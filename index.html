@@ -5,136 +5,239 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Saint Vincent Ferrer - Life Journey RPG</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-transform: translateZ(0); transform: translateZ(0); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; overflow: hidden; position: fixed; font-family: 'Georgia', serif; background: #000; }
         canvas { display: block; width: 100% !important; height: 100% !important; position: absolute; top: 0; left: 0; }
         #hud { position: fixed; top: 20px; left: 20px; background: rgba(20, 20, 40, 0.95); padding: 15px; border-radius: 10px; border: 2px solid #d4af37; color: #f0e6d2; font-size: 14px; z-index: 100; max-width: 300px; }
         #chapter-title { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 0, 0, 0.95); padding: 40px 60px; border: 3px solid #d4af37; border-radius: 15px; color: #d4af37; font-size: 32px; font-weight: bold; text-align: center; z-index: 200; display: none; max-width: 80%; }
-        #dialogue-box { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(20, 20, 40, 0.98); padding: 25px 35px; border: 3px solid #d4af37; border-radius: 10px; color: #f0e6d2; font-size: 16px; max-width: 80%; z-index: 150; display: none; line-height: 1.8; }
-        #dialogue-speaker { color: #d4af37; font-weight: bold; font-size: 18px; margin-bottom: 10px; }
-        #dialogue-continue { background: #d4af37; color: #1a1a2e; border: none; padding: 10px 25px; margin-top: 15px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; float: right; }
+        #dialogue-box { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); background: rgba(20, 20, 40, 0.98); padding: 25px 35px; border: 3px solid #d4af37; border-radius: 10px; color: #f0e6d2; font-size: 16px; max-width: 80%; z-index: 150; display: none; line-height: 1.8; text-align: center; }
+        #dialogue-speaker { color: #d4af37; font-weight: bold; font-size: 18px; margin-bottom: 10px; text-align: center; }
+        #dialogue-text { text-align: center; }
+        #dialogue-continue { background: #d4af37; color: #1a1a2e; border: none; padding: 10px 25px; margin-top: 15px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; display: block; margin-left: auto; margin-right: auto; }
         #dialogue-continue:hover { background: #f0d978; }
-        #controls { position: fixed; bottom: 20px; left: 20px; background: rgba(20, 20, 40, 0.9); padding: 15px; border-radius: 8px; color: #f0e6d2; font-size: 12px; z-index: 100; }
+        #controls { position: fixed; bottom: 20px; left: 20px; background: rgba(20, 20, 40, 0.9); padding: 15px; border-radius: 8px; color: #f0e6d2; font-size: 12px; z-index: 100; text-align: center; }
         #mobile-joystick { position: fixed; bottom: 40px; left: 40px; width: 150px; height: 150px; display: none; z-index: 200; }
         @media (max-width: 768px), (pointer: coarse) { #mobile-joystick { display: block; } #controls { display: none; } }
         .joystick-base { position: absolute; width: 150px; height: 150px; background: radial-gradient(circle, rgba(52, 73, 94, 0.7) 0%, rgba(44, 62, 80, 0.8) 100%); border: 3px solid rgba(212, 175, 55, 0.6); border-radius: 50%; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); }
         .joystick-stick { position: absolute; width: 60px; height: 60px; background: radial-gradient(circle, rgba(212, 175, 55, 0.9) 0%, rgba(160, 132, 40, 1) 100%); border: 3px solid rgba(160, 132, 40, 0.9); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: all 0.1s; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); }
         #interact-button { position: fixed; bottom: 50px; right: 50px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(212, 175, 55, 0.9) 0%, rgba(160, 132, 40, 1) 100%); border: 4px solid rgba(160, 132, 40, 0.9); border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: white; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); z-index: 200; cursor: pointer; }
         @media (max-width: 768px), (pointer: coarse) { #interact-button { display: flex; } }
-        #mission-objective { position: fixed; top: 20px; right: 20px; background: rgba(20, 20, 40, 0.95); padding: 15px; border-radius: 10px; border: 2px solid #4a9eff; color: #f0e6d2; font-size: 14px; z-index: 100; max-width: 300px; }
+        #mission-objective { position: fixed; top: 20px; right: 20px; background: rgba(20, 20, 40, 0.95); padding: 15px; border-radius: 10px; border: 2px solid #4a9eff; color: #f0e6d2; font-size: 14px; z-index: 100; max-width: 300px; text-align: center; }
         #objective-title { color: #4a9eff; font-weight: bold; margin-bottom: 8px; }
+        #task-progress { color: #ffd700; font-weight: bold; margin-top: 8px; font-size: 16px; }
         .miracle-effect { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 72px; color: #ffd700; text-shadow: 0 0 30px #fff, 0 0 60px #ffd700; z-index: 250; pointer-events: none; animation: miraclePulse 2s ease-out; }
         @keyframes miraclePulse { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1); } }
         #title-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 300; color: #d4af37; }
-        #title-screen h1 { font-size: 48px; margin-bottom: 20px; text-shadow: 3px 3px 6px rgba(0,0,0,0.7); }
-        #title-screen h2 { font-size: 24px; margin-bottom: 40px; color: #f0e6d2; }
+        #title-screen h1 { font-size: 48px; margin-bottom: 20px; text-shadow: 3px 3px 6px rgba(0,0,0,0.7); text-align: center; }
+        #title-screen h2 { font-size: 24px; margin-bottom: 40px; color: #f0e6d2; text-align: center; }
         #start-button { background: #d4af37; color: #1a1a2e; border: none; padding: 20px 50px; font-size: 20px; font-weight: bold; border-radius: 10px; cursor: pointer; box-shadow: 0 6px 0 #a08428; transition: all 0.2s; }
         #start-button:hover { background: #f0d978; transform: translateY(-3px); box-shadow: 0 9px 0 #a08428; }
         #start-button:active { transform: translateY(3px); box-shadow: 0 3px 0 #a08428; }
+        #playing-as { position: fixed; top: 90px; left: 20px; background: rgba(139, 0, 139, 0.9); padding: 10px 15px; border-radius: 8px; border: 2px solid #d4af37; color: #ffd700; font-size: 14px; font-weight: bold; z-index: 100; text-align: center; }
+        #next-chapter-button { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #4a9eff; color: white; border: none; padding: 15px 40px; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; box-shadow: 0 6px 0 #2c5aa0; z-index: 200; display: none; }
+        #next-chapter-button:hover { background: #6fb1ff; }
+        #next-chapter-button:active { transform: translateX(-50%) translateY(3px); box-shadow: 0 3px 0 #2c5aa0; }
+        #mini-radar { position: fixed; bottom: 20px; right: 20px; width: 150px; height: 150px; background: rgba(20, 20, 40, 0.9); border: 3px solid #4a9eff; border-radius: 50%; z-index: 100; }
+        .radar-player { position: absolute; width: 8px; height: 8px; background: #00ff00; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 10px #00ff00; }
+        .radar-objective { position: absolute; width: 10px; height: 10px; background: #ffd700; border-radius: 50%; box-shadow: 0 0 10px #ffd700; animation: radarPulse 1s infinite; }
+        @keyframes radarPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.7; } }
+        .radar-scan { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(transparent 0deg, rgba(74, 158, 255, 0.3) 90deg, transparent 90deg); animation: radarScan 3s linear infinite; }
+        @keyframes radarScan { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
     <div id="title-screen">
-        <h1>SAINT VINCENT FERRER</h1>
+        <h1>✝️ SAINT VINCENT FERRER ✝️</h1>
         <h2>The Life and Miracles</h2>
         <p style="max-width: 600px; text-align: center; margin: 20px; color: #f0e6d2; line-height: 1.6;">
-            "The fear of the Lord is the beginning of wisdom" - Proverbs 9:10<br>
-            Experience the miraculous life of the great Dominican preacher
+            "The fear of the Lord is the beginning of wisdom" - Proverbs 9:10<br><br>
+            Experience the miraculous life of the great Dominican preacher<br>
+            <strong>Third-Person Action RPG</strong>
         </p>
         <button id="start-button">Begin Journey</button>
     </div>
     <div id="chapter-title"></div>
+    <div id="playing-as">Playing as: Mother Constance</div>
     <div id="hud">
-        <div><strong>Chapter:</strong> <span id="current-chapter">Prologue</span></div>
-        <div><strong>Location:</strong> <span id="current-location">Valencia</span></div>
-        <div><strong>Year:</strong> <span id="current-year">1350</span></div>
-        <div><strong>Souls:</strong> <span id="souls-converted">0</span></div>
+        <div style="text-align: center;"><strong>Chapter:</strong><br><span id="current-chapter">Prologue</span></div>
+        <div style="text-align: center; margin-top: 8px;"><strong>Location:</strong><br><span id="current-location">Valencia</span></div>
+        <div style="text-align: center; margin-top: 8px;"><strong>Year:</strong><br><span id="current-year">1350</span></div>
+        <div style="text-align: center; margin-top: 8px;"><strong>Souls Converted:</strong><br><span id="souls-converted">0</span></div>
     </div>
     <div id="mission-objective">
         <div id="objective-title">Current Mission</div>
-        <div id="objective-text">Experience the miraculous birth</div>
+        <div id="objective-text">Wait for instructions...</div>
+        <div id="task-progress">0 / 0 Tasks</div>
     </div>
     <div id="dialogue-box">
         <div id="dialogue-speaker"></div>
         <div id="dialogue-text"></div>
         <button id="dialogue-continue">Continue</button>
     </div>
-    <div id="controls"><strong>WASD:</strong> Move | <strong>Mouse:</strong> Look | <strong>E:</strong> Interact</div>
+    <div id="controls"><strong>WASD:</strong> Move | <strong>Mouse:</strong> Camera | <strong>E:</strong> Interact</div>
     <div id="mobile-joystick"><div class="joystick-base"></div><div class="joystick-stick"></div></div>
     <button id="interact-button">E</button>
+    <button id="next-chapter-button">Continue to Next Chapter →</button>
+    
+    <div id="mini-radar">
+        <div class="radar-scan"></div>
+        <div class="radar-player"></div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         'use strict';
 
-        // Game Constants
-        const MOVE_SPEED = 15;
-        const ROTATION_SPEED = 0.002;
+        // Constants
+        const MOVE_SPEED = 10;
+        const CAMERA_DISTANCE = 8;
+        const CAMERA_HEIGHT = 5;
+        const COLLISION_DISTANCE = 1.5;
 
-        // Chapters - Complete Life Timeline
+        // Chapter definitions
         const CHAPTERS = {
-            WOMB_BARKING: {name: "In the Womb - The Barking", year: 1349, location: "Valencia", next: "WOMB_HEALING"},
-            WOMB_HEALING: {name: "In the Womb - Healing", year: 1349, location: "Valencia", next: "BIRTH"},
-            BIRTH: {name: "The Miraculous Birth", year: 1350, location: "Valencia", next: "CHILDHOOD"},
-            CHILDHOOD: {name: "Education and Calling", year: 1360, location: "Valencia", next: "DOMINICAN"},
-            DOMINICAN: {name: "Becoming a Dominican", year: 1367, location: "Valencia", next: "PEDRO_LUNA"},
-            PEDRO_LUNA: {name: "Meeting Cardinal Pedro", year: 1394, location: "Avignon", next: "PLAGUE"},
-            PLAGUE: {name: "The Plague Vision", year: 1398, location: "Avignon", next: "VISION"},
-            VISION: {name: "Vision of Christ", year: 1398, location: "Avignon", next: "ALLEGIANCE"},
-            ALLEGIANCE: {name: "Declaring Allegiance", year: 1399, location: "Avignon", next: "BISHOPS"},
-            BISHOPS: {name: "Convincing Bishops", year: 1400, location: "France", next: "PREACHING"},
-            PREACHING: {name: "Great Preacher of Europe", year: 1400, location: "Europe", next: "CHILD_REVIVAL"},
-            CHILD_REVIVAL: {name: "Raising Dead Children", year: 1405, location: "Spain", next: "SEVERED_HEAD"},
-            SEVERED_HEAD: {name: "The Severed Head Speaks", year: 1407, location: "Barcelona", next: "SYNAGOGUE"},
-            SYNAGOGUE: {name: "Converting Synagogues", year: 1411, location: "Toledo", next: "MOSQUE"},
-            MOSQUE: {name: "Mission to Mosques", year: 1412, location: "Granada", next: "WINGS"},
-            WINGS: {name: "The Angelic Flight", year: 1405, location: "Barcelona", next: "MULTIPLICATION"},
-            MULTIPLICATION: {name: "Multiplying Food", year: 1410, location: "France", next: "RESURRECTION"},
-            RESURRECTION: {name: "Raising the Dead", year: 1410, location: "Salamanca", next: "LAME_WALK"},
-            LAME_WALK: {name: "The Lame Walk", year: 1415, location: "Brittany", next: "CONSTANCE"},
-            CONSTANCE: {name: "Council of Constance", year: 1416, location: "Perpignan", next: "MARTIN"},
-            MARTIN: {name: "Supporting Pope Martin V", year: 1417, location: "France", next: "FINAL"},
-            FINAL: {name: "Final Days", year: 1419, location: "Vannes", next: "DEATH"},
-            DEATH: {name: "The Holy Death", year: 1419, location: "Vannes", next: "FUNERAL"},
-            FUNERAL: {name: "Funeral Miracles", year: 1419, location: "Vannes", next: "CANONIZATION"},
-            CANONIZATION: {name: "Declaration of Sainthood", year: 1455, location: "Rome", next: null}
+            WOMB_BARKING: {
+                name: "In the Womb - The Barking", 
+                year: 1349, 
+                location: "Valencia, Spain",
+                playAs: "Mother Constance",
+                tasks: 2,
+                objective: "Talk to William and witness the barking"
+            },
+            WOMB_HEALING: {
+                name: "In the Womb - Healing the Blind", 
+                year: 1349, 
+                location: "Valencia, Spain",
+                playAs: "Mother Constance",
+                tasks: 1,
+                objective: "Touch blind woman to heal her"
+            },
+            BIRTH: {
+                name: "The Miraculous Birth", 
+                year: 1350, 
+                location: "Valencia, Spain",
+                playAs: "Mother Constance",
+                tasks: 1,
+                objective: "Give birth to Vincent"
+            },
+            CHILDHOOD: {
+                name: "Childhood Calling", 
+                year: 1360, 
+                location: "Valencia",
+                playAs: "Young Vincent",
+                tasks: 2,
+                objective: "Pray at church and talk to father"
+            },
+            DOMINICAN: {
+                name: "Becoming a Dominican", 
+                year: 1367, 
+                location: "Valencia",
+                playAs: "Saint Vincent Ferrer",
+                tasks: 1,
+                objective: "Take vows at the monastery"
+            },
+            PREACHING: {
+                name: "Great Preacher", 
+                year: 1400, 
+                location: "Europe",
+                playAs: "Saint Vincent Ferrer",
+                tasks: 5,
+                objective: "Preach to 5 groups of people"
+            },
+            SYNAGOGUE: {
+                name: "Converting Synagogues", 
+                year: 1411, 
+                location: "Toledo, Spain",
+                playAs: "Saint Vincent Ferrer",
+                tasks: 3,
+                objective: "Preach in Hebrew to 3 Jewish groups"
+            },
+            MOSQUE: {
+                name: "Mission to Mosques", 
+                year: 1412, 
+                location: "Granada, Spain",
+                playAs: "Saint Vincent Ferrer",
+                tasks: 3,
+                objective: "Preach in Arabic to 3 Muslim groups"
+            },
+            CHILD_REVIVAL: {
+                name: "Raising Dead Children", 
+                year: 1405, 
+                location: "Spain",
+                playAs: "Saint Vincent Ferrer",
+                tasks: 2,
+                objective: "Raise 2 dead children to life"
+            },
+            WINGS: {
+                name: "The Angelic Flight", 
+                year: 1405, 
+                location: "Barcelona",
+                playAs: "Saint Vincent Ferrer",
+                tasks: 1,
+                objective: "Fly to save drowning man"
+            },
+            RESURRECTION: {
+                name: "Raising the Dead", 
+                year: 1410, 
+                location: "Salamanca",
+                playAs: "Saint Vincent Ferrer",
+                tasks: 1,
+                objective: "Command the corpse to testify"
+            },
+            DEATH: {
+                name: "The Holy Death", 
+                year: 1419, 
+                location: "Vannes, Brittany",
+                playAs: "Saint Vincent Ferrer",
+                tasks: 1,
+                objective: "Receive last rites"
+            },
+            FUNERAL: {
+                name: "Funeral Miracles", 
+                year: 1419, 
+                location: "Vannes Cathedral",
+                playAs: "Brother Thomas (Pupil)",
+                tasks: 3,
+                objective: "Witness 3 funeral miracles"
+            },
+            CANONIZATION: {
+                name: "Declaration of Sainthood", 
+                year: 1455, 
+                location: "Rome, Vatican",
+                playAs: "Brother Thomas (Pupil)",
+                tasks: 1,
+                objective: "Hear Pope's declaration"
+            }
         };
 
-        // Gregorian Chant System
+        // Game State
+        let scene, camera, renderer, gameState = 'title';
+        let currentChapter = 'WOMB_BARKING';
+        let playerModel, cameraTarget = new THREE.Vector3();
+        let tasksCompleted = 0, tasksRequired = 0;
+        let canFly = false, soulsConverted = 0, dialogueQueue = [];
+        let audioContext, masterGain;
+        const keys = {}, interactables = [], buildings = [];
+        let mouseX = 0, mouseY = 0, cameraAngle = 0;
+        let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
+        let joyActive = false, joyStartX = 0, joyStartY = 0, joyDeltaX = 0, joyDeltaY = 0;
+
+        // Gregorian Chant
         const GREGORIAN_SCALE = {
             D3: 146.83, E3: 164.81, F3: 174.61, G3: 196.00, A3: 220.00, B3: 246.94, 
             C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.00, A4: 440.00
         };
-
         const CHANTS = {
-            KYRIE: [
-                {note:'D4',dur:1.0},{note:'F4',dur:0.5},{note:'G4',dur:0.5},{note:'A4',dur:1.5},{note:'G4',dur:0.5},
-                {note:'F4',dur:1.0},{note:'E4',dur:0.5},{note:'D4',dur:1.5}
-            ],
-            DIES_IRAE: [
-                {note:'D4',dur:0.5},{note:'D4',dur:0.5},{note:'F4',dur:1.0},{note:'E4',dur:0.5},
-                {note:'D4',dur:1.0},{note:'E4',dur:0.5},{note:'F4',dur:0.5},{note:'G4',dur:1.5}
-            ]
+            KYRIE: [{note:'D4',dur:1.0},{note:'F4',dur:0.5},{note:'G4',dur:0.5},{note:'A4',dur:1.5}]
         };
 
-        // Game State
-        let scene, camera, renderer, gameState = 'title', currentChapter = 'WOMB_BARKING';
-        let canFly = false, soulsConverted = 0, dialogueQueue = [];
-        let audioContext, masterGain, isChantPlaying = false;
-        const keys = {};
-        let mouseX = 0, mouseY = 0, isPointerLocked = false;
-        let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
-        let joyActive = false, joyStartX = 0, joyStartY = 0, joyDeltaX = 0, joyDeltaY = 0;
-
-        // Initialize
         function init() {
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0x87CEEB);
             scene.fog = new THREE.FogExp2(0x87CEEB, 0.008);
 
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.set(0, 2, 5);
-
+            
             renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -142,22 +245,35 @@
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
             renderer.physicallyCorrectLights = true;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.5;
+            renderer.toneMappingExposure = 1.2;
             document.body.appendChild(renderer.domElement);
 
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
             scene.add(ambientLight);
+            
             const sunLight = new THREE.DirectionalLight(0xfff5e6, 2.5);
             sunLight.position.set(50, 100, 50);
             sunLight.castShadow = true;
             sunLight.shadow.mapSize.width = 4096;
             sunLight.shadow.mapSize.height = 4096;
+            sunLight.shadow.camera.left = -100;
+            sunLight.shadow.camera.right = 100;
+            sunLight.shadow.camera.top = 100;
+            sunLight.shadow.camera.bottom = -100;
             scene.add(sunLight);
+
+            const fillLight = new THREE.DirectionalLight(0x9db4ff, 0.5);
+            fillLight.position.set(-50, 50, -50);
+            scene.add(fillLight);
 
             document.getElementById('start-button').addEventListener('click', startGame);
             document.getElementById('dialogue-continue').addEventListener('click', advanceDialogue);
-            document.getElementById('interact-button').addEventListener('click', () => { if(dialogueQueue.length) advanceDialogue(); });
-            document.addEventListener('keydown', e => { keys[e.key.toLowerCase()] = true; if(e.key.toLowerCase() === 'e' && dialogueQueue.length) advanceDialogue(); });
+            document.getElementById('interact-button').addEventListener('click', tryInteract);
+            document.getElementById('next-chapter-button').addEventListener('click', nextChapter);
+            document.addEventListener('keydown', e => { 
+                keys[e.key.toLowerCase()] = true; 
+                if(e.key.toLowerCase() === 'e') tryInteract();
+            });
             document.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
             document.addEventListener('mousemove', onMouseMove);
             window.addEventListener('resize', onResize);
@@ -173,12 +289,12 @@
                 masterGain = audioContext.createGain();
                 masterGain.connect(audioContext.destination);
                 masterGain.gain.value = 0.1;
-            } catch(e) { console.log("Audio not supported"); }
+            } catch(e) {}
         }
 
-        function playChant(chantName = 'KYRIE') {
+        function playChant(name = 'KYRIE') {
             if(!audioContext) return;
-            const chant = CHANTS[chantName] || CHANTS.KYRIE;
+            const chant = CHANTS[name] || CHANTS.KYRIE;
             let time = audioContext.currentTime;
             chant.forEach(n => {
                 const osc = audioContext.createOscillator();
@@ -230,7 +346,6 @@
             gameState = 'playing';
             loadChapter('WOMB_BARKING');
             playChant('KYRIE');
-            if(!isMobile) requestPointerLock();
         }
 
         function loadChapter(key) {
@@ -239,65 +354,120 @@
             document.getElementById('current-chapter').textContent = ch.name;
             document.getElementById('current-location').textContent = ch.location;
             document.getElementById('current-year').textContent = ch.year;
+            document.getElementById('playing-as').textContent = 'Playing as: ' + ch.playAs;
+            document.getElementById('objective-text').textContent = ch.objective;
+            tasksRequired = ch.tasks;
+            tasksCompleted = 0;
+            updateTaskProgress();
             showChapterTitle(ch.name);
             clearScene();
-            interactables = []; // Clear interactive objects
+            interactables.length = 0;
+            buildings.length = 0;
+            document.getElementById('next-chapter-button').style.display = 'none';
 
+            // Create player model
+            if(ch.playAs.includes('Mother')) {
+                playerModel = createMotherModel();
+            } else if(ch.playAs.includes('Young Vincent')) {
+                playerModel = createYoungVincentModel();
+            } else if(ch.playAs.includes('Vincent')) {
+                playerModel = createVincentModel();
+            } else if(ch.playAs.includes('Thomas')) {
+                playerModel = createPupilModel();
+            }
+            playerModel.position.set(0, 0, 0);
+            scene.add(playerModel);
+
+            // Load chapter content
             switch(key) {
                 case 'WOMB_BARKING': loadWombBarkingChapter(); break;
                 case 'WOMB_HEALING': loadWombHealingChapter(); break;
                 case 'BIRTH': loadBirthChapter(); break;
                 case 'CHILDHOOD': loadChildhoodChapter(); break;
                 case 'DOMINICAN': loadDominicanChapter(); break;
-                case 'PEDRO_LUNA': loadPedroLunaChapter(); break;
-                case 'PLAGUE': loadPlagueChapter(); break;
-                case 'VISION': loadVisionChapter(); break;
-                case 'ALLEGIANCE': loadAllegianceChapter(); break;
-                case 'BISHOPS': loadBishopsChapter(); break;
                 case 'PREACHING': loadPreachingChapter(); break;
-                case 'CHILD_REVIVAL': loadChildRevivalChapter(); break;
-                case 'SEVERED_HEAD': loadSeveredHeadChapter(); break;
                 case 'SYNAGOGUE': loadSynagogueChapter(); break;
                 case 'MOSQUE': loadMosqueChapter(); break;
+                case 'CHILD_REVIVAL': loadChildRevivalChapter(); break;
                 case 'WINGS': loadWingsChapter(); break;
-                case 'MULTIPLICATION': loadMultiplicationChapter(); break;
                 case 'RESURRECTION': loadResurrectionChapter(); break;
-                case 'LAME_WALK': loadLameWalkChapter(); break;
-                case 'CONSTANCE': loadConstanceChapter(); break;
-                case 'MARTIN': loadMartinChapter(); break;
                 case 'DEATH': loadDeathChapter(); break;
                 case 'FUNERAL': loadFuneralChapter(); break;
                 case 'CANONIZATION': loadCanonizationChapter(); break;
-                default: loadDefaultChapter(); break;
             }
         }
 
         function showChapterTitle(title) {
             const el = document.getElementById('chapter-title');
-            el.textContent = title;
+            el.innerHTML = `<div style="font-size: 32px; margin-bottom: 15px;">${title}</div>
+                <div style="font-size: 18px; color: #f0e6d2;">Complete all tasks to continue</div>`;
             el.style.display = 'block';
-            setTimeout(() => el.style.display = 'none', 3000);
+            setTimeout(() => el.style.display = 'none', 4000);
         }
 
         function clearScene() {
             while(scene.children.length > 0) { 
                 const obj = scene.children[0];
                 if(obj.geometry) obj.geometry.dispose();
-                if(obj.material) obj.material.dispose();
+                if(obj.material) {
+                    if(Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+                    else obj.material.dispose();
+                }
                 scene.remove(obj);
             }
-            const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+            const ambient = new THREE.AmbientLight(0xffffff, 0.8);
             scene.add(ambient);
             const sun = new THREE.DirectionalLight(0xfff5e6, 2.5);
             sun.position.set(50, 100, 50);
             sun.castShadow = true;
+            sun.shadow.mapSize.width = 4096;
+            sun.shadow.mapSize.height = 4096;
             scene.add(sun);
+            const fill = new THREE.DirectionalLight(0x9db4ff, 0.5);
+            fill.position.set(-50, 50, -50);
+            scene.add(fill);
+        }
+
+        function updateTaskProgress() {
+            document.getElementById('task-progress').textContent = `${tasksCompleted} / ${tasksRequired} Tasks`;
+            if(tasksCompleted >= tasksRequired) {
+                document.getElementById('next-chapter-button').style.display = 'block';
+                showMiracle('✨ CHAPTER COMPLETE! ✨');
+            }
+        }
+
+        function nextChapter() {
+            const chapters = Object.keys(CHAPTERS);
+            const currentIdx = chapters.indexOf(currentChapter);
+            if(currentIdx < chapters.length - 1) {
+                loadChapter(chapters[currentIdx + 1]);
+            } else {
+                showGameComplete();
+            }
+        }
+
+        function showGameComplete() {
+            document.getElementById('chapter-title').innerHTML = `
+                <div style="color:#d4af37; font-size:42px;">✝️ JOURNEY COMPLETE ✝️</div>
+                <div style="color:#f0e6d2; font-size:18px; margin-top:20px; line-height:1.8;">
+                    You have lived the miraculous life of<br>
+                    <strong style="color:#d4af37; font-size:24px;">SAINT VINCENT FERRER</strong><br><br>
+                    <strong style="color:#4a9eff;">Total Souls Converted: ${soulsConverted}</strong><br><br>
+                    "Fear the Lord and give Him glory" - Revelation 14:7<br><br>
+                    Saint Vincent Ferrer, pray for us!<br><br>
+                    <div style="font-size:14px; margin-top:15px;">Refresh to play again</div>
+                </div>
+            `;
+            document.getElementById('chapter-title').style.display = 'block';
         }
 
         function showDialogue(dlg) {
-            if(!dlg) { document.getElementById('dialogue-box').style.display = 'none'; return; }
+            if(!dlg) { 
+                document.getElementById('dialogue-box').style.display = 'none'; 
+                return; 
+            }
             document.getElementById('dialogue-speaker').textContent = dlg.speaker;
-            document.getElementById('dialogue-text').textContent = dlg.text + (dlg.citation ? `\n\n[${dlg.citation}]` : '');
+            document.getElementById('dialogue-text').textContent = dlg.text;
             document.getElementById('dialogue-box').style.display = 'block';
         }
 
@@ -307,8 +477,53 @@
                 showDialogue(dialogueQueue[0]);
             } else {
                 document.getElementById('dialogue-box').style.display = 'none';
-                const next = CHAPTERS[currentChapter].next;
-                if(next) setTimeout(() => loadChapter(next), 3000);
+            }
+        }
+
+        function tryInteract() {
+            const nearest = findNearestInteractable();
+            if(nearest) {
+                executeInteraction(nearest);
+            }
+        }
+
+        function findNearestInteractable() {
+            if(!playerModel) return null;
+            let nearest = null;
+            let nearestDist = 3;
+            interactables.forEach(obj => {
+                const dist = playerModel.position.distanceTo(obj.position);
+                if(dist < nearestDist) {
+                    nearest = obj;
+                    nearestDist = dist;
+                }
+            });
+            return nearest;
+        }
+
+        function executeInteraction(obj) {
+            scene.remove(obj);
+            const idx = interactables.indexOf(obj);
+            if(idx > -1) interactables.splice(idx, 1);
+            
+            tasksCompleted++;
+            updateTaskProgress();
+            updateRadar();
+            
+            if(obj.userData.dialogue) {
+                dialogueQueue = obj.userData.dialogue;
+                showDialogue(dialogueQueue[0]);
+            }
+            
+            if(obj.userData.effect === 'heal') {
+                createMiracleEffect(obj.position.x, obj.position.y + 1, obj.position.z, 0xffffff);
+                addConversions(obj.userData.souls || 10);
+            } else if(obj.userData.effect === 'preach') {
+                createMiracleEffect(obj.position.x, obj.position.y + 1, obj.position.z, 0xffd700);
+                addConversions(obj.userData.souls || 50);
+            } else if(obj.userData.effect === 'convert') {
+                createMiracleEffect(obj.position.x, obj.position.y + 1, obj.position.z, 0x4a9eff);
+                addConversions(obj.userData.souls || 25);
             }
         }
 
@@ -326,935 +541,705 @@
             setTimeout(() => document.body.removeChild(el), 2000);
         }
 
+        function updateRadar() {
+            const radar = document.getElementById('mini-radar');
+            const existing = radar.querySelectorAll('.radar-objective');
+            existing.forEach(e => e.remove());
+
+            if(!playerModel) return;
+
+            interactables.forEach(obj => {
+                const dx = obj.position.x - playerModel.position.x;
+                const dz = obj.position.z - playerModel.position.z;
+                const dist = Math.sqrt(dx*dx + dz*dz);
+                
+                if(dist < 50) {
+                    const radarX = (dx / 50) * 65 + 75;
+                    const radarY = (dz / 50) * 65 + 75;
+                    
+                    const dot = document.createElement('div');
+                    dot.className = 'radar-objective';
+                    dot.style.left = radarX + 'px';
+                    dot.style.top = radarY + 'px';
+                    radar.appendChild(dot);
+                }
+            });
+        }
+
+        function checkCollision(newX, newZ) {
+            for(let building of buildings) {
+                const dx = newX - building.x;
+                const dz = newZ - building.z;
+                const dist = Math.sqrt(dx*dx + dz*dz);
+                
+                if(dist < building.radius + COLLISION_DISTANCE) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // PLAYER MODEL CREATORS
+        function createMotherModel() {
+            const group = new THREE.Group();
+            const dress = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.4, 0.5, 1.4, 16),
+                new THREE.MeshStandardMaterial({color: 0x8b4789, roughness: 0.7, metalness: 0.1})
+            );
+            dress.position.y = 0.7;
+            dress.castShadow = true;
+            group.add(dress);
+            
+            const head = new THREE.Mesh(
+                new THREE.SphereGeometry(0.25, 16, 16),
+                new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5})
+            );
+            head.position.y = 1.6;
+            head.castShadow = true;
+            group.add(head);
+            
+            // Arms
+            const armGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.7, 8);
+            const armMat = new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5});
+            const leftArm = new THREE.Mesh(armGeo, armMat);
+            leftArm.position.set(-0.45, 0.8, 0);
+            leftArm.rotation.z = 0.4;
+            leftArm.castShadow = true;
+            group.add(leftArm);
+            const rightArm = new THREE.Mesh(armGeo, armMat);
+            rightArm.position.set(0.45, 0.8, 0);
+            rightArm.rotation.z = -0.4;
+            rightArm.castShadow = true;
+            group.add(rightArm);
+            
+            return group;
+        }
+
+        function createYoungVincentModel() {
+            const group = new THREE.Group();
+            const body = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.25, 0.3, 1, 16),
+                new THREE.MeshStandardMaterial({color: 0x4a4a4a, roughness: 0.8})
+            );
+            body.position.y = 0.5;
+            body.castShadow = true;
+            group.add(body);
+            
+            const head = new THREE.Mesh(
+                new THREE.SphereGeometry(0.2, 16, 16),
+                new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5})
+            );
+            head.position.y = 1.2;
+            head.castShadow = true;
+            group.add(head);
+            
+            // Arms and legs for young Vincent
+            const armGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.5, 8);
+            const armMat = new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5});
+            const leftArm = new THREE.Mesh(armGeo, armMat);
+            leftArm.position.set(-0.35, 0.6, 0);
+            leftArm.rotation.z = 0.3;
+            leftArm.castShadow = true;
+            group.add(leftArm);
+            const rightArm = new THREE.Mesh(armGeo, armMat);
+            rightArm.position.set(0.35, 0.6, 0);
+            rightArm.rotation.z = -0.3;
+            rightArm.castShadow = true;
+            group.add(rightArm);
+            
+            const legGeo = new THREE.CylinderGeometry(0.08, 0.07, 0.5, 8);
+            const legMat = new THREE.MeshStandardMaterial({color: 0x2c3e50, roughness: 0.8});
+            const leftLeg = new THREE.Mesh(legGeo, legMat);
+            leftLeg.position.set(-0.12, 0.15, 0);
+            leftLeg.castShadow = true;
+            group.add(leftLeg);
+            const rightLeg = new THREE.Mesh(legGeo, legMat);
+            rightLeg.position.set(0.12, 0.15, 0);
+            rightLeg.castShadow = true;
+            group.add(rightLeg);
+            
+            return group;
+        }
+
+        function createVincentModel() {
+            const group = new THREE.Group();
+            const habit = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.35, 0.4, 1.4, 16),
+                new THREE.MeshStandardMaterial({color: 0x000000, roughness: 0.9})
+            );
+            habit.position.y = 0.7;
+            habit.castShadow = true;
+            group.add(habit);
+            
+            const scapular = new THREE.Mesh(
+                new THREE.BoxGeometry(0.6, 1.2, 0.05),
+                new THREE.MeshStandardMaterial({color: 0xffffff, roughness: 0.7})
+            );
+            scapular.position.set(0, 0.7, 0.22);
+            scapular.castShadow = true;
+            group.add(scapular);
+            
+            const head = new THREE.Mesh(
+                new THREE.SphereGeometry(0.25, 16, 16),
+                new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5})
+            );
+            head.position.y = 1.6;
+            head.castShadow = true;
+            group.add(head);
+            
+            const halo = new THREE.Mesh(
+                new THREE.TorusGeometry(0.35, 0.04, 16, 32),
+                new THREE.MeshStandardMaterial({
+                    color: 0xffd700,
+                    emissive: 0xffd700,
+                    emissiveIntensity: 1.0
+                })
+            );
+            halo.position.y = 2;
+            halo.rotation.x = Math.PI/2;
+            group.add(halo);
+            
+            // Arms and legs
+            const armGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.7, 8);
+            const armMat = new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5});
+            const leftArm = new THREE.Mesh(armGeo, armMat);
+            leftArm.position.set(-0.45, 0.8, 0);
+            leftArm.rotation.z = 0.3;
+            leftArm.castShadow = true;
+            group.add(leftArm);
+            const rightArm = new THREE.Mesh(armGeo, armMat);
+            rightArm.position.set(0.45, 0.8, 0);
+            rightArm.rotation.z = -0.3;
+            rightArm.castShadow = true;
+            group.add(rightArm);
+            
+            const legGeo = new THREE.CylinderGeometry(0.09, 0.08, 0.5, 8);
+            const legMat = new THREE.MeshStandardMaterial({color: 0x000000, roughness: 0.9});
+            const leftLeg = new THREE.Mesh(legGeo, legMat);
+            leftLeg.position.set(-0.15, 0.15, 0);
+            leftLeg.castShadow = true;
+            group.add(leftLeg);
+            const rightLeg = new THREE.Mesh(legGeo, legMat);
+            rightLeg.position.set(0.15, 0.15, 0);
+            rightLeg.castShadow = true;
+            group.add(rightLeg);
+            
+            return group;
+        }
+
+        function createPupilModel() {
+            const group = new THREE.Group();
+            const robe = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.35, 0.4, 1.4, 16),
+                new THREE.MeshStandardMaterial({color: 0x8b4513, roughness: 0.9})
+            );
+            robe.position.y = 0.7;
+            robe.castShadow = true;
+            group.add(robe);
+            
+            const head = new THREE.Mesh(
+                new THREE.SphereGeometry(0.25, 16, 16),
+                new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5})
+            );
+            head.position.y = 1.6;
+            head.castShadow = true;
+            group.add(head);
+            
+            // Arms and legs
+            const armGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.7, 8);
+            const armMat = new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5});
+            const leftArm = new THREE.Mesh(armGeo, armMat);
+            leftArm.position.set(-0.45, 0.8, 0);
+            leftArm.rotation.z = 0.3;
+            leftArm.castShadow = true;
+            group.add(leftArm);
+            const rightArm = new THREE.Mesh(armGeo, armMat);
+            rightArm.position.set(0.45, 0.8, 0);
+            rightArm.rotation.z = -0.3;
+            rightArm.castShadow = true;
+            group.add(rightArm);
+            
+            const legGeo = new THREE.CylinderGeometry(0.09, 0.08, 0.5, 8);
+            const legMat = new THREE.MeshStandardMaterial({color: 0x654321, roughness: 0.9});
+            const leftLeg = new THREE.Mesh(legGeo, legMat);
+            leftLeg.position.set(-0.15, 0.15, 0);
+            leftLeg.castShadow = true;
+            group.add(leftLeg);
+            const rightLeg = new THREE.Mesh(legGeo, legMat);
+            rightLeg.position.set(0.15, 0.15, 0);
+            rightLeg.castShadow = true;
+            group.add(rightLeg);
+            
+            return group;
+        }
+
+        // ENVIRONMENT CREATORS
         function createGround() {
             const ground = new THREE.Mesh(
-                new THREE.PlaneGeometry(200,200,50,50),
-                new THREE.MeshStandardMaterial({color:0x5d8c3e, roughness:0.95})
+                new THREE.PlaneGeometry(200, 200, 50, 50),
+                new THREE.MeshStandardMaterial({
+                    color: 0x5d8c3e, 
+                    roughness: 0.95,
+                    metalness: 0
+                })
             );
             ground.rotation.x = -Math.PI/2;
             ground.receiveShadow = true;
             scene.add(ground);
         }
 
-        function createPerson(color = 0x4a4a4a) {
+        function createNPC(x, y, z, color = 0x4a4a4a) {
             const group = new THREE.Group();
-            // Body
             const body = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.3,0.35,1.2,16),
-                new THREE.MeshStandardMaterial({color: color, roughness:0.8})
+                new THREE.CylinderGeometry(0.3, 0.35, 1.2, 16),
+                new THREE.MeshStandardMaterial({color: color, roughness: 0.8})
             );
             body.position.y = 0.6;
             body.castShadow = true;
             group.add(body);
-            // Head
+            
             const head = new THREE.Mesh(
-                new THREE.SphereGeometry(0.25,16,16),
-                new THREE.MeshStandardMaterial({color:0xf0c291, roughness:0.6})
+                new THREE.SphereGeometry(0.25, 16, 16),
+                new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5})
             );
             head.position.y = 1.4;
             head.castShadow = true;
             group.add(head);
+            
             // Arms
-            const armGeo = new THREE.CylinderGeometry(0.08,0.08,0.6,8);
-            const armMat = new THREE.MeshStandardMaterial({color:0xf0c291});
+            const armGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.6, 8);
+            const armMat = new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5});
             const leftArm = new THREE.Mesh(armGeo, armMat);
             leftArm.position.set(-0.4, 0.7, 0);
             leftArm.rotation.z = 0.3;
             leftArm.castShadow = true;
+            group.add(leftArm);
             const rightArm = new THREE.Mesh(armGeo, armMat);
             rightArm.position.set(0.4, 0.7, 0);
             rightArm.rotation.z = -0.3;
             rightArm.castShadow = true;
-            group.add(leftArm);
             group.add(rightArm);
+            
             // Legs
-            const legGeo = new THREE.CylinderGeometry(0.1,0.09,0.5,8);
-            const legMat = new THREE.MeshStandardMaterial({color:0x2c3e50});
+            const legGeo = new THREE.CylinderGeometry(0.1, 0.09, 0.5, 8);
+            const legMat = new THREE.MeshStandardMaterial({color: 0x2c3e50, roughness: 0.8});
             const leftLeg = new THREE.Mesh(legGeo, legMat);
             leftLeg.position.set(-0.15, 0.15, 0);
             leftLeg.castShadow = true;
+            group.add(leftLeg);
             const rightLeg = new THREE.Mesh(legGeo, legMat);
             rightLeg.position.set(0.15, 0.15, 0);
             rightLeg.castShadow = true;
-            group.add(leftLeg);
             group.add(rightLeg);
+            
+            group.position.set(x, y, z);
+            scene.add(group);
             return group;
         }
 
-        function createVincent() {
-            const group = new THREE.Group();
-            // Dominican black habit
-            const body = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.35,0.4,1.4,16),
-                new THREE.MeshStandardMaterial({color:0x000000, roughness:0.9})
-            );
-            body.position.y = 0.7;
-            body.castShadow = true;
-            group.add(body);
-            // White scapular
-            const scapular = new THREE.Mesh(
-                new THREE.BoxGeometry(0.6,1.2,0.05),
-                new THREE.MeshStandardMaterial({color:0xffffff})
-            );
-            scapular.position.set(0, 0.7, 0.2);
-            scapular.castShadow = true;
-            group.add(scapular);
-            // Head
-            const head = new THREE.Mesh(
-                new THREE.SphereGeometry(0.25,16,16),
-                new THREE.MeshStandardMaterial({color:0xf0c291, roughness:0.6})
-            );
-            head.position.y = 1.6;
-            head.castShadow = true;
-            group.add(head);
-            // Halo
-            const halo = new THREE.Mesh(
-                new THREE.TorusGeometry(0.35,0.04,16,32),
-                new THREE.MeshStandardMaterial({
-                    color:0xffd700, 
-                    emissive:0xffd700, 
-                    emissiveIntensity:0.8
-                })
-            );
-            halo.position.y = 2;
-            halo.rotation.x = Math.PI/2;
-            group.add(halo);
-            return group;
-        }
-
-        function createHouse(x,y,z) {
-            // Walls
+        function createHouse(x, y, z) {
             const wall = new THREE.Mesh(
-                new THREE.BoxGeometry(12,6,12),
-                new THREE.MeshStandardMaterial({color:0xd4a373, roughness:0.9})
+                new THREE.BoxGeometry(12, 6, 12),
+                new THREE.MeshStandardMaterial({color: 0xd4a373, roughness: 0.9})
             );
-            wall.position.set(x,y+3,z);
+            wall.position.set(x, y + 3, z);
             wall.castShadow = true;
             wall.receiveShadow = true;
             scene.add(wall);
-            // Roof
+            
             const roof = new THREE.Mesh(
-                new THREE.ConeGeometry(9,4,4),
-                new THREE.MeshStandardMaterial({color:0x8b4513, roughness:0.95})
+                new THREE.ConeGeometry(9, 4, 4),
+                new THREE.MeshStandardMaterial({color: 0x8b4513, roughness: 0.95})
             );
-            roof.position.set(x,y+8,z);
+            roof.position.set(x, y + 8, z);
             roof.rotation.y = Math.PI/4;
             roof.castShadow = true;
             scene.add(roof);
-            // Door
-            const door = new THREE.Mesh(
-                new THREE.BoxGeometry(2,4,0.3),
-                new THREE.MeshStandardMaterial({color:0x4a2511})
-            );
-            door.position.set(x,y+2,z+6.1);
-            scene.add(door);
-            // Windows
-            for(let i=-1; i<=1; i+=2) {
-                const win = new THREE.Mesh(
-                    new THREE.BoxGeometry(1.5,2,0.2),
-                    new THREE.MeshStandardMaterial({
-                        color:0x87ceeb, 
-                        transparent:true, 
-                        opacity:0.6
-                    })
-                );
-                win.position.set(x+i*3, y+4, z+6.1);
-                scene.add(win);
-            }
+            
+            buildings.push({x: x, z: z, radius: 7});
         }
 
-        function createChurch(x,y,z) {
-            // Main building
+        function createChurch(x, y, z) {
             const main = new THREE.Mesh(
-                new THREE.BoxGeometry(25,15,35),
-                new THREE.MeshStandardMaterial({color:0xa89968, roughness:0.9})
+                new THREE.BoxGeometry(25, 15, 35),
+                new THREE.MeshStandardMaterial({color: 0xa89968, roughness: 0.9})
             );
-            main.position.set(x,y+7.5,z);
+            main.position.set(x, y + 7.5, z);
             main.castShadow = true;
             main.receiveShadow = true;
             scene.add(main);
-            // Bell tower
+            
             const tower = new THREE.Mesh(
-                new THREE.BoxGeometry(5,25,5),
-                new THREE.MeshStandardMaterial({color:0x8b7355, roughness:0.9})
+                new THREE.BoxGeometry(5, 25, 5),
+                new THREE.MeshStandardMaterial({color: 0x8b7355, roughness: 0.9})
             );
-            tower.position.set(x-12,y+12.5,z+12);
+            tower.position.set(x - 12, y + 12.5, z + 12);
             tower.castShadow = true;
             scene.add(tower);
-            // Cross
+            
+            const cross = new THREE.Group();
             const crossV = new THREE.Mesh(
-                new THREE.BoxGeometry(0.4,3,0.4),
+                new THREE.BoxGeometry(0.4, 3, 0.4),
                 new THREE.MeshStandardMaterial({
-                    color:0xffd700,
-                    emissive:0xffd700,
-                    emissiveIntensity:0.5
+                    color: 0xffd700, 
+                    emissive: 0xffd700, 
+                    emissiveIntensity: 0.7
                 })
             );
-            crossV.position.set(x-12,y+27,z+12);
-            scene.add(crossV);
+            crossV.position.y = 1.5;
+            cross.add(crossV);
             const crossH = new THREE.Mesh(
-                new THREE.BoxGeometry(2,0.4,0.4),
+                new THREE.BoxGeometry(2, 0.4, 0.4),
                 new THREE.MeshStandardMaterial({
-                    color:0xffd700,
-                    emissive:0xffd700,
-                    emissiveIntensity:0.5
+                    color: 0xffd700, 
+                    emissive: 0xffd700, 
+                    emissiveIntensity: 0.7
                 })
             );
-            crossH.position.set(x-12,y+26.5,z+12);
-            scene.add(crossH);
+            crossH.position.y = 1;
+            cross.add(crossH);
+            cross.position.set(x - 12, y + 26, z + 12);
+            scene.add(cross);
+            
+            buildings.push({x: x, z: z, radius: 15});
         }
 
-        function createTree(x,y,z) {
-            // Trunk
+        function createTree(x, y, z) {
             const trunk = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.3,0.4,4,8),
-                new THREE.MeshStandardMaterial({color:0x6B4423, roughness:0.98})
+                new THREE.CylinderGeometry(0.3, 0.4, 4, 8),
+                new THREE.MeshStandardMaterial({color: 0x6B4423, roughness: 0.98})
             );
-            trunk.position.set(x,y+2,z);
+            trunk.position.set(x, y + 2, z);
             trunk.castShadow = true;
             trunk.receiveShadow = true;
             scene.add(trunk);
-            // Leaves
+            
             const leaves = new THREE.Mesh(
-                new THREE.SphereGeometry(2.5,8,8),
-                new THREE.MeshStandardMaterial({color:0x2d5016, roughness:0.85})
+                new THREE.SphereGeometry(2.5, 12, 12),
+                new THREE.MeshStandardMaterial({color: 0x2d5016, roughness: 0.85})
             );
-            leaves.position.set(x,y+5,z);
+            leaves.position.set(x, y + 5, z);
             leaves.castShadow = true;
             scene.add(leaves);
         }
 
-        function createBush(x,y,z) {
+        function createBush(x, y, z) {
             const bush = new THREE.Mesh(
-                new THREE.SphereGeometry(0.8,8,8),
-                new THREE.MeshStandardMaterial({color:0x228B22, roughness:0.9})
+                new THREE.SphereGeometry(0.8, 8, 8),
+                new THREE.MeshStandardMaterial({color: 0x228B22, roughness: 0.9})
             );
             bush.scale.set(1, 0.6, 1);
-            bush.position.set(x,y+0.3,z);
+            bush.position.set(x, y + 0.3, z);
             bush.castShadow = true;
             scene.add(bush);
         }
 
-        function createFlower(x,y,z,color) {
-            const stem = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.02,0.02,0.3,4),
-                new THREE.MeshStandardMaterial({color:0x228B22})
-            );
-            stem.position.set(x,y+0.15,z);
-            scene.add(stem);
-            const bloom = new THREE.Mesh(
-                new THREE.SphereGeometry(0.08,6,6),
-                new THREE.MeshStandardMaterial({
-                    color:color, 
-                    emissive:color, 
-                    emissiveIntensity:0.2
-                })
-            );
-            bloom.position.set(x,y+0.3,z);
-            scene.add(bloom);
-        }
-
-        function createInteractable(x,y,z,type,label) {
+        function createInteractable(x, y, z, type, label, dialogue = [], effect = null, souls = 0) {
             const obj = new THREE.Mesh(
-                new THREE.BoxGeometry(0.5,0.5,0.5),
+                new THREE.BoxGeometry(0.6, 0.6, 0.6),
                 new THREE.MeshStandardMaterial({
-                    color:0xffd700,
-                    emissive:0xffd700,
-                    emissiveIntensity:0.5
+                    color: 0xffd700,
+                    emissive: 0xffd700,
+                    emissiveIntensity: 0.8,
+                    metalness: 0.3,
+                    roughness: 0.4
                 })
             );
-            obj.position.set(x,y,z);
-            obj.userData = {type:type, label:label, interactive:true};
+            obj.position.set(x, y, z);
+            obj.userData = {
+                type: type,
+                label: label,
+                dialogue: dialogue,
+                effect: effect,
+                souls: souls,
+                floatOffset: Math.random() * Math.PI * 2
+            };
+            obj.castShadow = true;
             scene.add(obj);
-            // Floating animation
-            obj.userData.floatOffset = Math.random() * Math.PI * 2;
+            interactables.push(obj);
+            
+            // Add glow light
+            const light = new THREE.PointLight(0xffd700, 1, 5);
+            light.position.copy(obj.position);
+            scene.add(light);
+            
             return obj;
         }
 
-        let interactables = [];
-        function checkInteractions() {
-            const playerPos = camera.position;
-            let nearest = null;
-            let nearestDist = 3;
-            
-            interactables.forEach(obj => {
-                if(!obj.userData.interactive) return;
-                const dist = playerPos.distanceTo(obj.position);
-                if(dist < nearestDist) {
-                    nearest = obj;
-                    nearestDist = dist;
-                }
-            });
-
-            if(nearest) {
-                document.getElementById('objective-text').textContent = `Press E: ${nearest.userData.label}`;
-                if(keys['e']) {
-                    executeInteraction(nearest);
-                    keys['e'] = false;
-                }
-            }
-        }
-
-        function executeInteraction(obj) {
-            scene.remove(obj);
-            const idx = interactables.indexOf(obj);
-            if(idx > -1) interactables.splice(idx, 1);
-            
-            switch(obj.userData.type) {
-                case 'heal':
-                    showMiracle('✨ HEALING MIRACLE ✨');
-                    addConversions(10);
-                    break;
-                case 'preach':
-                    showMiracle('📖 PREACHING ✨');
-                    addConversions(50);
-                    break;
-                case 'convert':
-                    showMiracle('✝️ CONVERSION ✝️');
-                    addConversions(25);
-                    break;
-                case 'rosary':
-                    showMiracle('📿 ROSARY OBTAINED');
-                    break;
-                case 'bible':
-                    showMiracle('📖 BIBLE OBTAINED');
-                    break;
-            }
-        }
-
-        // CHAPTER LOADING FUNCTIONS
-
-        function loadWombBarkingChapter() {
-            createGround();
-            createHouse(0,0,-10);
-            for(let i=0; i<5; i++) createTree(-20+i*10, 0, -30);
-            for(let i=0; i<10; i++) createBush(-15+Math.random()*30, 0, -20+Math.random()*10);
-            
-            // Husband character
-            const husband = createPerson(0x4a2511);
-            husband.position.set(3,0,2);
-            scene.add(husband);
-            
-            camera.position.set(0,1.5,8);
-            document.getElementById('objective-text').textContent = 'Experience the barking miracle';
-            
-            dialogueQueue = [
-                {speaker:"Narrator", text:"Valencia, 1349. You are Constance, pregnant with Vincent."},
-                {speaker:"Husband William", text:"Constance! I hear barking from your womb!"},
-                {speaker:"You (Constance)", text:"The child barks like a hound! He will guard Christ's flock!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-        }
-
-        function loadWombHealingChapter() {
-            createGround();
-            createHouse(0,0,-10);
-            for(let i=0; i<5; i++) createTree(-20+i*10, 0, -30);
-            
-            // Blind woman approaching
-            const blind = createPerson(0x8b4513);
-            blind.position.set(-5,0,0);
-            scene.add(blind);
-            
-            // Interactive healing spot
-            const healSpot = createInteractable(0, 1.5, -1, 'heal', 'Witness Healing');
-            interactables.push(healSpot);
-            
-            camera.position.set(0,1.5,8);
-            document.getElementById('objective-text').textContent = 'Touch the womb to heal the blind woman';
-            
-            dialogueQueue = [
-                {speaker:"Blind Woman", text:"May I touch your womb? Perhaps God will heal me."},
-                {speaker:"You (Constance)", text:"Yes, dear sister. May God's will be done."},
-                {speaker:"Blind Woman", text:"I CAN SEE! Your child healed me from the womb!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-            setTimeout(() => { addConversions(1); createMiracleEffect(-5,1.5,0,0xffffff); }, 5000);
-        }
-
-        function loadBirthChapter() {
-            createGround();
-            createHouse(0,0,-10);
-            for(let i=0; i<8; i++) createTree(-30+i*8, 0, -35);
-            for(let i=0; i<15; i++) {
-                const colors = [0xFF69B4, 0xFFFF00, 0xFF0000, 0xFF00FF];
-                createFlower(-10+Math.random()*20, 0, -15+Math.random()*10, colors[Math.floor(Math.random()*colors.length)]);
-            }
-            
-            // Midwife
-            const midwife = createPerson(0xffffff);
-            midwife.position.set(2,0,-3);
-            scene.add(midwife);
-            
-            camera.position.set(0,2,8);
-            document.getElementById('objective-text').textContent = 'Witness the miraculous birth';
-            
-            dialogueQueue = [
-                {speaker:"Narrator", text:"January 23, 1350 - Vincent is born with miraculous signs."},
-                {speaker:"Midwife", text:"The child is born! And such a holy light surrounds him!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-            createMiracleEffect(0,2,-5,0xffd700);
-        }
-
-        function loadChildhoodChapter() {
-            createGround();
-            createHouse(5,0,-15);
-            createChurch(-15,0,-25);
-            for(let i=0; i<10; i++) createTree(-25+i*5, 0, -40);
-            
-            // Young Vincent
-            const youngVincent = createPerson(0x2c3e50);
-            youngVincent.position.set(0,0,5);
-            scene.add(youngVincent);
-            
-            // Father
-            const father = createPerson(0x4a2511);
-            father.position.set(3,0,3);
-            scene.add(father);
-            
-            // Interactive prayer spot
-            const praySpot = createInteractable(-12, 0.5, -20, 'preach', 'Pray at Church');
-            interactables.push(praySpot);
-            
-            camera.position.set(0,2,12);
-            document.getElementById('objective-text').textContent = 'Go to church to pray (Golden object)';
-            
-            dialogueQueue = [
-                {speaker:"Young Vincent", text:"Father, I wish to serve God and preach the Gospel!"},
-                {speaker:"Father", text:"Then you shall study, my son, and become a great servant of God."}
-            ];
-            showDialogue(dialogueQueue[0]);
-        }
-
-        function loadDominicanChapter() {
-            createGround();
-            createChurch(0,0,-20);
-            for(let i=0; i<12; i++) createTree(-30+i*5, 0, -40);
-            for(let i=0; i<8; i++) createBush(-20+i*5, 0, -10);
-            
-            // Dominican friars
-            for(let i=0; i<5; i++) {
-                const friar = createPerson(0x000000);
-                friar.position.set(-8+i*4, 0, -15);
-                scene.add(friar);
-            }
-            
-            // Vincent model
-            const vincent = createVincent();
-            vincent.position.set(0,0,-10);
-            scene.add(vincent);
-            
-            camera.position.set(0,2,15);
-            document.getElementById('objective-text').textContent = 'Take Dominican vows';
-            
-            dialogueQueue = [
-                {speaker:"Narrator", text:"Age 17 - Vincent joins the Dominican Order."},
-                {speaker:"Vincent", text:"I vow poverty, chastity, and obedience to preach God's Word!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-        }
-
-        function loadPedroLunaChapter() {
-            createGround();
-            // Papal palace
-            const palace = new THREE.Mesh(
-                new THREE.BoxGeometry(40,20,30),
-                new THREE.MeshStandardMaterial({color:0xf5deb3, roughness:0.8})
-            );
-            palace.position.set(0,10,-30);
-            palace.castShadow = true;
-            scene.add(palace);
-            
-            for(let i=0; i<8; i++) createTree(-35+i*10, 0, -50);
-            
-            // Pedro de Luna
-            const pedro = createPerson(0x8b0000);
-            pedro.position.set(-3,0,-20);
-            scene.add(pedro);
-            
-            // Vincent
-            const vincent = createVincent();
-            vincent.position.set(3,0,-20);
-            scene.add(vincent);
-            
-            camera.position.set(0,2,-5);
-            document.getElementById('objective-text').textContent = 'Meet with Cardinal Pedro de Luna';
-            
-            dialogueQueue = [
-                {speaker:"Cardinal Pedro", text:"Vincent, become my confessor. Guide my soul."},
-                {speaker:"Vincent", text:"I will serve as God wills, Your Eminence."}
-            ];
-            showDialogue(dialogueQueue[0]);
-        }
-
-        function loadPlagueChapter() {
-            scene.background = new THREE.Color(0x4a4a4a);
-            createGround();
-            createHouse(0,0,-10);
-            
-            // Sick bed
-            const bed = new THREE.Mesh(
-                new THREE.BoxGeometry(3,0.5,5),
-                new THREE.MeshStandardMaterial({color:0x8b4513})
-            );
-            bed.position.set(0,0.5,-5);
-            scene.add(bed);
-            
-            // Vincent sick
-            const sickVincent = createVincent();
-            sickVincent.position.set(0,1,-5);
-            sickVincent.rotation.z = Math.PI/2;
-            scene.add(sickVincent);
-            
-            // Dominican brothers
-            for(let i=0; i<3; i++) {
-                const brother = createPerson(0x000000);
-                brother.position.set(-3+i*3, 0, 0);
-                scene.add(brother);
-            }
-            
-            camera.position.set(0,2,10);
-            document.getElementById('objective-text').textContent = 'Vincent lies dying of plague';
-            
-            playChant('DIES_IRAE');
-            dialogueQueue = [
-                {speaker:"Narrator", text:"1398 - Vincent lies dying of plague..."},
-                {speaker:"Dominican Brother", text:"We are losing him! Pray for Father Vincent!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-        }
-
-        function loadVisionChapter() {
-            scene.background = new THREE.Color(0xffd700);
-            scene.fog = new THREE.Fog(0xffd700, 10, 100);
-            createGround();
-            
-            // Christ figure (glowing)
-            const christ = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.4,0.4,2,16),
-                new THREE.MeshStandardMaterial({
-                    color:0xffffff,
-                    emissive:0xffffff,
-                    emissiveIntensity:0.8
-                })
-            );
-            christ.position.set(0,1,-8);
-            scene.add(christ);
-            const christHead = new THREE.Mesh(
-                new THREE.SphereGeometry(0.4,16,16),
-                new THREE.MeshStandardMaterial({
-                    color:0xffffff,
-                    emissive:0xffffff,
-                    emissiveIntensity:0.8
-                })
-            );
-            christHead.position.set(0,2.5,-8);
-            scene.add(christHead);
-            
-            // Saints Dominic and Francis
-            const dominic = createPerson(0x000000);
-            dominic.position.set(-3,0,-6);
-            scene.add(dominic);
-            const francis = createPerson(0x8b4513);
-            francis.position.set(3,0,-6);
-            scene.add(francis);
-            
-            // Heavenly light
-            const light = new THREE.PointLight(0xffffff, 5, 30);
-            light.position.set(0,10,-8);
-            scene.add(light);
-            
-            camera.position.set(0,2,10);
-            document.getElementById('objective-text').textContent = 'Receive divine commission';
-            
-            dialogueQueue = [
-                {speaker:"Jesus Christ", text:"Vincent, ARISE! Go preach! The day of judgment is at hand!"},
-                {speaker:"Vincent", text:"Lord, I obey! I will preach until my last breath!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-            showMiracle("✨ HEALED BY CHRIST ✨");
-            createMiracleEffect(0,3,-8,0xffffff);
-        }
-
-        function loadAllegianceChapter() {
-            scene.background = new THREE.Color(0x87CEEB);
-            createGround();
-            createChurch(0,0,-25);
-            for(let i=0; i<10; i++) createTree(-40+i*8, 0, -45);
-            
-            // Pope Benedict XIII
-            const pope = createPerson(0xff0000);
-            pope.position.set(0,0,-20);
-            scene.add(pope);
-            
-            // Cardinals
-            for(let i=0; i<6; i++) {
-                const cardinal = createPerson(0x8b0000);
-                cardinal.position.set(-10+i*4, 0, -15);
-                scene.add(cardinal);
-            }
-            
-            // Vincent
-            const vincent = createVincent();
-            vincent.position.set(0,0,-10);
-            scene.add(vincent);
-            
-            camera.position.set(0,2,5);
-            document.getElementById('objective-text').textContent = 'Declare allegiance to the Pope';
-            
-            dialogueQueue = [
-                {speaker:"Vincent", text:"I declare Benedict XIII is the true pope. I stake my soul on this!"},
-                {speaker:"Pope Benedict XIII", text:"Go forth, Vincent. Preach and convert souls to the true Church."}
-            ];
-            showDialogue(dialogueQueue[0]);
-        }
-
-        function loadBishopsChapter() {
-            createGround();
-            createChurch(-20,0,-30);
-            for(let i=0; i<15; i++) createTree(-50+i*7, 0, -50);
-            
-            // Bishops
-            for(let i=0; i<8; i++) {
-                const bishop = createPerson(0x9b59b6);
-                bishop.position.set(-15+i*4, 0, -20);
-                scene.add(bishop);
-            }
-            
-            // Vincent preaching
-            const vincent = createVincent();
-            vincent.position.set(0,0,-15);
-            scene.add(vincent);
-            
-            // Interactive miracle spot
-            const miracleSpot = createInteractable(0, 1, -10, 'heal', 'Perform Miracle');
-            interactables.push(miracleSpot);
-            
-            camera.position.set(0,2,10);
-            document.getElementById('objective-text').textContent = 'Convince bishops with miracles (golden object)';
-            
-            dialogueQueue = [
-                {speaker:"Bishop", text:"How do we know Benedict is legitimate?"},
-                {speaker:"Vincent", text:"Test me! I will work a miracle to prove God's approval!"},
-                {speaker:"Narrator", text:"A blind man was healed, and the bishops believed."}
-            ];
-            showDialogue(dialogueQueue[0]);
-        }
-
-        function loadPreachingChapter() {
-            createGround();
-            createChurch(0,0,-25);
-            for(let i=0; i<20; i++) createTree(-60+i*6, 0, -50);
-            for(let i=0; i<15; i++) createBush(-30+Math.random()*60, 0, -10+Math.random()*20);
-            
-            // Large crowd
-            for(let i=0; i<40; i++) {
-                const person = createPerson(0x2c3e50 + Math.random()*0x222222);
-                person.position.set(-20+Math.random()*40, 0, -15+Math.random()*25);
-                scene.add(person);
-            }
-            
-            // Vincent on platform
-            const platform = new THREE.Mesh(
-                new THREE.CylinderGeometry(3,3,0.5,16),
-                new THREE.MeshStandardMaterial({color:0x8b4513})
-            );
-            platform.position.set(0,0.25,-10);
-            scene.add(platform);
-            
-            const vincent = createVincent();
-            vincent.position.set(0,0.5,-10);
-            scene.add(vincent);
-            
-            // Multiple conversion spots
-            for(let i=0; i<5; i++) {
-                const spot = createInteractable(-10+i*5, 0.5, -8+i*2, 'convert', 'Preach to Crowd');
-                interactables.push(spot);
-            }
-            
-            camera.position.set(0,2,20);
-            document.getElementById('objective-text').textContent = 'Preach to the crowds (collect golden objects)';
-            
-            dialogueQueue = [
-                {speaker:"Narrator", text:"Vincent preaches across Europe. Thousands convert daily."},
-                {speaker:"Vincent", text:"Repent! The day of judgment approaches! Turn to Christ!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-            addConversions(1000);
-        }
-
-        function loadChildRevivalChapter() {
-            createGround();
-            createHouse(10,0,-15);
-            for(let i=0; i<8; i++) createTree(-30+i*8, 0, -35);
-            
-            // Mother with dead child
-            const mother = createPerson(0x000000);
-            mother.position.set(-3,0,0);
-            scene.add(mother);
-            
-            // Dead child
-            const child = new THREE.Mesh(
-                new THREE.BoxGeometry(0.3,0.6,0.3),
-                new THREE.MeshStandardMaterial({color:0x8b4513})
-            );
-            child.position.set(-3,0.3,-1);
-            child.rotation.z = Math.PI/2;
-            scene.add(child);
-            
-            // Vincent
-            const vincent = createVincent();
-            vincent.position.set(2,0,0);
-            scene.add(vincent);
-            
-            // Miracle interaction
-            const reviveSpot = createInteractable(-3, 0.5, -1, 'heal', 'Raise Child');
-            interactables.push(reviveSpot);
-            
-            camera.position.set(0,2,8);
-            document.getElementById('objective-text').textContent = 'Raise the dead child (golden object)';
-            
-            dialogueQueue = [
-                {speaker:"Narrator", text:"A mother brings her dead child to Vincent."},
-                {speaker:"Mother", text:"Father Vincent, my baby is dead! Can you help?"},
-                {speaker:"Vincent", text:"In Christ's name, child, ARISE!"},
-                {speaker:"Narrator", text:"The child opened his eyes and lived!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-        }
-
-        function createMiracleEffect(x,y,z,color) {
+        function createMiracleEffect(x, y, z, color) {
             const particles = new THREE.Group();
-            for(let i=0; i<30; i++) {
+            for(let i = 0; i < 40; i++) {
                 const particle = new THREE.Mesh(
-                    new THREE.SphereGeometry(0.1,4,4),
+                    new THREE.SphereGeometry(0.12, 6, 6),
                     new THREE.MeshBasicMaterial({
-                        color:color,
-                        transparent:true,
-                        opacity:0.8
+                        color: color, 
+                        transparent: true, 
+                        opacity: 0.9
                     })
                 );
                 particle.position.set(
-                    x + (Math.random()-0.5)*3,
-                    y + (Math.random()-0.5)*3,
-                    z + (Math.random()-0.5)*3
+                    x + (Math.random() - 0.5) * 3,
+                    y + (Math.random() - 0.5) * 3,
+                    z + (Math.random() - 0.5) * 3
                 );
                 particles.add(particle);
             }
             scene.add(particles);
             
-            let rotation = 0;
-            const animateParticles = () => {
-                rotation += 0.02;
-                particles.rotation.y = rotation;
-                particles.children.forEach((p,i) => {
-                    p.position.y += Math.sin(rotation + i) * 0.01;
+            let rot = 0;
+            const animate = () => {
+                rot += 0.03;
+                particles.rotation.y = rot;
+                particles.children.forEach((p, i) => {
+                    p.position.y += Math.sin(rot + i * 0.5) * 0.02;
                 });
-                if(rotation < 6) requestAnimationFrame(animateParticles);
+                if(rot < 6) requestAnimationFrame(animate);
                 else scene.remove(particles);
             };
-            animateParticles();
+            animate();
         }
 
-        function loadSeveredHeadChapter() {
+        // CHAPTER LOADERS
+        function loadWombBarkingChapter() {
             createGround();
-            camera.position.set(0,2,10);
-            dialogueQueue = [
-                {speaker:"Narrator", text:"In Barcelona, a man's severed head was brought to Vincent."},
-                {speaker:"Vincent", text:"In the name of Jesus Christ, I command you to speak!"},
-                {speaker:"Severed Head", text:"I am saved by Christ's mercy. Now I return to rest."},
-                {speaker:"Crowd", text:"A MIRACLE! The dead spoke!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-            setTimeout(() => showMiracle("💀 THE HEAD SPEAKS 💀"), 7000);
-            addConversions(100);
+            createHouse(0, 0, -10);
+            for(let i = 0; i < 5; i++) createTree(-20 + i * 10, 0, -30);
+            for(let i = 0; i < 10; i++) createBush(-15 + Math.random() * 30, 0, -20 + Math.random() * 10);
+
+            createNPC(5, 0, 3, 0x4a2511);
+            createInteractable(5, 1, 3, 'talk', 'Talk to William', [
+                {speaker: "William (Husband)", text: "Constance, do you hear that sound? It's coming from your womb!"},
+                {speaker: "You (Constance)", text: "Yes! The child barks like a dog! He will be a hound of the Lord!"}
+            ]);
+
+            createNPC(-5, 0, 5, 0x8b4513);
+            createInteractable(-5, 1, 5, 'talk', 'Talk to Neighbor', [
+                {speaker: "Neighbor", text: "We heard the barking from outside! This is a miracle from God!"}
+            ]);
+            
+            updateRadar();
+        }
+
+        function loadWombHealingChapter() {
+            createGround();
+            createHouse(0, 0, -10);
+            for(let i = 0; i < 5; i++) createTree(-20 + i * 10, 0, -30);
+
+            createNPC(-6, 0, 4, 0x2c3e50);
+            createInteractable(-6, 1, 4, 'heal', 'Touch blind woman', [
+                {speaker: "Blind Woman", text: "Please, may I touch your womb? I have been blind for years!"},
+                {speaker: "You (Constance)", text: "Yes, sister. May God's will be done."},
+                {speaker: "Blind Woman", text: "I CAN SEE! Your child healed me! This baby is blessed by God!"}
+            ], 'heal', 1);
+            
+            updateRadar();
+        }
+
+        function loadBirthChapter() {
+            createGround();
+            createHouse(0, 0, -10);
+            for(let i = 0; i < 8; i++) createTree(-30 + i * 8, 0, -35);
+
+            createNPC(3, 0, -5, 0xffffff);
+            createInteractable(3, 1, -5, 'birth', 'Give Birth', [
+                {speaker: "Midwife", text: "The child is born! Look at the holy light surrounding him!"},
+                {speaker: "Narrator", text: "January 23, 1350 - Vincent Ferrer is born with miraculous signs."}
+            ], 'heal', 0);
+            
+            updateRadar();
+        }
+
+        function loadChildhoodChapter() {
+            createGround();
+            createHouse(10, 0, -15);
+            createChurch(-15, 0, -25);
+            for(let i = 0; i < 10; i++) createTree(-25 + i * 5, 0, -40);
+
+            createInteractable(-12, 0.5, -20, 'pray', 'Pray at Church', [
+                {speaker: "Young Vincent", text: "Lord, I dedicate my life to You. I will serve You always."}
+            ]);
+
+            createNPC(8, 0, -10, 0x4a2511);
+            createInteractable(8, 1, -10, 'talk', 'Talk to Father', [
+                {speaker: "Father", text: "Vincent, I see the calling of God upon you. You will do great things."}
+            ]);
+            
+            updateRadar();
+        }
+
+        function loadDominicanChapter() {
+            createGround();
+            createChurch(0, 0, -20);
+            for(let i = 0; i < 12; i++) createTree(-30 + i * 5, 0, -40);
+
+            for(let i = 0; i < 5; i++) createNPC(-8 + i * 4, 0, -15, 0x000000);
+
+            createInteractable(0, 0.5, -15, 'vows', 'Take Dominican Vows', [
+                {speaker: "Vincent Ferrer", text: "I vow poverty, chastity, and obedience. I will preach the Gospel of Christ!"},
+                {speaker: "Prior", text: "Welcome to the Order of Preachers, Brother Vincent."}
+            ]);
+            
+            updateRadar();
+        }
+
+        function loadPreachingChapter() {
+            createGround();
+            createChurch(0, 0, -25);
+            for(let i = 0; i < 20; i++) createTree(-60 + i * 6, 0, -50);
+
+            for(let i = 0; i < 40; i++) {
+                createNPC(-20 + Math.random() * 40, 0, -15 + Math.random() * 25, 0x2c3e50);
+            }
+
+            for(let i = 0; i < 5; i++) {
+                createInteractable(-15 + i * 8, 0.5, -10 + i * 3, 'preach', `Preach to Group ${i + 1}`, [
+                    {speaker: "Vincent Ferrer", text: "Repent! The day of judgment draws near! Turn to Christ and be saved!"},
+                    {speaker: "Crowd", text: "We believe! We will follow Christ!"}
+                ], 'preach', 200);
+            }
+            
+            updateRadar();
         }
 
         function loadSynagogueChapter() {
             createGround();
-            for(let i=0; i<20; i++) {
-                const p = createPerson();
-                p.position.set(-10+Math.random()*20, 0, -20+Math.random()*10);
-                scene.add(p);
+            for(let i = 0; i < 20; i++) createNPC(-10 + Math.random() * 20, 0, -20 + Math.random() * 10, 0x000080);
+
+            for(let i = 0; i < 3; i++) {
+                createInteractable(-10 + i * 10, 0.5, -15 + i * 5, 'preach', `Preach in Hebrew to Group ${i + 1}`, [
+                    {speaker: "Vincent (in Hebrew)", text: "Your Scriptures point to Jesus the Messiah! Isaiah 53 speaks of Him!"},
+                    {speaker: "Jews", text: "This man knows our Torah perfectly! We must listen!"}
+                ], 'convert', 2666);
             }
-            camera.position.set(0,2,10);
-            dialogueQueue = [
-                {speaker:"Vincent (in Hebrew)", text:"Listen, children of Abraham! Your Scriptures point to Jesus!"},
-                {speaker:"Rabbi", text:"You speak perfect Hebrew and know our texts! We must consider this."},
-                {speaker:"Narrator", text:"Thousands of Jews converted through Vincent's Hebrew preaching."}
-            ];
-            showDialogue(dialogueQueue[0]);
-            addConversions(8000);
+            
+            updateRadar();
         }
 
         function loadMosqueChapter() {
             createGround();
-            for(let i=0; i<25; i++) {
-                const p = createPerson();
-                p.position.set(-15+Math.random()*30, 0, -20+Math.random()*10);
-                scene.add(p);
+            for(let i = 0; i < 25; i++) createNPC(-15 + Math.random() * 30, 0, -20 + Math.random() * 10, 0x006400);
+
+            for(let i = 0; i < 3; i++) {
+                createInteractable(-10 + i * 10, 0.5, -15 + i * 5, 'preach', `Preach in Arabic to Group ${i + 1}`, [
+                    {speaker: "Vincent (in Arabic)", text: "Isa - Jesus - is the Way, the Truth, and the Life! Come to Him!"},
+                    {speaker: "Muslims", text: "No Christian has spoken our language so perfectly! Tell us more!"}
+                ], 'convert', 1666);
             }
-            camera.position.set(0,2,10);
-            dialogueQueue = [
-                {speaker:"Vincent (in Arabic)", text:"Peace be upon you! Let me show you Isa - Jesus the Messiah!"},
-                {speaker:"Imam", text:"No Christian has spoken our tongue so well. Tell us more."},
-                {speaker:"Narrator", text:"Thousands of Muslims converted through Vincent's Arabic preaching."}
-            ];
-            showDialogue(dialogueQueue[0]);
-            addConversions(5000);
+            
+            updateRadar();
+        }
+
+        function loadChildRevivalChapter() {
+            createGround();
+            createHouse(10, 0, -15);
+            for(let i = 0; i < 8; i++) createTree(-30 + i * 8, 0, -35);
+
+            createNPC(-8, 0, 5, 0x000000);
+            createInteractable(-8, 0.5, 5, 'heal', 'Raise First Dead Child', [
+                {speaker: "Mother", text: "Father Vincent, my baby is dead! Please help!"},
+                {speaker: "Vincent", text: "In the name of Jesus Christ, CHILD, ARISE!"},
+                {speaker: "Mother", text: "He's alive! He opened his eyes! Praise God!"}
+            ], 'heal', 50);
+
+            createNPC(8, 0, 5, 0x8b0000);
+            createInteractable(8, 0.5, 5, 'heal', 'Raise Second Dead Child', [
+                {speaker: "Mother", text: "Saint Vincent, work your miracle again!"},
+                {speaker: "Vincent", text: "Through Christ's power, LIVE AGAIN!"},
+                {speaker: "Crowd", text: "He raises the dead! This is a true saint!"}
+            ], 'heal', 50);
+            
+            updateRadar();
         }
 
         function loadWingsChapter() {
             createGround();
-            camera.position.set(0,5,15);
-            canFly = true;
-            dialogueQueue = [
-                {speaker:"Narrator", text:"During a sermon, Vincent suddenly grew angel wings!"},
-                {speaker:"Vincent", text:"Someone is drowning! In Christ's name, I fly to save them!"},
-                {speaker:"Crowd", text:"He flies like an angel! Glory to God!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-            showMiracle("🕊️ WINGS OF ANGELS 🕊️");
-            addConversions(500);
-        }
+            for(let i = 0; i < 30; i++) createNPC(-15 + Math.random() * 30, 0, -15 + Math.random() * 20, 0x4a4a4a);
 
-        function loadMultiplicationChapter() {
-            createGround();
-            camera.position.set(0,2,10);
-            dialogueQueue = [
-                {speaker:"Narrator", text:"A poor family had no food. Vincent blessed their meager bread."},
-                {speaker:"Vincent", text:"In Jesus' name, may this bread multiply to feed all!"},
-                {speaker:"Family", text:"The bread multiplies! We have enough for the whole village!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-            showMiracle("🍞 FOOD MULTIPLIED 🍞");
-            addConversions(30);
+            createInteractable(0, 0.5, -20, 'fly', 'Receive Wings and Fly', [
+                {speaker: "Vincent", text: "Someone drowns in the harbor! Lord, give me wings!"},
+                {speaker: "Narrator", text: "Suddenly, angel wings sprouted from Vincent's back!"},
+                {speaker: "Crowd", text: "He flies like an angel! Glory to God!"}
+            ], 'heal', 500);
+            
+            updateRadar();
         }
 
         function loadResurrectionChapter() {
             createGround();
-            camera.position.set(0,2,10);
-            dialogueQueue = [
-                {speaker:"Narrator", text:"Workers found an ancient tomb in Salamanca."},
-                {speaker:"Vincent", text:"I command you: ARISE and declare if you are saved or damned!"},
-                {speaker:"Dead Man", text:"I am saved by God's grace. I return now to rest."},
-                {speaker:"Crowd", text:"He raised the dead! This man is a saint!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-            setTimeout(() => showMiracle("☠️ THE DEAD ARISE ☠️"), 6000);
-            addConversions(200);
-        }
+            for(let i = 0; i < 15; i++) createNPC(-10 + Math.random() * 20, 0, -15 + Math.random() * 10, 0x2c3e50);
 
-        function loadLameWalkChapter() {
-            createGround();
-            camera.position.set(0,2,10);
-            dialogueQueue = [
-                {speaker:"Narrator", text:"A crippled man crawled to Vincent's feet."},
-                {speaker:"Cripple", text:"Father Vincent, I have not walked in twenty years!"},
-                {speaker:"Vincent", text:"In Jesus' name, STAND and WALK!"},
-                {speaker:"Healed Man", text:"I can walk! I can run! Praise God and Saint Vincent!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-            setTimeout(() => showMiracle("🚶 THE LAME WALK 🚶"), 5000);
-            addConversions(75);
-        }
-
-        function loadConstanceChapter() {
-            createGround();
-            camera.position.set(0,2,10);
-            dialogueQueue = [
-                {speaker:"Vincent", text:"I can no longer support Benedict XIII. The Church needs unity."},
-                {speaker:"Benedict XIII", text:"Vincent, you abandon me after all these years?"},
-                {speaker:"Vincent", text:"I love you, but I love the Church more. The schism must end."}
-            ];
-            showDialogue(dialogueQueue[0]);
-        }
-
-        function loadMartinChapter() {
-            createGround();
-            camera.position.set(0,2,10);
-            dialogueQueue = [
-                {speaker:"Vincent", text:"Pope Martin V is the true Vicar of Christ! The Church is one!"},
-                {speaker:"Cardinal", text:"Your support ends the schism. The Church is united again!"}
-            ];
-            showDialogue(dialogueQueue[0]);
+            createInteractable(0, 0.5, -15, 'resurrect', 'Command Corpse to Testify', [
+                {speaker: "Vincent", text: "In Christ's name, whoever you are in this tomb, ARISE and declare if you are saved or damned!"},
+                {speaker: "Dead Man", text: "I am saved by God's mercy. I now return peacefully to rest."},
+                {speaker: "Crowd", text: "The dead spoke! This is a miracle from heaven!"}
+            ], 'heal', 200);
+            
+            updateRadar();
         }
 
         function loadDeathChapter() {
             createGround();
-            camera.position.set(0,2,8);
-            playChant('DIES_IRAE');
-            dialogueQueue = [
-                {speaker:"Narrator", text:"April 5, 1419 - Vincent's final moments."},
-                {speaker:"Vincent", text:"Lord Jesus... into Thy hands... I commend my spirit..."},
-                {speaker:"Narrator", text:"The bells rang by themselves. A brilliant light filled the room."}
-            ];
-            showDialogue(dialogueQueue[0]);
-            setTimeout(() => showMiracle("🕊️ A SAINT ENTERS HEAVEN 🕊️"), 8000);
+            createHouse(0, 0, -10);
+            for(let i = 0; i < 5; i++) createNPC(-6 + i * 3, 0, 0, 0x000000);
+
+            createInteractable(0, 0.5, -8, 'die', 'Receive Last Rites', [
+                {speaker: "Vincent", text: "Lord Jesus... into Thy hands... I commend my spirit..."},
+                {speaker: "Narrator", text: "The bells rang by themselves. A brilliant light filled the room. The saint entered heaven."}
+            ], 'heal', 0);
+            
+            updateRadar();
         }
 
         function loadFuneralChapter() {
             createGround();
-            for(let i=0; i<50; i++) {
-                const p = createPerson();
-                p.position.set(-20+Math.random()*40, 0, -20+Math.random()*20);
-                scene.add(p);
-            }
-            camera.position.set(0,2,15);
-            dialogueQueue = [
-                {speaker:"Narrator", text:"Over 100 miracles at his funeral in just 2 days!"},
-                {speaker:"Blind Man", text:"I touched his body and now I see!"},
-                {speaker:"Cripple", text:"I walked to his tomb on crutches, now I dance!"}
-            ];
-            showDialogue(dialogueQueue[0]);
-            for(let i=0; i<5; i++) {
-                setTimeout(() => showMiracle("✨ MIRACLE ✨"), i*2000);
-            }
+            createChurch(0, 0, -25);
+            for(let i = 0; i < 50; i++) createNPC(-20 + Math.random() * 40, 0, -20 + Math.random() * 20, 0x000000);
+
+            createInteractable(-10, 0.5, -15, 'witness', 'Witness Blind Man Healed', [
+                {speaker: "Blind Man", text: "I touched the saint's body and now I see! Miracle!"}
+            ], 'heal', 0);
+
+            createInteractable(0, 0.5, -15, 'witness', 'Witness Cripple Walk', [
+                {speaker: "Cripple", text: "I crawled here but now I walk! Saint Vincent healed me!"}
+            ], 'heal', 0);
+
+            createInteractable(10, 0.5, -15, 'witness', 'Witness Deaf Child Hear', [
+                {speaker: "Mother", text: "My son can hear! He spoke his first words at the tomb!"}
+            ], 'heal', 0);
+            
+            updateRadar();
         }
 
         function loadCanonizationChapter() {
             createGround();
-            camera.position.set(0,2,15);
-            dialogueQueue = [
-                {speaker:"Narrator", text:"Rome, 1455 - You are Brother Thomas, Vincent's former pupil."},
-                {speaker:"You (Thomas)", text:"My teacher... my spiritual father... declared a SAINT!"},
-                {speaker:"Pope Callixtus III", text:"We declare Vincent Ferrer a SAINT! 873 miracles confirmed!"},
-                {speaker:"You (Thomas)", text:"I witnessed his holiness. Now all the Church proclaims it!"},
-                {speaker:"Narrator", text:"Final count: 25,000 Jews converted, 8,000 Muslims, countless Christians from sin."}
-            ];
-            showDialogue(dialogueQueue[0]);
-            setTimeout(() => {
-                document.getElementById('chapter-title').innerHTML = `
-                    <div style="color:#d4af37; font-size:36px;">✝️ JOURNEY COMPLETE ✝️</div>
-                    <div style="color:#f0e6d2; font-size:18px; margin-top:20px;">
-                        Saint Vincent Ferrer<br>
-                        Souls Converted: ${soulsConverted}<br><br>
-                        "Fear the Lord and give Him glory"<br>
-                        - Revelation 14:7<br><br>
-                        Saint Vincent Ferrer, pray for us!
-                    </div>
-                `;
-                document.getElementById('chapter-title').style.display = 'block';
-            }, 15000);
-        }
+            const basilica = new THREE.Mesh(
+                new THREE.BoxGeometry(50, 30, 40),
+                new THREE.MeshStandardMaterial({color: 0xf5f5dc, roughness: 0.6, metalness: 0.1})
+            );
+            basilica.position.set(0, 15, -30);
+            basilica.castShadow = true;
+            basilica.receiveShadow = true;
+            scene.add(basilica);
+            
+            buildings.push({x: 0, z: -30, radius: 28});
 
-        function loadDefaultChapter() {
-            createGround();
-            camera.position.set(0,2,10);
-        }
+            for(let i = 0; i < 100; i++) {
+                createNPC(-20 + Math.random() * 40, 0, -5 + Math.random() * 25, 0x8b0000);
+            }
 
-        function requestPointerLock() {
-            renderer.domElement.requestPointerLock();
+            createInteractable(0, 0.5, -20, 'witness', 'Hear Pope\'s Declaration', [
+                {speaker: "Pope Callixtus III", text: "We declare that Vincent Ferrer is inscribed in the catalog of Saints!"},
+                {speaker: "You (Brother Thomas)", text: "My teacher is now SAINT Vincent Ferrer! I witnessed his holiness!"},
+                {speaker: "Narrator", text: "873 miracles confirmed. 25,000 Jews and 8,000 Muslims converted."}
+            ]);
+            
+            updateRadar();
         }
 
         function onMouseMove(e) {
-            if(document.pointerLockElement === renderer.domElement) {
-                isPointerLocked = true;
-                camera.rotation.y -= (e.movementX || 0) * ROTATION_SPEED;
-                camera.rotation.x -= (e.movementY || 0) * ROTATION_SPEED;
-                camera.rotation.x = Math.max(-Math.PI/2, Math.min(Math.PI/2, camera.rotation.x));
-            }
+            if(isMobile) return;
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            cameraAngle += e.movementX * 0.003;
         }
 
         function onResize() {
@@ -1264,45 +1249,84 @@
         }
 
         function update(dt) {
-            if(gameState !== 'playing') return;
+            if(gameState !== 'playing' || !playerModel) return;
+
             const speed = MOVE_SPEED * dt;
-            const forward = new THREE.Vector3();
-            const right = new THREE.Vector3();
-            camera.getWorldDirection(forward);
-            forward.y = 0;
-            forward.normalize();
-            right.crossVectors(camera.up, forward).normalize();
+            const forward = new THREE.Vector3(Math.sin(cameraAngle), 0, Math.cos(cameraAngle));
+            const right = new THREE.Vector3(Math.cos(cameraAngle), 0, -Math.sin(cameraAngle));
 
-            if(keys['w']) camera.position.add(forward.multiplyScalar(speed));
-            if(keys['s']) camera.position.add(forward.multiplyScalar(-speed));
-            if(keys['a']) camera.position.add(right.multiplyScalar(speed));
-            if(keys['d']) camera.position.add(right.multiplyScalar(-speed));
-            if(keys[' '] && canFly) camera.position.y += speed;
-            if(keys['shift'] && canFly) camera.position.y -= speed;
+            let moveX = 0, moveZ = 0;
 
-            if(joyActive) {
-                camera.position.add(right.clone().multiplyScalar(-joyDeltaX * speed));
-                camera.position.add(forward.clone().multiplyScalar(-joyDeltaY * speed));
+            // UNINVERTED CONTROLS - W moves forward in camera direction
+            if(keys['w']) {
+                moveX += forward.x * speed;
+                moveZ += forward.z * speed;
+            }
+            if(keys['s']) {
+                moveX -= forward.x * speed;
+                moveZ -= forward.z * speed;
+            }
+            if(keys['a']) {
+                moveX -= right.x * speed;
+                moveZ -= right.z * speed;
+            }
+            if(keys['d']) {
+                moveX += right.x * speed;
+                moveZ += right.z * speed;
             }
 
-            if(!canFly && camera.position.y < 2) camera.position.y = 2;
-            
-            // Check for interactive objects
-            checkInteractions();
-            
-            // Animate interactive objects (floating)
+            // Mobile joystick - also uninverted
+            if(joyActive) {
+                moveX -= right.x * joyDeltaX * speed;
+                moveZ -= right.z * joyDeltaX * speed;
+                moveX -= forward.x * joyDeltaY * speed;
+                moveZ -= forward.z * joyDeltaY * speed;
+            }
+
+            // Apply movement with collision detection
+            const newX = playerModel.position.x + moveX;
+            const newZ = playerModel.position.z + moveZ;
+
+            if(!checkCollision(newX, playerModel.position.z)) {
+                playerModel.position.x = newX;
+            }
+            if(!checkCollision(playerModel.position.x, newZ)) {
+                playerModel.position.z = newZ;
+            }
+
+            // Rotate player to face movement direction
+            if(keys['w'] || keys['s'] || keys['a'] || keys['d'] || joyActive) {
+                playerModel.rotation.y = cameraAngle;
+            }
+
+            // Camera follow player (third person)
+            cameraTarget.copy(playerModel.position);
+            const camX = cameraTarget.x - Math.sin(cameraAngle) * CAMERA_DISTANCE;
+            const camZ = cameraTarget.z - Math.cos(cameraAngle) * CAMERA_DISTANCE;
+            camera.position.x = camX;
+            camera.position.y = cameraTarget.y + CAMERA_HEIGHT;
+            camera.position.z = camZ;
+            camera.lookAt(playerModel.position.x, playerModel.position.y + 1, playerModel.position.z);
+
+            // Check for nearby interactables
+            const nearest = findNearestInteractable();
+            if(nearest) {
+                document.getElementById('objective-text').textContent = `Press E: ${nearest.userData.label}`;
+            } else {
+                document.getElementById('objective-text').textContent = CHAPTERS[currentChapter].objective;
+            }
+
+            // Animate interactables
             interactables.forEach(obj => {
-                if(obj.userData.floatOffset !== undefined) {
-                    obj.position.y = 0.5 + Math.sin(Date.now() * 0.002 + obj.userData.floatOffset) * 0.3;
-                    obj.rotation.y += 0.02;
-                }
+                obj.position.y = 0.5 + Math.sin(Date.now() * 0.003 + obj.userData.floatOffset) * 0.3;
+                obj.rotation.y += 0.03;
             });
         }
 
         let lastTime = 0;
         function animate(time = 0) {
             requestAnimationFrame(animate);
-            const dt = Math.min((time - lastTime) / 1000, 0.016);
+            const dt = Math.min((time - lastTime) / 1000, 0.05);
             lastTime = time;
             update(dt);
             renderer.render(scene, camera);
