@@ -37,6 +37,9 @@
         #next-chapter-button { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #4a9eff; color: white; border: none; padding: 15px 40px; font-size: 18px; font-weight: bold; border-radius: 10px; cursor: pointer; box-shadow: 0 6px 0 #2c5aa0; z-index: 200; display: none; }
         #next-chapter-button:hover { background: #6fb1ff; }
         #next-chapter-button:active { transform: translateX(-50%) translateY(3px); box-shadow: 0 3px 0 #2c5aa0; }
+        #fullscreen-button { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(74, 158, 255, 0.9); color: white; border: 3px solid #4a9eff; padding: 12px 30px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; z-index: 300; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        #fullscreen-button:hover { background: rgba(111, 177, 255, 0.9); }
+        #fullscreen-button:active { transform: translateX(-50%) translateY(2px); }
         #mini-radar { position: fixed; bottom: 20px; right: 20px; width: 150px; height: 150px; background: rgba(20, 20, 40, 0.9); border: 3px solid #4a9eff; border-radius: 50%; z-index: 100; }
         .radar-player { position: absolute; width: 8px; height: 8px; background: #00ff00; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 10px #00ff00; }
         .radar-objective { position: absolute; width: 10px; height: 10px; background: #ffd700; border-radius: 50%; box-shadow: 0 0 10px #ffd700; animation: radarPulse 1s infinite; }
@@ -78,6 +81,7 @@
     <div id="mobile-joystick"><div class="joystick-base"></div><div class="joystick-stick"></div></div>
     <button id="interact-button">E</button>
     <button id="next-chapter-button">Continue to Next Chapter →</button>
+    <button id="fullscreen-button">Enter Fullscreen 📱</button>
     
     <div id="mini-radar">
         <div class="radar-scan"></div>
@@ -217,10 +221,11 @@
         let tasksCompleted = 0, tasksRequired = 0;
         let canFly = false, soulsConverted = 0, dialogueQueue = [];
         let audioContext, masterGain;
-        const keys = {}, interactables = [], buildings = [];
+        const keys = {}, interactables = [], buildings = [], doors = [];
         let mouseX = 0, mouseY = 0, cameraAngle = 0;
         let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
         let joyActive = false, joyStartX = 0, joyStartY = 0, joyDeltaX = 0, joyDeltaY = 0;
+        let isIndoors = false, currentBuilding = null;
 
         // Gregorian Chant
         const GREGORIAN_SCALE = {
@@ -270,6 +275,7 @@
             document.getElementById('dialogue-continue').addEventListener('click', advanceDialogue);
             document.getElementById('interact-button').addEventListener('click', tryInteract);
             document.getElementById('next-chapter-button').addEventListener('click', nextChapter);
+            document.getElementById('fullscreen-button').addEventListener('click', toggleFullscreen);
             document.addEventListener('keydown', e => { 
                 keys[e.key.toLowerCase()] = true; 
                 if(e.key.toLowerCase() === 'e') tryInteract();
@@ -281,6 +287,33 @@
             if(isMobile) setupMobileJoystick();
             initAudio();
             animate();
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement) {
+                const elem = document.documentElement;
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else if (elem.mozRequestFullScreen) {
+                    elem.mozRequestFullScreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                }
+                document.getElementById('fullscreen-button').textContent = 'Exit Fullscreen ✕';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                document.getElementById('fullscreen-button').textContent = 'Enter Fullscreen 📱';
+            }
         }
 
         function initAudio() {
@@ -363,6 +396,9 @@
             clearScene();
             interactables.length = 0;
             buildings.length = 0;
+            doors.length = 0;
+            isIndoors = false;
+            currentBuilding = null;
             document.getElementById('next-chapter-button').style.display = 'none';
 
             // Create player model
@@ -481,10 +517,242 @@
         }
 
         function tryInteract() {
+            // Check for doors first
+            const nearestDoor = findNearestDoor();
+            if(nearestDoor) {
+                openDoor(nearestDoor);
+                return;
+            }
+            
+            // Then check for regular interactables
             const nearest = findNearestInteractable();
             if(nearest) {
                 executeInteraction(nearest);
             }
+        }
+
+        function findNearestDoor() {
+            if(!playerModel) return null;
+            let nearest = null;
+            let nearestDist = 3;
+            doors.forEach(door => {
+                const dist = playerModel.position.distanceTo(door.position);
+                if(dist < nearestDist) {
+                    nearest = door;
+                    nearestDist = dist;
+                }
+            });
+            return nearest;
+        }
+
+        function openDoor(door) {
+            if(door.userData.isOpen) {
+                // Door already open, pass through
+                return;
+            }
+            
+            // Open the door
+            door.userData.isOpen = true;
+            
+            // Animate door opening
+            const openAngle = door.userData.openAngle || Math.PI/2;
+            const targetRotation = door.rotation.y + openAngle;
+            
+            let currentRot = door.rotation.y;
+            const animateDoor = () => {
+                currentRot += 0.1;
+                door.rotation.y = currentRot;
+                if(currentRot < targetRotation) {
+                    requestAnimationFrame(animateDoor);
+                } else {
+                    door.rotation.y = targetRotation;
+                }
+            };
+            animateDoor();
+            
+            // If this door leads to interior, transition
+            if(door.userData.leadsToInterior) {
+                setTimeout(() => {
+                    enterBuilding(door.userData.buildingId);
+                }, 500);
+            } else if(door.userData.leadsToExterior) {
+                setTimeout(() => {
+                    exitBuilding();
+                }, 500);
+            }
+        }
+
+        function enterBuilding(buildingId) {
+            isIndoors = true;
+            currentBuilding = buildingId;
+            
+            // Clear exterior
+            clearSceneObjects();
+            
+            // Create interior
+            createBuildingInterior(buildingId);
+            
+            // Position player inside
+            playerModel.position.set(0, 0, 5);
+            
+            showMiracle('Entered Building');
+        }
+
+        function exitBuilding() {
+            isIndoors = false;
+            const lastBuilding = currentBuilding;
+            currentBuilding = null;
+            
+            // Clear interior
+            clearSceneObjects();
+            
+            // Reload current chapter exterior
+            loadChapter(currentChapter);
+            
+            // Position player outside building
+            if(lastBuilding) {
+                const building = buildings.find(b => b.id === lastBuilding);
+                if(building) {
+                    playerModel.position.set(building.x, 0, building.z + 10);
+                }
+            }
+            
+            showMiracle('Exited Building');
+        }
+
+        function clearSceneObjects() {
+            // Remove all scene objects except lights and camera
+            const objectsToRemove = [];
+            scene.children.forEach(obj => {
+                if(obj.type !== 'AmbientLight' && obj.type !== 'DirectionalLight' && obj !== camera && obj !== playerModel) {
+                    objectsToRemove.push(obj);
+                }
+            });
+            objectsToRemove.forEach(obj => {
+                if(obj.geometry) obj.geometry.dispose();
+                if(obj.material) {
+                    if(Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+                    else obj.material.dispose();
+                }
+                scene.remove(obj);
+            });
+        }
+
+        function createBuildingInterior(buildingId) {
+            // Create interior floor
+            const floor = new THREE.Mesh(
+                new THREE.PlaneGeometry(20, 20),
+                new THREE.MeshStandardMaterial({color: 0x8b7355, roughness: 0.9})
+            );
+            floor.rotation.x = -Math.PI/2;
+            floor.receiveShadow = true;
+            scene.add(floor);
+            
+            // Create walls
+            const wallMaterial = new THREE.MeshStandardMaterial({color: 0xd4a373, roughness: 0.9});
+            
+            // Back wall
+            const backWall = new THREE.Mesh(
+                new THREE.BoxGeometry(20, 6, 0.5),
+                wallMaterial
+            );
+            backWall.position.set(0, 3, -10);
+            backWall.castShadow = true;
+            backWall.receiveShadow = true;
+            scene.add(backWall);
+            
+            // Left wall
+            const leftWall = new THREE.Mesh(
+                new THREE.BoxGeometry(0.5, 6, 20),
+                wallMaterial
+            );
+            leftWall.position.set(-10, 3, 0);
+            leftWall.castShadow = true;
+            leftWall.receiveShadow = true;
+            scene.add(leftWall);
+            
+            // Right wall
+            const rightWall = new THREE.Mesh(
+                new THREE.BoxGeometry(0.5, 6, 20),
+                wallMaterial
+            );
+            rightWall.position.set(10, 3, 0);
+            rightWall.castShadow = true;
+            rightWall.receiveShadow = true;
+            scene.add(rightWall);
+            
+            // Front wall with door opening
+            const frontWallLeft = new THREE.Mesh(
+                new THREE.BoxGeometry(7, 6, 0.5),
+                wallMaterial
+            );
+            frontWallLeft.position.set(-6.5, 3, 10);
+            frontWallLeft.castShadow = true;
+            scene.add(frontWallLeft);
+            
+            const frontWallRight = new THREE.Mesh(
+                new THREE.BoxGeometry(7, 6, 0.5),
+                wallMaterial
+            );
+            frontWallRight.position.set(6.5, 3, 10);
+            frontWallRight.castShadow = true;
+            scene.add(frontWallRight);
+            
+            // Exit door (interior side)
+            const exitDoor = createDoor(0, 0, 9.5, false, null, true);
+            doors.push(exitDoor);
+            
+            // Add furniture based on building type
+            if(buildingId && buildingId.includes('house')) {
+                // Add bed
+                const bed = new THREE.Mesh(
+                    new THREE.BoxGeometry(3, 0.5, 4),
+                    new THREE.MeshStandardMaterial({color: 0x8b4513})
+                );
+                bed.position.set(-5, 0.5, -5);
+                bed.castShadow = true;
+                scene.add(bed);
+                
+                // Add table
+                const table = new THREE.Mesh(
+                    new THREE.BoxGeometry(3, 0.2, 2),
+                    new THREE.MeshStandardMaterial({color: 0x654321})
+                );
+                table.position.set(5, 1.5, -3);
+                table.castShadow = true;
+                scene.add(table);
+            } else if(buildingId && buildingId.includes('church')) {
+                // Add altar
+                const altar = new THREE.Mesh(
+                    new THREE.BoxGeometry(4, 1.5, 2),
+                    new THREE.MeshStandardMaterial({color: 0xd4af37, metalness: 0.5})
+                );
+                altar.position.set(0, 0.75, -8);
+                altar.castShadow = true;
+                scene.add(altar);
+                
+                // Add cross on altar
+                const cross = new THREE.Group();
+                const crossV = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.2, 1.5, 0.2),
+                    new THREE.MeshStandardMaterial({color: 0xffd700, emissive: 0xffd700, emissiveIntensity: 0.5})
+                );
+                crossV.position.y = 0.75;
+                cross.add(crossV);
+                const crossH = new THREE.Mesh(
+                    new THREE.BoxGeometry(1, 0.2, 0.2),
+                    new THREE.MeshStandardMaterial({color: 0xffd700, emissive: 0xffd700, emissiveIntensity: 0.5})
+                );
+                crossH.position.y = 0.5;
+                cross.add(crossH);
+                cross.position.set(0, 1.5, -8);
+                scene.add(cross);
+            }
+            
+            // Add interior lighting
+            const interiorLight = new THREE.PointLight(0xffa500, 1.5, 20);
+            interiorLight.position.set(0, 5, 0);
+            scene.add(interiorLight);
         }
 
         function findNearestInteractable() {
@@ -837,7 +1105,7 @@
             return group;
         }
 
-        function createHouse(x, y, z) {
+        function createHouse(x, y, z, id = 'house') {
             const wall = new THREE.Mesh(
                 new THREE.BoxGeometry(12, 6, 12),
                 new THREE.MeshStandardMaterial({color: 0xd4a373, roughness: 0.9})
@@ -856,10 +1124,22 @@
             roof.castShadow = true;
             scene.add(roof);
             
-            buildings.push({x: x, z: z, radius: 7});
+            // Create door
+            const door = createDoor(x, y, z + 6, true, id);
+            doors.push(door);
+            
+            // Door frame
+            const doorFrame = new THREE.Mesh(
+                new THREE.BoxGeometry(2.5, 4.5, 0.3),
+                new THREE.MeshStandardMaterial({color: 0x654321})
+            );
+            doorFrame.position.set(x, y + 2, z + 6.2);
+            scene.add(doorFrame);
+            
+            buildings.push({x: x, z: z, radius: 7, id: id});
         }
 
-        function createChurch(x, y, z) {
+        function createChurch(x, y, z, id = 'church') {
             const main = new THREE.Mesh(
                 new THREE.BoxGeometry(25, 15, 35),
                 new THREE.MeshStandardMaterial({color: 0xa89968, roughness: 0.9})
@@ -901,7 +1181,56 @@
             cross.position.set(x - 12, y + 26, z + 12);
             scene.add(cross);
             
-            buildings.push({x: x, z: z, radius: 15});
+            // Create church door (larger)
+            const door = createDoor(x, y, z + 17.5, true, id);
+            door.scale.set(1.5, 1.2, 1);
+            doors.push(door);
+            
+            // Large door frame
+            const doorFrame = new THREE.Mesh(
+                new THREE.BoxGeometry(4, 6, 0.3),
+                new THREE.MeshStandardMaterial({color: 0x654321})
+            );
+            doorFrame.position.set(x, y + 3, z + 17.7);
+            scene.add(doorFrame);
+            
+            buildings.push({x: x, z: z + 17, radius: 15, id: id});
+        }
+
+        function createDoor(x, y, z, leadsToInterior = false, buildingId = null, leadsToExterior = false) {
+            const door = new THREE.Mesh(
+                new THREE.BoxGeometry(2, 4, 0.2),
+                new THREE.MeshStandardMaterial({
+                    color: 0x4a2511,
+                    roughness: 0.8
+                })
+            );
+            door.position.set(x, y + 2, z);
+            door.castShadow = true;
+            
+            // Door handle
+            const handle = new THREE.Mesh(
+                new THREE.SphereGeometry(0.1, 8, 8),
+                new THREE.MeshStandardMaterial({
+                    color: 0xffd700,
+                    metalness: 0.8,
+                    roughness: 0.2
+                })
+            );
+            handle.position.set(x + 0.7, y + 2, z + 0.15);
+            scene.add(handle);
+            
+            door.userData = {
+                isOpen: false,
+                openAngle: Math.PI/2,
+                leadsToInterior: leadsToInterior,
+                leadsToExterior: leadsToExterior,
+                buildingId: buildingId,
+                isDoor: true
+            };
+            
+            scene.add(door);
+            return door;
         }
 
         function createTree(x, y, z) {
@@ -1084,7 +1413,7 @@
 
         function loadPreachingChapter() {
             createGround();
-            createChurch(0, 0, -25);
+            createChurch(0, 0, -25, 'preaching-church');
             for(let i = 0; i < 20; i++) createTree(-60 + i * 6, 0, -50);
 
             for(let i = 0; i < 40; i++) {
@@ -1131,7 +1460,7 @@
 
         function loadChildRevivalChapter() {
             createGround();
-            createHouse(10, 0, -15);
+            createHouse(10, 0, -15, 'revival-house');
             for(let i = 0; i < 8; i++) createTree(-30 + i * 8, 0, -35);
 
             createNPC(-8, 0, 5, 0x000000);
@@ -1179,7 +1508,7 @@
 
         function loadDeathChapter() {
             createGround();
-            createHouse(0, 0, -10);
+            createHouse(0, 0, -10, 'death-house');
             for(let i = 0; i < 5; i++) createNPC(-6 + i * 3, 0, 0, 0x000000);
 
             createInteractable(0, 0.5, -8, 'die', 'Receive Last Rites', [
@@ -1192,7 +1521,7 @@
 
         function loadFuneralChapter() {
             createGround();
-            createChurch(0, 0, -25);
+            createChurch(0, 0, -25, 'funeral-church');
             for(let i = 0; i < 50; i++) createNPC(-20 + Math.random() * 40, 0, -20 + Math.random() * 20, 0x000000);
 
             createInteractable(-10, 0.5, -15, 'witness', 'Witness Blind Man Healed', [
@@ -1308,9 +1637,23 @@
             camera.position.z = camZ;
             camera.lookAt(playerModel.position.x, playerModel.position.y + 1, playerModel.position.z);
 
-            // Check for nearby interactables
+            // Check for nearby interactables and doors
+            const nearestDoor = findNearestDoor();
             const nearest = findNearestInteractable();
-            if(nearest) {
+            
+            if(nearestDoor) {
+                if(nearestDoor.userData.isOpen) {
+                    if(nearestDoor.userData.leadsToInterior) {
+                        document.getElementById('objective-text').textContent = 'Press E: Enter Building';
+                    } else if(nearestDoor.userData.leadsToExterior) {
+                        document.getElementById('objective-text').textContent = 'Press E: Exit Building';
+                    } else {
+                        document.getElementById('objective-text').textContent = CHAPTERS[currentChapter].objective;
+                    }
+                } else {
+                    document.getElementById('objective-text').textContent = 'Press E: Open Door';
+                }
+            } else if(nearest) {
                 document.getElementById('objective-text').textContent = `Press E: ${nearest.userData.label}`;
             } else {
                 document.getElementById('objective-text').textContent = CHAPTERS[currentChapter].objective;
