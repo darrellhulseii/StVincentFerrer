@@ -8,55 +8,58 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; overflow: hidden; position: fixed; font-family: 'Georgia', serif; background: #000; }
         canvas { display: block; width: 100% !important; height: 100% !important; position: absolute; top: 0; left: 0; }
-        #hud { position: fixed; top: 20px; left: 20px; background: linear-gradient(135deg, rgba(20, 20, 40, 0.95) 0%, rgba(40, 30, 60, 0.95) 100%); padding: 20px; border-radius: 15px; border: 3px solid #d4af37; color: #f0e6d2; font-size: 14px; z-index: 100; max-width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.7); backdrop-filter: blur(10px); }
-        #chapter-title { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, rgba(0, 0, 0, 0.98) 0%, rgba(30, 20, 40, 0.98) 100%); padding: 50px 70px; border: 4px solid #d4af37; border-radius: 20px; color: #d4af37; font-size: 36px; font-weight: bold; text-align: center; z-index: 200; display: none; max-width: 85%; box-shadow: 0 20px 60px rgba(0,0,0,0.9); }
-        #dialogue-box { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, rgba(20, 20, 40, 0.98) 0%, rgba(40, 30, 60, 0.98) 100%); padding: 30px 40px; border: 3px solid #d4af37; border-radius: 15px; color: #f0e6d2; font-size: 18px; max-width: 85%; z-index: 150; display: none; line-height: 2; text-align: center; box-shadow: 0 15px 40px rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
-        #dialogue-speaker { color: #d4af37; font-weight: bold; font-size: 20px; margin-bottom: 12px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        #hud { position: fixed; top: 5px; left: 5px; background: linear-gradient(135deg, rgba(20, 20, 40, 0.95) 0%, rgba(40, 30, 60, 0.95) 100%); padding: 5px; border-radius: 4px; border: 1px solid #d4af37; color: #f0e6d2; font-size: 7px; z-index: 100; max-width: 80px; box-shadow: 0 2px 8px rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
+        #chapter-title { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, rgba(0, 0, 0, 0.98) 0%, rgba(30, 20, 40, 0.98) 100%); padding: 12px 18px; border: 1px solid #d4af37; border-radius: 5px; color: #d4af37; font-size: 11px; font-weight: bold; text-align: center; z-index: 200; display: none; max-width: 90%; box-shadow: 0 5px 15px rgba(0,0,0,0.9); }
+        #dialogue-box { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, rgba(20, 20, 40, 0.98) 0%, rgba(40, 30, 60, 0.98) 100%); padding: 8px 10px; border: 1px solid #d4af37; border-radius: 4px; color: #f0e6d2; font-size: 7px; max-width: 90%; z-index: 150; display: none; line-height: 1.4; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
+        #dialogue-speaker { color: #d4af37; font-weight: bold; font-size: 8px; margin-bottom: 3px; text-align: center; text-shadow: 0 1px 1px rgba(0,0,0,0.5); }
         #dialogue-text { text-align: center; }
-        #dialogue-continue { background: linear-gradient(135deg, #d4af37 0%, #f0d978 100%); color: #1a1a2e; border: none; padding: 12px 30px; margin-top: 18px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; display: block; margin-left: auto; margin-right: auto; box-shadow: 0 4px 12px rgba(212, 175, 55, 0.5); transition: all 0.3s; }
-        #dialogue-continue:hover { background: linear-gradient(135deg, #f0d978 0%, #ffd700 100%); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(212, 175, 55, 0.7); }
-        #controls { position: fixed; bottom: 20px; left: 20px; background: linear-gradient(135deg, rgba(20, 20, 40, 0.9) 0%, rgba(40, 30, 60, 0.9) 100%); padding: 15px 20px; border-radius: 10px; color: #f0e6d2; font-size: 12px; z-index: 100; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
-        #mobile-joystick { position: fixed; bottom: 40px; left: 40px; width: 200px; height: 200px; display: none; z-index: 200; }
+        #dialogue-continue { background: linear-gradient(135deg, #d4af37 0%, #f0d978 100%); color: #1a1a2e; border: none; padding: 3px 8px; margin-top: 4px; border-radius: 2px; cursor: pointer; font-size: 7px; font-weight: bold; display: block; margin-left: auto; margin-right: auto; box-shadow: 0 1px 3px rgba(212, 175, 55, 0.5); transition: all 0.3s; }
+        #dialogue-continue:hover { background: linear-gradient(135deg, #f0d978 0%, #ffd700 100%); transform: translateY(-1px); box-shadow: 0 2px 4px rgba(212, 175, 55, 0.7); }
+        #controls { position: fixed; bottom: 5px; left: 5px; background: linear-gradient(135deg, rgba(20, 20, 40, 0.9) 0%, rgba(40, 30, 60, 0.9) 100%); padding: 4px 5px; border-radius: 3px; color: #f0e6d2; font-size: 6px; z-index: 100; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.6); }
+        #mobile-joystick { position: fixed; bottom: 10px; left: 10px; width: 70px; height: 70px; display: none; z-index: 200; }
         @media (max-width: 768px), (pointer: coarse) { #mobile-joystick { display: block; } #controls { display: none; } }
-        .joystick-base { position: absolute; width: 200px; height: 200px; background: radial-gradient(circle, rgba(52, 73, 94, 0.85) 0%, rgba(44, 62, 80, 0.95) 100%); border: 5px solid rgba(212, 175, 55, 0.8); border-radius: 50%; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), inset 0 -3px 12px rgba(0,0,0,0.4); }
-        .joystick-stick { position: absolute; width: 90px; height: 90px; background: radial-gradient(circle, rgba(212, 175, 55, 1) 0%, rgba(160, 132, 40, 1) 100%); border: 5px solid rgba(160, 132, 40, 1); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: all 0.08s; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 -3px 10px rgba(0,0,0,0.5); }
-        #interact-button { position: fixed; bottom: 60px; right: 60px; width: 90px; height: 90px; background: radial-gradient(circle, rgba(212, 175, 55, 1) 0%, rgba(160, 132, 40, 1) 100%); border: 5px solid rgba(160, 132, 40, 1); border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; color: white; text-shadow: 0 3px 6px rgba(0, 0, 0, 0.6); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6); z-index: 200; cursor: pointer; }
+        @media (min-width: 1200px) { #hud { font-size: 8px; max-width: 100px; } #dialogue-box { font-size: 8px; } #mission-objective { font-size: 8px; max-width: 100px; } #chapter-title { font-size: 13px; } }
+        @media (min-width: 1600px) { #hud { font-size: 9px; max-width: 120px; } #dialogue-box { font-size: 9px; } #mission-objective { font-size: 9px; max-width: 120px; } #chapter-title { font-size: 15px; } }
+        .joystick-base { position: absolute; width: 70px; height: 70px; background: radial-gradient(circle, rgba(52, 73, 94, 0.85) 0%, rgba(44, 62, 80, 0.95) 100%); border: 2px solid rgba(212, 175, 55, 0.8); border-radius: 50%; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7), inset 0 -1px 3px rgba(0,0,0,0.4); }
+        .joystick-stick { position: absolute; width: 32px; height: 32px; background: radial-gradient(circle, rgba(212, 175, 55, 1) 0%, rgba(160, 132, 40, 1) 100%); border: 2px solid rgba(160, 132, 40, 1); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: all 0.08s; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6), inset 0 -1px 3px rgba(0,0,0,0.5); }
+        #interact-button { position: fixed; bottom: 15px; right: 15px; width: 35px; height: 35px; background: radial-gradient(circle, rgba(212, 175, 55, 1) 0%, rgba(160, 132, 40, 1) 100%); border: 2px solid rgba(160, 132, 40, 1); border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: white; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6); z-index: 200; cursor: pointer; }
         @media (max-width: 768px), (pointer: coarse) { #interact-button { display: flex; } }
-        #mission-objective { position: fixed; top: 20px; right: 20px; background: linear-gradient(135deg, rgba(20, 20, 40, 0.95) 0%, rgba(40, 30, 60, 0.95) 100%); padding: 20px; border-radius: 15px; border: 3px solid #4a9eff; color: #f0e6d2; font-size: 15px; z-index: 100; max-width: 320px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.7); backdrop-filter: blur(10px); }
-        #objective-title { color: #4a9eff; font-weight: bold; margin-bottom: 10px; font-size: 17px; }
-        #task-progress { color: #ffd700; font-weight: bold; margin-top: 10px; font-size: 18px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        .miracle-effect { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 84px; color: #ffd700; text-shadow: 0 0 40px #fff, 0 0 80px #ffd700, 0 0 120px #ffd700; z-index: 250; pointer-events: none; animation: miraclePulse 2.5s ease-out; font-weight: bold; }
+        #mission-objective { position: fixed; top: 5px; right: 5px; background: linear-gradient(135deg, rgba(20, 20, 40, 0.95) 0%, rgba(40, 30, 60, 0.95) 100%); padding: 5px; border-radius: 4px; border: 1px solid #4a9eff; color: #f0e6d2; font-size: 7px; z-index: 100; max-width: 80px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
+        #objective-title { color: #4a9eff; font-weight: bold; margin-bottom: 2px; font-size: 8px; }
+        #task-progress { color: #ffd700; font-weight: bold; margin-top: 2px; font-size: 8px; text-shadow: 0 1px 1px rgba(0,0,0,0.5); }
+        .miracle-effect { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: #ffd700; text-shadow: 0 0 10px #fff, 0 0 20px #ffd700, 0 0 30px #ffd700; z-index: 250; pointer-events: none; animation: miraclePulse 2.5s ease-out; font-weight: bold; }
         @keyframes miraclePulse { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(-10deg); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(5deg); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(0deg); } }
         #title-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 50%, #4a2c6e 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 300; color: #d4af37; }
-        #title-screen h1 { font-size: 56px; margin-bottom: 25px; text-shadow: 0 0 20px rgba(212,175,55,0.8), 3px 3px 8px rgba(0,0,0,0.9); text-align: center; animation: titleGlow 3s ease-in-out infinite; }
-        @keyframes titleGlow { 0%, 100% { text-shadow: 0 0 20px rgba(212,175,55,0.8), 3px 3px 8px rgba(0,0,0,0.9); } 50% { text-shadow: 0 0 40px rgba(212,175,55,1), 3px 3px 8px rgba(0,0,0,0.9); } }
-        #title-screen h2 { font-size: 28px; margin-bottom: 45px; color: #f0e6d2; text-align: center; }
-        #start-button { background: linear-gradient(135deg, #d4af37 0%, #f0d978 100%); color: #1a1a2e; border: none; padding: 25px 60px; font-size: 22px; font-weight: bold; border-radius: 12px; cursor: pointer; box-shadow: 0 8px 0 #a08428, 0 12px 25px rgba(0,0,0,0.5); transition: all 0.2s; }
-        #start-button:hover { background: linear-gradient(135deg, #f0d978 0%, #ffd700 100%); transform: translateY(-5px); box-shadow: 0 13px 0 #a08428, 0 17px 30px rgba(0,0,0,0.6); }
-        #start-button:active { transform: translateY(3px); box-shadow: 0 5px 0 #a08428, 0 8px 20px rgba(0,0,0,0.4); }
-        #playing-as { position: fixed; top: 100px; left: 20px; background: linear-gradient(135deg, rgba(139, 0, 139, 0.95) 0%, rgba(75, 0, 130, 0.95) 100%); padding: 12px 18px; border-radius: 10px; border: 3px solid #d4af37; color: #ffd700; font-size: 15px; font-weight: bold; z-index: 100; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.6); }
-        #next-chapter-button { position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #4a9eff 0%, #6fb1ff 100%); color: white; border: none; padding: 18px 50px; font-size: 20px; font-weight: bold; border-radius: 12px; cursor: pointer; box-shadow: 0 8px 0 #2c5aa0, 0 12px 30px rgba(74, 158, 255, 0.5); z-index: 200; display: none; transition: all 0.2s; }
-        #next-chapter-button:hover { background: linear-gradient(135deg, #6fb1ff 0%, #87ceeb 100%); transform: translateX(-50%) translateY(-4px); box-shadow: 0 12px 0 #2c5aa0, 0 16px 35px rgba(74, 158, 255, 0.6); }
-        #next-chapter-button:active { transform: translateX(-50%) translateY(3px); box-shadow: 0 5px 0 #2c5aa0, 0 8px 25px rgba(74, 158, 255, 0.4); }
-        #door-button { position: fixed; top: 120px; right: 20px; background: linear-gradient(135deg, #ffd700 0%, #f0d978 100%); color: #1a1a2e; border: 5px solid #d4af37; padding: 25px 45px; font-size: 24px; font-weight: bold; border-radius: 15px; cursor: pointer; z-index: 300; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.8); display: none; transition: all 0.3s; text-align: center; animation: doorPulse 2s ease-in-out infinite; }
+        #title-screen h1 { font-size: 20px; margin-bottom: 8px; text-shadow: 0 0 8px rgba(212,175,55,0.8), 1px 1px 3px rgba(0,0,0,0.9); text-align: center; animation: titleGlow 3s ease-in-out infinite; }
+        @keyframes titleGlow { 0%, 100% { text-shadow: 0 0 8px rgba(212,175,55,0.8), 1px 1px 3px rgba(0,0,0,0.9); } 50% { text-shadow: 0 0 15px rgba(212,175,55,1), 1px 1px 3px rgba(0,0,0,0.9); } }
+        #title-screen h2 { font-size: 10px; margin-bottom: 12px; color: #f0e6d2; text-align: center; }
+        #title-screen p { font-size: 8px; max-width: 85%; margin: 10px; line-height: 1.4; }
+        #start-button { background: linear-gradient(135deg, #d4af37 0%, #f0d978 100%); color: #1a1a2e; border: none; padding: 8px 18px; font-size: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; box-shadow: 0 3px 0 #a08428, 0 4px 8px rgba(0,0,0,0.5); transition: all 0.2s; }
+        #start-button:hover { background: linear-gradient(135deg, #f0d978 0%, #ffd700 100%); transform: translateY(-1px); box-shadow: 0 4px 0 #a08428, 0 5px 10px rgba(0,0,0,0.6); }
+        #start-button:active { transform: translateY(1px); box-shadow: 0 1px 0 #a08428, 0 2px 5px rgba(0,0,0,0.4); }
+        #playing-as { position: fixed; top: 25px; left: 5px; background: linear-gradient(135deg, rgba(139, 0, 139, 0.95) 0%, rgba(75, 0, 130, 0.95) 100%); padding: 3px 5px; border-radius: 3px; border: 1px solid #d4af37; color: #ffd700; font-size: 7px; font-weight: bold; z-index: 100; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.6); }
+        #next-chapter-button { position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #4a9eff 0%, #6fb1ff 100%); color: white; border: none; padding: 6px 15px; font-size: 9px; font-weight: bold; border-radius: 4px; cursor: pointer; box-shadow: 0 3px 0 #2c5aa0, 0 4px 10px rgba(74, 158, 255, 0.5); z-index: 200; display: none; transition: all 0.2s; }
+        #next-chapter-button:hover { background: linear-gradient(135deg, #6fb1ff 0%, #87ceeb 100%); transform: translateX(-50%) translateY(-1px); box-shadow: 0 4px 0 #2c5aa0, 0 5px 12px rgba(74, 158, 255, 0.6); }
+        #next-chapter-button:active { transform: translateX(-50%) translateY(1px); box-shadow: 0 1px 0 #2c5aa0, 0 2px 6px rgba(74, 158, 255, 0.4); }
+        #door-button { position: fixed; top: 35px; right: 5px; background: linear-gradient(135deg, #ffd700 0%, #f0d978 100%); color: #1a1a2e; border: 2px solid #d4af37; padding: 6px 12px; font-size: 9px; font-weight: bold; border-radius: 4px; cursor: pointer; z-index: 300; box-shadow: 0 3px 8px rgba(212, 175, 55, 0.8); display: none; transition: all 0.3s; text-align: center; animation: doorPulse 2s ease-in-out infinite; }
         @keyframes doorPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        #door-button:hover { background: linear-gradient(135deg, #f0d978 0%, #ffd700 100%); transform: scale(1.1) translateY(-3px); box-shadow: 0 15px 40px rgba(212, 175, 55, 1); }
-        #door-button:active { transform: scale(0.95) translateY(2px); box-shadow: 0 4px 15px rgba(212, 175, 55, 0.5); }
-        #mini-radar { position: fixed; bottom: 20px; right: 20px; width: 170px; height: 170px; background: radial-gradient(circle, rgba(20, 20, 40, 0.95) 0%, rgba(10, 10, 20, 0.95) 100%); border: 4px solid #4a9eff; border-radius: 50%; z-index: 100; box-shadow: 0 0 30px rgba(74, 158, 255, 0.5), 0 8px 25px rgba(0,0,0,0.6); }
-        .radar-player { position: absolute; width: 10px; height: 10px; background: #00ff00; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 15px #00ff00, 0 0 25px #00ff00; animation: playerPulse 1.5s ease-in-out infinite; }
-        @keyframes playerPulse { 0%, 100% { box-shadow: 0 0 15px #00ff00, 0 0 25px #00ff00; } 50% { box-shadow: 0 0 25px #00ff00, 0 0 40px #00ff00; } }
-        .radar-objective { position: absolute; width: 12px; height: 12px; background: #ffd700; border-radius: 50%; box-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700; animation: radarPulse 1.2s infinite; }
+        #door-button:hover { background: linear-gradient(135deg, #f0d978 0%, #ffd700 100%); transform: scale(1.1) translateY(-1px); box-shadow: 0 5px 12px rgba(212, 175, 55, 1); }
+        #door-button:active { transform: scale(0.95) translateY(1px); box-shadow: 0 1px 4px rgba(212, 175, 55, 0.5); }
+        #mini-radar { position: fixed; bottom: 5px; right: 5px; width: 50px; height: 50px; background: radial-gradient(circle, rgba(20, 20, 40, 0.95) 0%, rgba(10, 10, 20, 0.95) 100%); border: 1px solid #4a9eff; border-radius: 50%; z-index: 100; box-shadow: 0 0 8px rgba(74, 158, 255, 0.5), 0 2px 6px rgba(0,0,0,0.6); }
+        .radar-player { position: absolute; width: 4px; height: 4px; background: #00ff00; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 4px #00ff00, 0 0 6px #00ff00; animation: playerPulse 1.5s ease-in-out infinite; }
+        @keyframes playerPulse { 0%, 100% { box-shadow: 0 0 4px #00ff00, 0 0 6px #00ff00; } 50% { box-shadow: 0 0 6px #00ff00, 0 0 10px #00ff00; } }
+        .radar-objective { position: absolute; width: 4px; height: 4px; background: #ffd700; border-radius: 50%; box-shadow: 0 0 4px #ffd700, 0 0 6px #ffd700; animation: radarPulse 1.2s infinite; }
         @keyframes radarPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.7; } }
         .radar-scan { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(transparent 0deg, rgba(74, 158, 255, 0.4) 90deg, transparent 90deg); animation: radarScan 4s linear infinite; }
         @keyframes radarScan { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #fps-counter { position: fixed; top: 20px; right: 350px; background: rgba(0,0,0,0.7); color: #00ff00; padding: 8px 15px; border-radius: 5px; font-family: monospace; font-size: 14px; z-index: 100; }
+        #fps-counter { position: fixed; top: 5px; right: 90px; background: rgba(0,0,0,0.7); color: #00ff00; padding: 2px 4px; border-radius: 2px; font-family: monospace; font-size: 7px; z-index: 100; }
     </style>
 </head>
 <body>
     <div id="title-screen">
         <h1>✝️ SAINT VINCENT FERRER ✝️</h1>
         <h2>The Ultimate Life Journey</h2>
-        <p style="max-width: 700px; text-align: center; margin: 25px; color: #f0e6d2; line-height: 1.8; font-size: 16px;">
+        <p>
             "The fear of the Lord is the beginning of wisdom" - Proverbs 9:10<br><br>
             Experience the miraculous life of the great Dominican preacher<br>
             <strong style="color: #d4af37;">Photorealistic Third-Person Action RPG</strong>
@@ -67,10 +70,10 @@
     <div id="playing-as">Playing as: Mother Constance</div>
     <div id="fps-counter">FPS: 60</div>
     <div id="hud">
-        <div style="text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 10px; margin-bottom: 10px;"><strong style="font-size: 16px;">Chapter</strong><br><span id="current-chapter" style="color: #d4af37;">Prologue</span></div>
-        <div style="text-align: center; margin-top: 10px;"><strong>Location:</strong><br><span id="current-location">Valencia</span></div>
-        <div style="text-align: center; margin-top: 10px;"><strong>Year:</strong><br><span id="current-year">1350</span></div>
-        <div style="text-align: center; margin-top: 10px; border-top: 2px solid #d4af37; padding-top: 10px;"><strong>Souls Converted:</strong><br><span id="souls-converted" style="color: #ffd700; font-size: 18px; font-weight: bold;">0</span></div>
+        <div style="text-align: center; border-bottom: 1px solid #d4af37; padding-bottom: 3px; margin-bottom: 3px;"><strong style="font-size: 8px;">Chapter</strong><br><span id="current-chapter" style="color: #d4af37;">Prologue</span></div>
+        <div style="text-align: center; margin-top: 3px;"><strong>Location:</strong><br><span id="current-location">Valencia</span></div>
+        <div style="text-align: center; margin-top: 3px;"><strong>Year:</strong><br><span id="current-year">1350</span></div>
+        <div style="text-align: center; margin-top: 3px; border-top: 1px solid #d4af37; padding-top: 3px;"><strong>Souls Converted:</strong><br><span id="souls-converted" style="color: #ffd700; font-size: 8px; font-weight: bold;">0</span></div>
     </div>
     <div id="mission-objective">
         <div id="objective-title">⚔️ Current Mission</div>
@@ -266,10 +269,10 @@
                 const touch = e.touches[0];
                 const dx = touch.clientX - joyStartX;
                 const dy = touch.clientY - joyStartY;
-                const dist = Math.min(70, Math.sqrt(dx*dx + dy*dy));
+                const dist = Math.min(40, Math.sqrt(dx*dx + dy*dy));
                 const angle = Math.atan2(dy, dx);
-                joyDeltaX = Math.cos(angle) * (dist/70);
-                joyDeltaY = Math.sin(angle) * (dist/70);
+                joyDeltaX = Math.cos(angle) * (dist/40);
+                joyDeltaY = Math.sin(angle) * (dist/40);
                 stick.style.transform = `translate(calc(-50% + ${dist*Math.cos(angle)}px), calc(-50% + ${dist*Math.sin(angle)}px))`;
             });
             base.addEventListener('touchend', e => {
@@ -367,8 +370,8 @@
 
         function showChapterTitle(title) {
             const el = document.getElementById('chapter-title');
-            el.innerHTML = `<div style="font-size: 38px; margin-bottom: 18px; text-shadow: 0 0 30px rgba(212,175,55,0.8);">${title}</div>
-                <div style="font-size: 20px; color: #f0e6d2;">Complete all tasks to continue your journey</div>`;
+            el.innerHTML = `<div style="font-size: 12px; margin-bottom: 6px; text-shadow: 0 0 15px rgba(212,175,55,0.8);">${title}</div>
+                <div style="font-size: 8px; color: #f0e6d2;">Complete all tasks to continue your journey</div>`;
             el.style.display = 'block';
             setTimeout(() => el.style.display = 'none', 4500);
         }
@@ -438,14 +441,14 @@
 
         function showGameComplete() {
             document.getElementById('chapter-title').innerHTML = `
-                <div style="color:#d4af37; font-size:48px; text-shadow: 0 0 40px rgba(212,175,55,1);">✝️ JOURNEY COMPLETE ✝️</div>
-                <div style="color:#f0e6d2; font-size:20px; margin-top:25px; line-height:2;">
+                <div style="color:#d4af37; font-size:14px; text-shadow: 0 0 15px rgba(212,175,55,1);">✝️ JOURNEY COMPLETE ✝️</div>
+                <div style="color:#f0e6d2; font-size:7px; margin-top:8px; line-height:1.6;">
                     You have lived the miraculous life of<br>
-                    <strong style="color:#d4af37; font-size:28px;">SAINT VINCENT FERRER</strong><br><br>
-                    <strong style="color:#4a9eff; font-size:24px;">Total Souls Converted: ${soulsConverted.toLocaleString()}</strong><br><br>
+                    <strong style="color:#d4af37; font-size:9px;">SAINT VINCENT FERRER</strong><br><br>
+                    <strong style="color:#4a9eff; font-size:8px;">Total Souls Converted: ${soulsConverted.toLocaleString()}</strong><br><br>
                     "Fear the Lord and give Him glory" - Revelation 14:7<br><br>
                     Saint Vincent Ferrer, pray for us!<br><br>
-                    <div style="font-size:16px; margin-top:20px;">Refresh to play again</div>
+                    <div style="font-size:6px; margin-top:6px;">Refresh to play again</div>
                 </div>
             `;
             document.getElementById('chapter-title').style.display = 'block';
