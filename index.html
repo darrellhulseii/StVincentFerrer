@@ -85,7 +85,7 @@
         <div id="dialogue-text"></div>
         <button id="dialogue-continue">Continue →</button>
     </div>
-    <div id="controls"><strong>WASD:</strong> Move | <strong>Mouse:</strong> Camera | <strong>E:</strong> Interact</div>
+    <div id="controls"><strong>WASD:</strong> Move | <strong>Mouse:</strong> Camera | <strong>E:</strong> Tasks | <strong>Door Button:</strong> Doors</div>
     <div id="mobile-joystick"><div class="joystick-base"></div><div class="joystick-stick"></div></div>
     <button id="interact-button">E</button>
     <button id="next-chapter-button">Continue to Next Chapter →</button>
@@ -168,44 +168,82 @@
 
         function init() {
             scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x87CEEB);
-            scene.fog = new THREE.FogExp2(0x87CEEB, 0.007);
-
-            camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
             
-            renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+            // Epic sky gradient with realistic colors
+            const skyColor = new THREE.Color(0x87CEEB);
+            const horizonColor = new THREE.Color(0xe6f2ff);
+            scene.background = skyColor;
+            scene.fog = new THREE.FogExp2(horizonColor, 0.006);
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // Wider FOV for more epic view
+            camera.position.set(0, 10, 10);
+            camera.lookAt(0, 0, 0);
+            
+            renderer = new THREE.WebGLRenderer({ 
+                antialias: true, 
+                powerPreference: "high-performance",
+                stencil: false,
+                depth: true,
+                alpha: false,
+                premultipliedAlpha: true,
+                preserveDrawingBuffer: false,
+                failIfMajorPerformanceCaveat: false
+            });
             renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Cap at 2 for performance
             renderer.shadowMap.enabled = true;
             renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.shadowMap.autoUpdate = true;
             renderer.physicallyCorrectLights = true;
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.3;
+            renderer.toneMappingExposure = 1.5; // Increased for more vibrant colors
             renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.gammaFactor = 2.2;
+            
+            // Performance optimizations
+            renderer.info.autoReset = true;
+            renderer.sortObjects = true;
+            renderer.logarithmicDepthBuffer = false; // Better for performance
+            
             document.body.appendChild(renderer.domElement);
 
-            // Enhanced lighting for photorealism
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+            // Enhanced ultra-realistic lighting system
+            const ambientLight = new THREE.AmbientLight(0xffffff, 1.2); // Increased for better visibility
             scene.add(ambientLight);
             
-            const sunLight = new THREE.DirectionalLight(0xfff5e6, 3.5);
-            sunLight.position.set(100, 150, 100);
+            // Main sun light - ultra high quality shadows
+            const sunLight = new THREE.DirectionalLight(0xfff5e6, 4.5); // Increased intensity
+            sunLight.position.set(100, 200, 100);
             sunLight.castShadow = true;
-            sunLight.shadow.mapSize.width = 4096;
-            sunLight.shadow.mapSize.height = 4096;
-            sunLight.shadow.camera.left = -150;
-            sunLight.shadow.camera.right = 150;
-            sunLight.shadow.camera.top = 150;
-            sunLight.shadow.camera.bottom = -150;
-            sunLight.shadow.bias = -0.0001;
+            sunLight.shadow.mapSize.width = 8192; // Ultra high resolution shadows
+            sunLight.shadow.mapSize.height = 8192;
+            sunLight.shadow.camera.left = -200;
+            sunLight.shadow.camera.right = 200;
+            sunLight.shadow.camera.top = 200;
+            sunLight.shadow.camera.bottom = -200;
+            sunLight.shadow.camera.near = 0.5;
+            sunLight.shadow.camera.far = 500;
+            sunLight.shadow.bias = -0.00001; // Reduced shadow acne
+            sunLight.shadow.radius = 2; // Soft shadow edges
+            sunLight.shadow.normalBias = 0.02;
             scene.add(sunLight);
 
-            const fillLight = new THREE.DirectionalLight(0x9db4ff, 0.8);
-            fillLight.position.set(-80, 80, -80);
+            // Fill light - blue ambient for realistic sky lighting
+            const fillLight = new THREE.DirectionalLight(0x9db4ff, 1.2); // Increased
+            fillLight.position.set(-100, 100, -100);
             scene.add(fillLight);
             
-            const skyLight = new THREE.HemisphereLight(0x87CEEB, 0x5d8c3e, 0.6);
+            // Back light for rim lighting effect
+            const backLight = new THREE.DirectionalLight(0xffeaa7, 0.8);
+            backLight.position.set(0, 80, -150);
+            scene.add(backLight);
+            
+            // Hemisphere light for natural sky/ground gradient
+            const skyLight = new THREE.HemisphereLight(0x87CEEB, 0x5d8c3e, 1.0); // Increased
             scene.add(skyLight);
+            
+            // Add atmospheric volumetric fog for depth
+            scene.fog = new THREE.FogExp2(0x87CEEB, 0.006); // Slightly reduced for clarity
 
             document.getElementById('start-button').addEventListener('click', startGame);
             document.getElementById('dialogue-continue').addEventListener('click', advanceDialogue);
@@ -386,18 +424,36 @@
                 }
                 scene.remove(obj);
             }
-            const ambient = new THREE.AmbientLight(0xffffff, 0.9);
+            
+            // Rebuild ultra-epic lighting system
+            const ambient = new THREE.AmbientLight(0xffffff, 1.2);
             scene.add(ambient);
-            const sun = new THREE.DirectionalLight(0xfff5e6, 3.5);
-            sun.position.set(100, 150, 100);
+            
+            const sun = new THREE.DirectionalLight(0xfff5e6, 4.5);
+            sun.position.set(100, 200, 100);
             sun.castShadow = true;
-            sun.shadow.mapSize.width = 4096;
-            sun.shadow.mapSize.height = 4096;
+            sun.shadow.mapSize.width = 8192;
+            sun.shadow.mapSize.height = 8192;
+            sun.shadow.camera.left = -200;
+            sun.shadow.camera.right = 200;
+            sun.shadow.camera.top = 200;
+            sun.shadow.camera.bottom = -200;
+            sun.shadow.camera.near = 0.5;
+            sun.shadow.camera.far = 500;
+            sun.shadow.bias = -0.00001;
+            sun.shadow.radius = 2;
+            sun.shadow.normalBias = 0.02;
             scene.add(sun);
-            const fill = new THREE.DirectionalLight(0x9db4ff, 0.8);
-            fill.position.set(-80, 80, -80);
+            
+            const fill = new THREE.DirectionalLight(0x9db4ff, 1.2);
+            fill.position.set(-100, 100, -100);
             scene.add(fill);
-            const sky = new THREE.HemisphereLight(0x87CEEB, 0x5d8c3e, 0.6);
+            
+            const back = new THREE.DirectionalLight(0xffeaa7, 0.8);
+            back.position.set(0, 80, -150);
+            scene.add(back);
+            
+            const sky = new THREE.HemisphereLight(0x87CEEB, 0x5d8c3e, 1.0);
             scene.add(sky);
         }
 
@@ -474,14 +530,8 @@
         }
 
         function tryInteract() {
-            // Priority 1: Check for doors first - E key also works for doors
-            const nearestDoor = findNearestDoor();
-            if(nearestDoor) {
-                openDoor(nearestDoor);
-                return;
-            }
-            
-            // Priority 2: Handle regular task interactables
+            // E key only handles tasks/interactables, NOT doors
+            // Doors are ONLY opened via the door button
             const nearest = findNearestInteractable();
             if(nearest) {
                 executeInteraction(nearest);
@@ -1067,67 +1117,99 @@
 
         function createGround() {
             const ground = new THREE.Mesh(
-                new THREE.PlaneGeometry(250, 250, 80, 80),
+                new THREE.PlaneGeometry(250, 250, 100, 100), // Higher detail
                 new THREE.MeshStandardMaterial({
                     color: 0x5d8c3e,
-                    roughness: 0.93,
-                    metalness: 0
+                    roughness: 0.95,
+                    metalness: 0,
+                    side: THREE.FrontSide,
+                    flatShading: false,
+                    envMapIntensity: 1.0,
+                    aoMapIntensity: 1.0
                 })
             );
             ground.rotation.x = -Math.PI/2;
             ground.receiveShadow = true;
+            
+            // Add subtle displacement for realism
+            const vertices = ground.geometry.attributes.position.array;
+            for(let i = 0; i < vertices.length; i += 3) {
+                vertices[i + 2] = Math.random() * 0.3; // Slight height variation
+            }
+            ground.geometry.attributes.position.needsUpdate = true;
+            ground.geometry.computeVertexNormals(); // Recalculate for lighting
+            
             scene.add(ground);
         }
 
         function createNPC(x, y, z, color = 0x4a4a4a) {
             const group = new THREE.Group();
             const body = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.32, 0.37, 1.3, 18),
+                new THREE.CylinderGeometry(0.32, 0.37, 1.3, 24), // Higher poly count
                 new THREE.MeshStandardMaterial({
                     color: color,
-                    roughness: 0.75,
-                    metalness: 0.1
+                    roughness: 0.8,
+                    metalness: 0.15,
+                    envMapIntensity: 0.5,
+                    flatShading: false
                 })
             );
             body.position.y = 0.65;
             body.castShadow = true;
+            body.receiveShadow = true;
             group.add(body);
             
             const head = new THREE.Mesh(
-                new THREE.SphereGeometry(0.26, 18, 18),
+                new THREE.SphereGeometry(0.26, 24, 24), // Higher poly count
                 new THREE.MeshStandardMaterial({
                     color: 0xf0c291,
-                    roughness: 0.45
+                    roughness: 0.45,
+                    metalness: 0.05,
+                    envMapIntensity: 0.3
                 })
             );
             head.position.y = 1.5;
             head.castShadow = true;
+            head.receiveShadow = true;
             group.add(head);
             
-            // Arms
-            const armGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.7, 10);
-            const armMat = new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5});
+            // Ultra-realistic arms
+            const armGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.7, 12);
+            const armMat = new THREE.MeshStandardMaterial({
+                color: 0xf0c291, 
+                roughness: 0.5,
+                metalness: 0.05,
+                envMapIntensity: 0.3
+            });
             const leftArm = new THREE.Mesh(armGeo, armMat);
             leftArm.position.set(-0.44, 0.8, 0);
             leftArm.rotation.z = 0.4;
             leftArm.castShadow = true;
+            leftArm.receiveShadow = true;
             group.add(leftArm);
             const rightArm = new THREE.Mesh(armGeo, armMat);
             rightArm.position.set(0.44, 0.8, 0);
             rightArm.rotation.z = -0.4;
             rightArm.castShadow = true;
+            rightArm.receiveShadow = true;
             group.add(rightArm);
             
-            // Legs
-            const legGeo = new THREE.CylinderGeometry(0.11, 0.1, 0.55, 10);
-            const legMat = new THREE.MeshStandardMaterial({color: 0x2c3e50, roughness: 0.75});
+            // Ultra-realistic legs
+            const legGeo = new THREE.CylinderGeometry(0.11, 0.1, 0.55, 12);
+            const legMat = new THREE.MeshStandardMaterial({
+                color: 0x2c3e50, 
+                roughness: 0.8,
+                metalness: 0.1
+            });
             const leftLeg = new THREE.Mesh(legGeo, legMat);
             leftLeg.position.set(-0.16, 0.18, 0);
             leftLeg.castShadow = true;
+            leftLeg.receiveShadow = true;
             group.add(leftLeg);
             const rightLeg = new THREE.Mesh(legGeo, legMat);
             rightLeg.position.set(0.16, 0.18, 0);
             rightLeg.castShadow = true;
+            rightLeg.receiveShadow = true;
             group.add(rightLeg);
             
             group.position.set(x, y, z);
@@ -1140,8 +1222,10 @@
                 new THREE.BoxGeometry(14, 7, 14),
                 new THREE.MeshStandardMaterial({
                     color: 0xd4a373,
-                    roughness: 0.88,
-                    metalness: 0.05
+                    roughness: 0.9,
+                    metalness: 0.08,
+                    envMapIntensity: 0.3,
+                    aoMapIntensity: 1.0
                 })
             );
             wall.position.set(x, y + 3.5, z);
@@ -1153,12 +1237,15 @@
                 new THREE.ConeGeometry(10.5, 4.5, 4),
                 new THREE.MeshStandardMaterial({
                     color: 0x8b4513,
-                    roughness: 0.93
+                    roughness: 0.95,
+                    metalness: 0,
+                    envMapIntensity: 0.2
                 })
             );
             roof.position.set(x, y + 9, z);
             roof.rotation.y = Math.PI/4;
             roof.castShadow = true;
+            roof.receiveShadow = true;
             scene.add(roof);
             
             const door = createDoor(x, y, z + 7, true, id);
@@ -1168,10 +1255,13 @@
                 new THREE.BoxGeometry(2.7, 5, 0.35),
                 new THREE.MeshStandardMaterial({
                     color: 0x654321,
-                    roughness: 0.85
+                    roughness: 0.88,
+                    metalness: 0.05
                 })
             );
             doorFrame.position.set(x, y + 2.5, z + 7.3);
+            doorFrame.castShadow = true;
+            doorFrame.receiveShadow = true;
             scene.add(doorFrame);
             
             // Reduced collision radius from 8 to 5 so players can reach the door
@@ -1183,8 +1273,10 @@
                 new THREE.BoxGeometry(28, 17, 38),
                 new THREE.MeshStandardMaterial({
                     color: 0xa89968,
-                    roughness: 0.88,
-                    metalness: 0.05
+                    roughness: 0.9,
+                    metalness: 0.1,
+                    envMapIntensity: 0.4,
+                    aoMapIntensity: 1.0
                 })
             );
             main.position.set(x, y + 8.5, z);
@@ -1196,11 +1288,13 @@
                 new THREE.BoxGeometry(6, 28, 6),
                 new THREE.MeshStandardMaterial({
                     color: 0x8b7355,
-                    roughness: 0.88
+                    roughness: 0.9,
+                    metalness: 0.05
                 })
             );
             tower.position.set(x - 13, y + 14, z + 13);
             tower.castShadow = true;
+            tower.receiveShadow = true;
             scene.add(tower);
             
             const cross = new THREE.Group();
@@ -1209,30 +1303,38 @@
                 new THREE.MeshStandardMaterial({
                     color: 0xffd700,
                     emissive: 0xffd700,
-                    emissiveIntensity: 0.9,
-                    metalness: 0.8,
-                    roughness: 0.2
+                    emissiveIntensity: 1.2,
+                    metalness: 0.9,
+                    roughness: 0.15,
+                    envMapIntensity: 1.0
                 })
             );
             crossV.position.y = 1.75;
+            crossV.castShadow = true;
             cross.add(crossV);
             const crossH = new THREE.Mesh(
                 new THREE.BoxGeometry(2.2, 0.5, 0.5),
                 new THREE.MeshStandardMaterial({
                     color: 0xffd700,
                     emissive: 0xffd700,
-                    emissiveIntensity: 0.9,
-                    metalness: 0.8,
-                    roughness: 0.2
+                    emissiveIntensity: 1.2,
+                    metalness: 0.9,
+                    roughness: 0.15,
+                    envMapIntensity: 1.0
                 })
             );
             crossH.position.y = 1.2;
+            crossH.castShadow = true;
             cross.add(crossH);
             cross.position.set(x - 13, y + 29, z + 13);
             scene.add(cross);
             
-            const crossLight = new THREE.PointLight(0xffd700, 1.5, 20);
+            // Epic glowing cross light
+            const crossLight = new THREE.PointLight(0xffd700, 3.0, 30); // Increased
             crossLight.position.set(x - 13, y + 30, z + 13);
+            crossLight.castShadow = true;
+            crossLight.shadow.mapSize.width = 2048;
+            crossLight.shadow.mapSize.height = 2048;
             scene.add(crossLight);
             
             const door = createDoor(x, y, z + 19, true, id);
@@ -1243,10 +1345,13 @@
                 new THREE.BoxGeometry(4.5, 7, 0.35),
                 new THREE.MeshStandardMaterial({
                     color: 0x654321,
-                    roughness: 0.85
+                    roughness: 0.88,
+                    metalness: 0.05
                 })
             );
             doorFrame.position.set(x, y + 3.5, z + 19.3);
+            doorFrame.castShadow = true;
+            doorFrame.receiveShadow = true;
             scene.add(doorFrame);
             
             // Reduced collision radius from 16 to 10 so players can reach the door
@@ -1258,30 +1363,35 @@
                 new THREE.BoxGeometry(2.2, 4.5, 0.25),
                 new THREE.MeshStandardMaterial({
                     color: 0x4a2511,
-                    roughness: 0.82,
-                    metalness: 0.1
+                    roughness: 0.85,
+                    metalness: 0.15,
+                    envMapIntensity: 0.3
                 })
             );
             door.position.set(x, y + 2.25, z);
             door.castShadow = true;
+            door.receiveShadow = true;
             
             const handle = new THREE.Mesh(
-                new THREE.SphereGeometry(0.12, 12, 12),
+                new THREE.SphereGeometry(0.12, 16, 16),
                 new THREE.MeshStandardMaterial({
                     color: 0xffd700,
-                    metalness: 0.85,
-                    roughness: 0.18,
+                    metalness: 0.95,
+                    roughness: 0.1,
                     emissive: 0xffd700,
-                    emissiveIntensity: 0.3
+                    emissiveIntensity: 0.5,
+                    envMapIntensity: 1.0
                 })
             );
             handle.position.set(x + 0.8, y + 2.25, z + 0.18);
             handle.castShadow = true;
+            handle.receiveShadow = true;
             scene.add(handle);
             
-            // Add glowing light to make door visible
-            const doorLight = new THREE.PointLight(0xffd700, 0.8, 8);
+            // Epic glowing light to make door highly visible
+            const doorLight = new THREE.PointLight(0xffd700, 1.5, 12); // Increased
             doorLight.position.set(x, y + 2.5, z + 0.5);
+            doorLight.castShadow = true;
             scene.add(doorLight);
             
             door.userData = {
@@ -1302,11 +1412,13 @@
 
         function createTree(x, y, z) {
             const trunk = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.35, 0.45, 5, 12),
+                new THREE.CylinderGeometry(0.35, 0.45, 5, 16), // Higher poly
                 new THREE.MeshStandardMaterial({
                     color: 0x6B4423,
-                    roughness: 0.96,
-                    metalness: 0
+                    roughness: 0.98,
+                    metalness: 0,
+                    envMapIntensity: 0.1,
+                    bumpScale: 0.1
                 })
             );
             trunk.position.set(x, y + 2.5, z);
@@ -1315,28 +1427,35 @@
             scene.add(trunk);
             
             const leaves = new THREE.Mesh(
-                new THREE.SphereGeometry(3, 16, 16),
+                new THREE.SphereGeometry(3, 24, 24), // Higher poly
                 new THREE.MeshStandardMaterial({
                     color: 0x2d5016,
-                    roughness: 0.82
+                    roughness: 0.85,
+                    metalness: 0,
+                    envMapIntensity: 0.2,
+                    flatShading: false
                 })
             );
             leaves.position.set(x, y + 6.5, z);
             leaves.castShadow = true;
+            leaves.receiveShadow = true;
             scene.add(leaves);
         }
 
         function createBush(x, y, z) {
             const bush = new THREE.Mesh(
-                new THREE.SphereGeometry(0.9, 10, 10),
+                new THREE.SphereGeometry(0.9, 16, 16), // Higher poly
                 new THREE.MeshStandardMaterial({
                     color: 0x228B22,
-                    roughness: 0.88
+                    roughness: 0.9,
+                    metalness: 0,
+                    envMapIntensity: 0.15
                 })
             );
             bush.scale.set(1, 0.65, 1);
             bush.position.set(x, y + 0.35, z);
             bush.castShadow = true;
+            bush.receiveShadow = true;
             scene.add(bush);
         }
 
@@ -1346,9 +1465,10 @@
                 new THREE.MeshStandardMaterial({
                     color: 0xffd700,
                     emissive: 0xffd700,
-                    emissiveIntensity: 1.0,
-                    metalness: 0.5,
-                    roughness: 0.3
+                    emissiveIntensity: 1.5, // Increased glow
+                    metalness: 0.7,
+                    roughness: 0.2,
+                    envMapIntensity: 1.0
                 })
             );
             obj.position.set(x, y, z);
@@ -1361,11 +1481,16 @@
                 floatOffset: Math.random() * Math.PI * 2
             };
             obj.castShadow = true;
+            obj.receiveShadow = true;
             scene.add(obj);
             interactables.push(obj);
             
-            const light = new THREE.PointLight(0xffd700, 1.5, 6);
+            // Epic glowing light around objectives
+            const light = new THREE.PointLight(0xffd700, 2.5, 10); // Increased intensity and range
             light.position.copy(obj.position);
+            light.castShadow = true;
+            light.shadow.mapSize.width = 1024;
+            light.shadow.mapSize.height = 1024;
             scene.add(light);
             
             return obj;
@@ -2513,11 +2638,11 @@
             // Update objective text based on what's nearby - prioritize clarity
             if(nearestDoor) {
                 if(!nearestDoor.userData.isOpen) {
-                    document.getElementById('objective-text').textContent = '🚪 DOOR DETECTED - Press E or Door Button to Open';
+                    document.getElementById('objective-text').textContent = '🚪 DOOR - Use Door Button to Open';
                 } else if(nearestDoor.userData.leadsToInterior) {
-                    document.getElementById('objective-text').textContent = '🚪 DOOR OPEN - Press E or Door Button to Enter';
+                    document.getElementById('objective-text').textContent = '🚪 DOOR OPEN - Use Door Button to Enter';
                 } else if(nearestDoor.userData.leadsToExterior) {
-                    document.getElementById('objective-text').textContent = '🚪 EXIT DOOR - Press E or Door Button to Leave';
+                    document.getElementById('objective-text').textContent = '🚪 EXIT - Use Door Button to Leave';
                 } else {
                     document.getElementById('objective-text').textContent = '🚪 Door is open';
                 }
@@ -2536,10 +2661,22 @@
         }
 
         let lastTime = 0;
+        let deltaAccumulator = 0;
+        const FIXED_TIME_STEP = 1 / 60; // Target 60 FPS
+        const MAX_DELTA = 0.1; // Prevent spiral of death
+        
         function animate(time = 0) {
             requestAnimationFrame(animate);
-            const dt = Math.min((time - lastTime) / 1000, 0.05);
+            
+            let dt = Math.min((time - lastTime) / 1000, MAX_DELTA);
             lastTime = time;
+            
+            // Smooth delta time for consistent physics
+            deltaAccumulator += dt;
+            while (deltaAccumulator >= FIXED_TIME_STEP) {
+                update(FIXED_TIME_STEP);
+                deltaAccumulator -= FIXED_TIME_STEP;
+            }
             
             // FPS counter
             frameCount++;
@@ -2550,7 +2687,6 @@
                 lastFrameTime = time;
             }
             
-            update(dt);
             renderer.render(scene, camera);
         }
 
