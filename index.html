@@ -170,10 +170,8 @@
             scene = new THREE.Scene();
             
             // Epic sky gradient with realistic colors
-            const skyColor = new THREE.Color(0x87CEEB);
-            const horizonColor = new THREE.Color(0xe6f2ff);
-            scene.background = skyColor;
-            scene.fog = new THREE.FogExp2(horizonColor, 0.006);
+            scene.background = new THREE.Color(0x87CEEB);
+            scene.fog = new THREE.FogExp2(0x87CEEB, 0.006);
 
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // Wider FOV for more epic view
             camera.position.set(0, 10, 10);
@@ -215,8 +213,8 @@
             const sunLight = new THREE.DirectionalLight(0xfff5e6, 4.5); // Increased intensity
             sunLight.position.set(100, 200, 100);
             sunLight.castShadow = true;
-            sunLight.shadow.mapSize.width = 8192; // Ultra high resolution shadows
-            sunLight.shadow.mapSize.height = 8192;
+            sunLight.shadow.mapSize.width = 4096; // High resolution shadows (4K for compatibility)
+            sunLight.shadow.mapSize.height = 4096;
             sunLight.shadow.camera.left = -200;
             sunLight.shadow.camera.right = 200;
             sunLight.shadow.camera.top = 200;
@@ -239,11 +237,9 @@
             scene.add(backLight);
             
             // Hemisphere light for natural sky/ground gradient
+            // Hemisphere light for natural sky/ground gradient
             const skyLight = new THREE.HemisphereLight(0x87CEEB, 0x5d8c3e, 1.0); // Increased
             scene.add(skyLight);
-            
-            // Add atmospheric volumetric fog for depth
-            scene.fog = new THREE.FogExp2(0x87CEEB, 0.006); // Slightly reduced for clarity
 
             document.getElementById('start-button').addEventListener('click', startGame);
             document.getElementById('dialogue-continue').addEventListener('click', advanceDialogue);
@@ -329,46 +325,64 @@
         }
 
         function startGame() {
-            document.getElementById('title-screen').style.display = 'none';
-            gameState = 'playing';
-            loadChapter('WOMB_BARKING');
-            playChant('KYRIE');
+            try {
+                document.getElementById('title-screen').style.display = 'none';
+                gameState = 'playing';
+                loadChapter('WOMB_BARKING');
+                playChant('KYRIE');
+            } catch(error) {
+                console.error('Error starting game:', error);
+                alert('Error starting game. Please refresh the page.');
+            }
         }
 
         function loadChapter(key) {
-            currentChapter = key;
-            const ch = CHAPTERS[key];
-            document.getElementById('current-chapter').textContent = ch.name;
-            document.getElementById('current-location').textContent = ch.location;
-            document.getElementById('current-year').textContent = ch.year;
-            document.getElementById('playing-as').textContent = 'Playing as: ' + ch.playAs;
-            document.getElementById('objective-text').textContent = ch.objective;
-            tasksRequired = ch.tasks;
-            tasksCompleted = 0;
-            updateTaskProgress();
-            showChapterTitle(ch.name);
-            clearScene();
-            interactables.length = 0;
-            buildings.length = 0;
-            doors.length = 0;
-            walls.length = 0;
-            isIndoors = false;
-            currentBuilding = null;
-            document.getElementById('next-chapter-button').style.display = 'none';
+            try {
+                if(!CHAPTERS[key]) {
+                    console.error('Chapter not found:', key);
+                    return;
+                }
+                
+                currentChapter = key;
+                const ch = CHAPTERS[key];
+                document.getElementById('current-chapter').textContent = ch.name;
+                document.getElementById('current-location').textContent = ch.location;
+                document.getElementById('current-year').textContent = ch.year;
+                document.getElementById('playing-as').textContent = 'Playing as: ' + ch.playAs;
+                document.getElementById('objective-text').textContent = ch.objective;
+                tasksRequired = ch.tasks;
+                tasksCompleted = 0;
+                updateTaskProgress();
+                showChapterTitle(ch.name);
+                clearScene();
+                interactables.length = 0;
+                buildings.length = 0;
+                doors.length = 0;
+                walls.length = 0;
+                isIndoors = false;
+                currentBuilding = null;
+                document.getElementById('next-chapter-button').style.display = 'none';
 
-            // Create enhanced player model with limbs for animation
-            if(ch.playAs.includes('Mother')) {
-                playerModel = createMotherModel();
-            } else if(ch.playAs.includes('Young Vincent')) {
-                playerModel = createYoungVincentModel();
-            } else if(ch.playAs.includes('Vincent')) {
-                playerModel = createVincentModel();
-            } else if(ch.playAs.includes('Thomas')) {
-                playerModel = createPupilModel();
-            }
-            
-            playerModel.position.set(0, 0, 0);
-            scene.add(playerModel);
+                // Create enhanced player model with limbs for animation
+                if(ch.playAs.includes('Mother')) {
+                    playerModel = createMotherModel();
+                } else if(ch.playAs.includes('Young Vincent')) {
+                    playerModel = createYoungVincentModel();
+                } else if(ch.playAs.includes('Vincent')) {
+                    playerModel = createVincentModel();
+                } else if(ch.playAs.includes('Thomas')) {
+                    playerModel = createPupilModel();
+                } else {
+                    playerModel = createVincentModel(); // Default
+                }
+                
+                if(!playerModel) {
+                    console.error('Failed to create player model');
+                    return;
+                }
+                
+                playerModel.position.set(0, 0, 0);
+                scene.add(playerModel);
 
             // Load chapter content
             switch(key) {
@@ -404,6 +418,10 @@
                 case 'INVESTIGATION': loadInvestigationChapter(); break;
                 case 'CANONIZATION': loadCanonizationChapter(); break;
             }
+            } catch(error) {
+                console.error('Error loading chapter:', key, error);
+                alert('Error loading chapter. Please refresh the page.');
+            }
         }
 
         function showChapterTitle(title) {
@@ -432,8 +450,8 @@
             const sun = new THREE.DirectionalLight(0xfff5e6, 4.5);
             sun.position.set(100, 200, 100);
             sun.castShadow = true;
-            sun.shadow.mapSize.width = 8192;
-            sun.shadow.mapSize.height = 8192;
+            sun.shadow.mapSize.width = 4096;
+            sun.shadow.mapSize.height = 4096;
             sun.shadow.camera.left = -200;
             sun.shadow.camera.right = 200;
             sun.shadow.camera.top = 200;
@@ -1117,41 +1135,26 @@
 
         function createGround() {
             const ground = new THREE.Mesh(
-                new THREE.PlaneGeometry(250, 250, 100, 100), // Higher detail
+                new THREE.PlaneGeometry(250, 250, 50, 50), // Reduced from 80
                 new THREE.MeshStandardMaterial({
                     color: 0x5d8c3e,
                     roughness: 0.95,
-                    metalness: 0,
-                    side: THREE.FrontSide,
-                    flatShading: false,
-                    envMapIntensity: 1.0,
-                    aoMapIntensity: 1.0
+                    metalness: 0
                 })
             );
             ground.rotation.x = -Math.PI/2;
             ground.receiveShadow = true;
-            
-            // Add subtle displacement for realism
-            const vertices = ground.geometry.attributes.position.array;
-            for(let i = 0; i < vertices.length; i += 3) {
-                vertices[i + 2] = Math.random() * 0.3; // Slight height variation
-            }
-            ground.geometry.attributes.position.needsUpdate = true;
-            ground.geometry.computeVertexNormals(); // Recalculate for lighting
-            
             scene.add(ground);
         }
 
         function createNPC(x, y, z, color = 0x4a4a4a) {
             const group = new THREE.Group();
             const body = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.32, 0.37, 1.3, 24), // Higher poly count
+                new THREE.CylinderGeometry(0.32, 0.37, 1.3, 16), // Reduced from 24
                 new THREE.MeshStandardMaterial({
                     color: color,
                     roughness: 0.8,
-                    metalness: 0.15,
-                    envMapIntensity: 0.5,
-                    flatShading: false
+                    metalness: 0.15
                 })
             );
             body.position.y = 0.65;
@@ -1160,12 +1163,11 @@
             group.add(body);
             
             const head = new THREE.Mesh(
-                new THREE.SphereGeometry(0.26, 24, 24), // Higher poly count
+                new THREE.SphereGeometry(0.26, 16, 16), // Reduced from 24
                 new THREE.MeshStandardMaterial({
                     color: 0xf0c291,
                     roughness: 0.45,
-                    metalness: 0.05,
-                    envMapIntensity: 0.3
+                    metalness: 0.05
                 })
             );
             head.position.y = 1.5;
@@ -1174,43 +1176,42 @@
             group.add(head);
             
             // Ultra-realistic arms
-            const armGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.7, 12);
+            const armGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.7, 8);
             const armMat = new THREE.MeshStandardMaterial({
                 color: 0xf0c291, 
                 roughness: 0.5,
-                metalness: 0.05,
-                envMapIntensity: 0.3
+                metalness: 0.05
             });
-            const leftArm = new THREE.Mesh(armGeo, armMat);
-            leftArm.position.set(-0.44, 0.8, 0);
-            leftArm.rotation.z = 0.4;
-            leftArm.castShadow = true;
-            leftArm.receiveShadow = true;
-            group.add(leftArm);
-            const rightArm = new THREE.Mesh(armGeo, armMat);
-            rightArm.position.set(0.44, 0.8, 0);
-            rightArm.rotation.z = -0.4;
-            rightArm.castShadow = true;
-            rightArm.receiveShadow = true;
-            group.add(rightArm);
+            const leftArmNPC = new THREE.Mesh(armGeo, armMat);
+            leftArmNPC.position.set(-0.44, 0.8, 0);
+            leftArmNPC.rotation.z = 0.4;
+            leftArmNPC.castShadow = true;
+            leftArmNPC.receiveShadow = true;
+            group.add(leftArmNPC);
+            const rightArmNPC = new THREE.Mesh(armGeo, armMat);
+            rightArmNPC.position.set(0.44, 0.8, 0);
+            rightArmNPC.rotation.z = -0.4;
+            rightArmNPC.castShadow = true;
+            rightArmNPC.receiveShadow = true;
+            group.add(rightArmNPC);
             
             // Ultra-realistic legs
-            const legGeo = new THREE.CylinderGeometry(0.11, 0.1, 0.55, 12);
+            const legGeo = new THREE.CylinderGeometry(0.11, 0.1, 0.55, 8);
             const legMat = new THREE.MeshStandardMaterial({
                 color: 0x2c3e50, 
                 roughness: 0.8,
                 metalness: 0.1
             });
-            const leftLeg = new THREE.Mesh(legGeo, legMat);
-            leftLeg.position.set(-0.16, 0.18, 0);
-            leftLeg.castShadow = true;
-            leftLeg.receiveShadow = true;
-            group.add(leftLeg);
-            const rightLeg = new THREE.Mesh(legGeo, legMat);
-            rightLeg.position.set(0.16, 0.18, 0);
-            rightLeg.castShadow = true;
-            rightLeg.receiveShadow = true;
-            group.add(rightLeg);
+            const leftLegNPC = new THREE.Mesh(legGeo, legMat);
+            leftLegNPC.position.set(-0.16, 0.18, 0);
+            leftLegNPC.castShadow = true;
+            leftLegNPC.receiveShadow = true;
+            group.add(leftLegNPC);
+            const rightLegNPC = new THREE.Mesh(legGeo, legMat);
+            rightLegNPC.position.set(0.16, 0.18, 0);
+            rightLegNPC.castShadow = true;
+            rightLegNPC.receiveShadow = true;
+            group.add(rightLegNPC);
             
             group.position.set(x, y, z);
             scene.add(group);
@@ -1222,10 +1223,8 @@
                 new THREE.BoxGeometry(14, 7, 14),
                 new THREE.MeshStandardMaterial({
                     color: 0xd4a373,
-                    roughness: 0.9,
-                    metalness: 0.08,
-                    envMapIntensity: 0.3,
-                    aoMapIntensity: 1.0
+                    roughness: 0.88,
+                    metalness: 0.05
                 })
             );
             wall.position.set(x, y + 3.5, z);
@@ -1237,9 +1236,7 @@
                 new THREE.ConeGeometry(10.5, 4.5, 4),
                 new THREE.MeshStandardMaterial({
                     color: 0x8b4513,
-                    roughness: 0.95,
-                    metalness: 0,
-                    envMapIntensity: 0.2
+                    roughness: 0.93
                 })
             );
             roof.position.set(x, y + 9, z);
@@ -1249,14 +1246,13 @@
             scene.add(roof);
             
             const door = createDoor(x, y, z + 7, true, id);
-            doors.push(door); // Ensure door is added to array
+            doors.push(door);
             
             const doorFrame = new THREE.Mesh(
                 new THREE.BoxGeometry(2.7, 5, 0.35),
                 new THREE.MeshStandardMaterial({
                     color: 0x654321,
-                    roughness: 0.88,
-                    metalness: 0.05
+                    roughness: 0.85
                 })
             );
             doorFrame.position.set(x, y + 2.5, z + 7.3);
@@ -1264,7 +1260,6 @@
             doorFrame.receiveShadow = true;
             scene.add(doorFrame);
             
-            // Reduced collision radius from 8 to 5 so players can reach the door
             buildings.push({x: x, z: z, radius: 5, id: id});
         }
 
@@ -1273,10 +1268,8 @@
                 new THREE.BoxGeometry(28, 17, 38),
                 new THREE.MeshStandardMaterial({
                     color: 0xa89968,
-                    roughness: 0.9,
-                    metalness: 0.1,
-                    envMapIntensity: 0.4,
-                    aoMapIntensity: 1.0
+                    roughness: 0.88,
+                    metalness: 0.05
                 })
             );
             main.position.set(x, y + 8.5, z);
@@ -1288,8 +1281,7 @@
                 new THREE.BoxGeometry(6, 28, 6),
                 new THREE.MeshStandardMaterial({
                     color: 0x8b7355,
-                    roughness: 0.9,
-                    metalness: 0.05
+                    roughness: 0.88
                 })
             );
             tower.position.set(x - 13, y + 14, z + 13);
@@ -1303,10 +1295,9 @@
                 new THREE.MeshStandardMaterial({
                     color: 0xffd700,
                     emissive: 0xffd700,
-                    emissiveIntensity: 1.2,
-                    metalness: 0.9,
-                    roughness: 0.15,
-                    envMapIntensity: 1.0
+                    emissiveIntensity: 1.0,
+                    metalness: 0.8,
+                    roughness: 0.2
                 })
             );
             crossV.position.y = 1.75;
@@ -1317,10 +1308,9 @@
                 new THREE.MeshStandardMaterial({
                     color: 0xffd700,
                     emissive: 0xffd700,
-                    emissiveIntensity: 1.2,
-                    metalness: 0.9,
-                    roughness: 0.15,
-                    envMapIntensity: 1.0
+                    emissiveIntensity: 1.0,
+                    metalness: 0.8,
+                    roughness: 0.2
                 })
             );
             crossH.position.y = 1.2;
@@ -1329,12 +1319,9 @@
             cross.position.set(x - 13, y + 29, z + 13);
             scene.add(cross);
             
-            // Epic glowing cross light
-            const crossLight = new THREE.PointLight(0xffd700, 3.0, 30); // Increased
+            // Glowing cross light (no shadows for performance)
+            const crossLight = new THREE.PointLight(0xffd700, 2.0, 25);
             crossLight.position.set(x - 13, y + 30, z + 13);
-            crossLight.castShadow = true;
-            crossLight.shadow.mapSize.width = 2048;
-            crossLight.shadow.mapSize.height = 2048;
             scene.add(crossLight);
             
             const door = createDoor(x, y, z + 19, true, id);
@@ -1364,8 +1351,7 @@
                 new THREE.MeshStandardMaterial({
                     color: 0x4a2511,
                     roughness: 0.85,
-                    metalness: 0.15,
-                    envMapIntensity: 0.3
+                    metalness: 0.1
                 })
             );
             door.position.set(x, y + 2.25, z);
@@ -1373,14 +1359,13 @@
             door.receiveShadow = true;
             
             const handle = new THREE.Mesh(
-                new THREE.SphereGeometry(0.12, 16, 16),
+                new THREE.SphereGeometry(0.12, 12, 12),
                 new THREE.MeshStandardMaterial({
                     color: 0xffd700,
-                    metalness: 0.95,
-                    roughness: 0.1,
+                    metalness: 0.9,
+                    roughness: 0.15,
                     emissive: 0xffd700,
-                    emissiveIntensity: 0.5,
-                    envMapIntensity: 1.0
+                    emissiveIntensity: 0.4
                 })
             );
             handle.position.set(x + 0.8, y + 2.25, z + 0.18);
@@ -1388,10 +1373,9 @@
             handle.receiveShadow = true;
             scene.add(handle);
             
-            // Epic glowing light to make door highly visible
-            const doorLight = new THREE.PointLight(0xffd700, 1.5, 12); // Increased
+            // Glowing light to make door visible (no shadows for performance)
+            const doorLight = new THREE.PointLight(0xffd700, 1.0, 10);
             doorLight.position.set(x, y + 2.5, z + 0.5);
-            doorLight.castShadow = true;
             scene.add(doorLight);
             
             door.userData = {
@@ -1401,24 +1385,20 @@
                 leadsToExterior: leadsToExterior,
                 buildingId: buildingId,
                 isDoor: true,
-                light: doorLight // Store reference to clean up later if needed
+                light: doorLight
             };
             
             scene.add(door);
-            
-            // IMPORTANT: Return the door so it can be added to doors array
             return door;
         }
 
         function createTree(x, y, z) {
             const trunk = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.35, 0.45, 5, 16), // Higher poly
+                new THREE.CylinderGeometry(0.35, 0.45, 5, 12), // Reduced from 16
                 new THREE.MeshStandardMaterial({
                     color: 0x6B4423,
                     roughness: 0.98,
-                    metalness: 0,
-                    envMapIntensity: 0.1,
-                    bumpScale: 0.1
+                    metalness: 0
                 })
             );
             trunk.position.set(x, y + 2.5, z);
@@ -1427,13 +1407,11 @@
             scene.add(trunk);
             
             const leaves = new THREE.Mesh(
-                new THREE.SphereGeometry(3, 24, 24), // Higher poly
+                new THREE.SphereGeometry(3, 16, 16), // Reduced from 24
                 new THREE.MeshStandardMaterial({
                     color: 0x2d5016,
                     roughness: 0.85,
-                    metalness: 0,
-                    envMapIntensity: 0.2,
-                    flatShading: false
+                    metalness: 0
                 })
             );
             leaves.position.set(x, y + 6.5, z);
@@ -1444,12 +1422,11 @@
 
         function createBush(x, y, z) {
             const bush = new THREE.Mesh(
-                new THREE.SphereGeometry(0.9, 16, 16), // Higher poly
+                new THREE.SphereGeometry(0.9, 12, 12), // Reduced from 16
                 new THREE.MeshStandardMaterial({
                     color: 0x228B22,
                     roughness: 0.9,
-                    metalness: 0,
-                    envMapIntensity: 0.15
+                    metalness: 0
                 })
             );
             bush.scale.set(1, 0.65, 1);
@@ -1465,10 +1442,9 @@
                 new THREE.MeshStandardMaterial({
                     color: 0xffd700,
                     emissive: 0xffd700,
-                    emissiveIntensity: 1.5, // Increased glow
-                    metalness: 0.7,
-                    roughness: 0.2,
-                    envMapIntensity: 1.0
+                    emissiveIntensity: 1.2,
+                    metalness: 0.6,
+                    roughness: 0.3
                 })
             );
             obj.position.set(x, y, z);
@@ -1485,12 +1461,9 @@
             scene.add(obj);
             interactables.push(obj);
             
-            // Epic glowing light around objectives
-            const light = new THREE.PointLight(0xffd700, 2.5, 10); // Increased intensity and range
+            // Simple glowing light around objectives (no shadows to improve performance)
+            const light = new THREE.PointLight(0xffd700, 1.5, 8);
             light.position.copy(obj.position);
-            light.castShadow = true;
-            light.shadow.mapSize.width = 1024;
-            light.shadow.mapSize.height = 1024;
             scene.add(light);
             
             return obj;
@@ -2668,26 +2641,30 @@
         function animate(time = 0) {
             requestAnimationFrame(animate);
             
-            let dt = Math.min((time - lastTime) / 1000, MAX_DELTA);
-            lastTime = time;
-            
-            // Smooth delta time for consistent physics
-            deltaAccumulator += dt;
-            while (deltaAccumulator >= FIXED_TIME_STEP) {
-                update(FIXED_TIME_STEP);
-                deltaAccumulator -= FIXED_TIME_STEP;
+            try {
+                let dt = Math.min((time - lastTime) / 1000, MAX_DELTA);
+                lastTime = time;
+                
+                // Smooth delta time for consistent physics
+                deltaAccumulator += dt;
+                while (deltaAccumulator >= FIXED_TIME_STEP) {
+                    update(FIXED_TIME_STEP);
+                    deltaAccumulator -= FIXED_TIME_STEP;
+                }
+                
+                // FPS counter
+                frameCount++;
+                if(time - lastFrameTime >= 1000) {
+                    fps = frameCount;
+                    document.getElementById('fps-counter').textContent = `FPS: ${fps}`;
+                    frameCount = 0;
+                    lastFrameTime = time;
+                }
+                
+                renderer.render(scene, camera);
+            } catch(error) {
+                console.error('Animation error:', error);
             }
-            
-            // FPS counter
-            frameCount++;
-            if(time - lastFrameTime >= 1000) {
-                fps = frameCount;
-                document.getElementById('fps-counter').textContent = `FPS: ${fps}`;
-                frameCount = 0;
-                lastFrameTime = time;
-            }
-            
-            renderer.render(scene, camera);
         }
 
         init();
