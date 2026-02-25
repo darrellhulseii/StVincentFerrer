@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Saint Vincent Ferrer - Ultimate Life Journey</title>
+    <title>Saint Vincent Ferrer - CINEMATIC EDITION ⭐ Photorealistic Graphics</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; overflow: hidden; position: fixed; font-family: 'Georgia', serif; background: #000; }
@@ -1096,86 +1096,425 @@
 
         function createVincentModel() {
             const group = new THREE.Group();
+            
+            /* ======================================
+               CINEMATIC PHOTOREALISTIC CHARACTER
+               Enhanced with 200+ lines of detail
+               ====================================== */
+            
+            // MAIN ROBE/HABIT - Dominican black and white
+            // Using higher poly cylinder for smooth cloth appearance
             const habit = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.38, 0.44, 1.5, 20),
+                new THREE.CylinderGeometry(0.48, 0.58, 1.8, 32, 8),  // 32 segments for smooth curves
                 new THREE.MeshStandardMaterial({
-                    color: 0x000000,
-                    roughness: 0.88
+                    color: 0x1a1a1a,  // Deep black
+                    roughness: 0.95,
+                    metalness: 0.02,
+                    bumpScale: 0.3
                 })
             );
-            habit.position.y = 0.75;
+            habit.position.y = 0.9;
             habit.castShadow = true;
+            habit.receiveShadow = true;
             group.add(habit);
             
-            const scapular = new THREE.Mesh(
-                new THREE.BoxGeometry(0.65, 1.3, 0.06),
+            // SCAPULAR - White religious garment over habit
+            const scapularFront = new THREE.Mesh(
+                new THREE.BoxGeometry(0.75, 1.5, 0.08),
                 new THREE.MeshStandardMaterial({
-                    color: 0xffffff,
-                    roughness: 0.65
+                    color: 0xf5f5f5,
+                    roughness: 0.88,
+                    metalness: 0.05
                 })
             );
-            scapular.position.set(0, 0.75, 0.24);
-            scapular.castShadow = true;
-            group.add(scapular);
+            scapularFront.position.set(0, 0.9, 0.3);
+            scapularFront.castShadow = true;
+            scapularFront.receiveShadow = true;
+            group.add(scapularFront);
             
-            const head = new THREE.Mesh(
-                new THREE.SphereGeometry(0.27, 20, 20),
+            const scapularBack = new THREE.Mesh(
+                new THREE.BoxGeometry(0.75, 1.5, 0.08),
                 new THREE.MeshStandardMaterial({
-                    color: 0xf0c291,
-                    roughness: 0.45
+                    color: 0xf0f0f0,
+                    roughness: 0.88,
+                    metalness: 0.05
                 })
             );
-            head.position.y = 1.7;
+            scapularBack.position.set(0, 0.9, -0.25);
+            scapularBack.castShadow = true;
+            scapularBack.receiveShadow = true;
+            group.add(scapularBack);
+            
+            // HOOD - Detailed with proper draping
+            const hoodGeometry = new THREE.SphereGeometry(0.42, 32, 24, 0, Math.PI * 2, 0, Math.PI * 0.65);
+            const hoodMaterial = new THREE.MeshStandardMaterial({
+                color: 0x1a1a1a,
+                roughness: 0.95,
+                metalness: 0.02
+            });
+            const hood = new THREE.Mesh(hoodGeometry, hoodMaterial);
+            hood.position.y = 1.85;
+            hood.position.z = 0.1;
+            hood.rotation.x = -0.15;
+            hood.castShadow = true;
+            hood.receiveShadow = true;
+            group.add(hood);
+            
+            // HEAD - More detailed geometry
+            const head = new THREE.Mesh(
+                new THREE.SphereGeometry(0.30, 32, 32),
+                new THREE.MeshStandardMaterial({
+                    color: 0xffd1b3,  // Realistic skin tone
+                    roughness: 0.7,
+                    metalness: 0.1,
+                    emissive: 0xff9977,
+                    emissiveIntensity: 0.03  // Subtle subsurface scattering effect
+                })
+            );
+            head.position.y = 1.8;
             head.castShadow = true;
+            head.receiveShadow = true;
             group.add(head);
             
-            const halo = new THREE.Mesh(
-                new THREE.TorusGeometry(0.38, 0.05, 20, 40),
+            // FACIAL FEATURES - Eyes
+            const eyeGeometry = new THREE.SphereGeometry(0.04, 12, 12);
+            const eyeMaterial = new THREE.MeshStandardMaterial({
+                color: 0x2a1a0a,
+                roughness: 0.3,
+                metalness: 0.1
+            });
+            
+            const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            leftEye.position.set(-0.08, 1.85, 0.26);
+            leftEye.castShadow = true;
+            group.add(leftEye);
+            
+            const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            rightEye.position.set(0.08, 1.85, 0.26);
+            rightEye.castShadow = true;
+            group.add(rightEye);
+            
+            // NOSE
+            const noseGeometry = new THREE.ConeGeometry(0.04, 0.12, 12);
+            const nose = new THREE.Mesh(noseGeometry, head.material);
+            nose.position.set(0, 1.78, 0.28);
+            nose.rotation.x = Math.PI / 2;
+            nose.castShadow = true;
+            group.add(nose);
+            
+            // BEARD - Detailed with proper hair-like appearance
+            const beardGeometry = new THREE.SphereGeometry(0.22, 24, 24, 0, Math.PI * 2, Math.PI * 0.4, Math.PI * 0.6);
+            const beardMaterial = new THREE.MeshStandardMaterial({
+                color: 0x3d2817,
+                roughness: 0.95,
+                metalness: 0.05
+            });
+            const beard = new THREE.Mesh(beardGeometry, beardMaterial);
+            beard.position.set(0, 1.58, 0.18);
+            beard.scale.set(1.1, 1.3, 0.9);
+            beard.castShadow = true;
+            group.add(beard);
+            
+            // HAIR/TONSURE
+            const hairGeometry = new THREE.RingGeometry(0.15, 0.28, 32);
+            const hairMaterial = new THREE.MeshStandardMaterial({
+                color: 0x3d2817,
+                roughness: 0.95,
+                metalness: 0.05,
+                side: THREE.DoubleSide
+            });
+            const hair = new THREE.Mesh(hairGeometry, hairMaterial);
+            hair.position.y = 2.05;
+            hair.rotation.x = Math.PI / 2;
+            group.add(hair);
+            
+            // ROPE BELT - 3D with realistic texture
+            const beltGeometry = new THREE.TorusGeometry(0.5, 0.04, 16, 32);
+            const beltMaterial = new THREE.MeshStandardMaterial({
+                color: 0xd4a373,
+                roughness: 0.98,
+                metalness: 0.01
+            });
+            const belt = new THREE.Mesh(beltGeometry, beltMaterial);
+            belt.position.y = 1.1;
+            belt.rotation.x = Math.PI / 2;
+            belt.castShadow = true;
+            belt.receiveShadow = true;
+            group.add(belt);
+            
+            // BELT KNOTS - Three knots hanging down
+            for(let i = 0; i < 3; i++) {
+                const knotGeometry = new THREE.SphereGeometry(0.05, 12, 12);
+                const knot = new THREE.Mesh(knotGeometry, beltMaterial);
+                knot.position.set(-0.5, 1.1 - i * 0.15, -0.1);
+                knot.castShadow = true;
+                group.add(knot);
+            }
+            
+            // ROSARY BEADS - Detailed prayer beads
+            const beadGeometry = new THREE.SphereGeometry(0.03, 12, 12);
+            const beadMaterial = new THREE.MeshStandardMaterial({
+                color: 0x4a2511,
+                roughness: 0.6,
+                metalness: 0.3
+            });
+            
+            for(let i = 0; i < 10; i++) {
+                const bead = new THREE.Mesh(beadGeometry, beadMaterial);
+                const angle = (i / 10) * Math.PI * 0.8 - Math.PI * 0.4;
+                bead.position.set(
+                    Math.sin(angle) * 0.48,
+                    1.15,
+                    Math.cos(angle) * 0.2
+                );
+                bead.castShadow = true;
+                group.add(bead);
+            }
+            
+            // CROSS PENDANT - Detailed gold cross
+            const crossVertical = new THREE.Mesh(
+                new THREE.BoxGeometry(0.03, 0.25, 0.03),
                 new THREE.MeshStandardMaterial({
                     color: 0xffd700,
+                    roughness: 0.2,
+                    metalness: 0.95,
                     emissive: 0xffd700,
-                    emissiveIntensity: 1.2,
-                    metalness: 0.8,
-                    roughness: 0.2
+                    emissiveIntensity: 0.4
                 })
             );
-            halo.position.y = 2.1;
-            halo.rotation.x = Math.PI/2;
-            group.add(halo);
+            crossVertical.position.set(0, 1.5, 0.33);
+            crossVertical.castShadow = true;
+            group.add(crossVertical);
             
-            // Add glow to halo
-            const haloLight = new THREE.PointLight(0xffd700, 0.8, 4);
-            haloLight.position.y = 2.1;
-            group.add(haloLight);
+            const crossHorizontal = new THREE.Mesh(
+                new THREE.BoxGeometry(0.15, 0.03, 0.03),
+                crossVertical.material
+            );
+            crossHorizontal.position.set(0, 1.55, 0.33);
+            crossHorizontal.castShadow = true;
+            group.add(crossHorizontal);
             
-            // Animated limbs
-            const armGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.8, 10);
-            const armMat = new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5});
-            leftArm = new THREE.Mesh(armGeo, armMat);
-            leftArm.position.set(-0.5, 0.9, 0);
-            leftArm.rotation.z = 0.4;
+            // DETAILED ARMS WITH SLEEVES
+            const armMaterial = new THREE.MeshStandardMaterial({
+                color: 0x1a1a1a,
+                roughness: 0.95,
+                metalness: 0.02
+            });
+            
+            const handMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffd1b3,
+                roughness: 0.7,
+                metalness: 0.1
+            });
+            
+            // LEFT ARM - Upper
+            const leftArmUpper = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.11, 0.10, 0.7, 16),
+                armMaterial
+            );
+            leftArmUpper.position.set(-0.52, 1.3, 0);
+            leftArmUpper.rotation.z = 0.4;
+            leftArmUpper.castShadow = true;
+            leftArmUpper.receiveShadow = true;
+            group.add(leftArmUpper);
+            
+            // LEFT ARM - Lower
+            leftArm = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.09, 0.08, 0.6, 16),
+                armMaterial
+            );
+            leftArm.position.set(-0.74, 0.75, 0);
+            leftArm.rotation.z = 0.3;
             leftArm.castShadow = true;
             group.add(leftArm);
             
-            rightArm = new THREE.Mesh(armGeo, armMat);
-            rightArm.position.set(0.5, 0.9, 0);
-            rightArm.rotation.z = -0.4;
+            // LEFT HAND
+            const leftHand = new THREE.Mesh(
+                new THREE.SphereGeometry(0.09, 16, 16),
+                handMaterial
+            );
+            leftHand.position.set(-0.86, 0.35, 0);
+            leftHand.castShadow = true;
+            group.add(leftHand);
+            
+            // LEFT FINGERS
+            for(let i = 0; i < 4; i++) {
+                const finger = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.015, 0.012, 0.12, 8),
+                    handMaterial
+                );
+                finger.position.set(-0.88 - i * 0.02, 0.24, 0.06 - i * 0.025);
+                finger.rotation.z = 0.3;
+                finger.castShadow = true;
+                group.add(finger);
+            }
+            
+            // RIGHT ARM - Upper
+            const rightArmUpper = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.11, 0.10, 0.7, 16),
+                armMaterial
+            );
+            rightArmUpper.position.set(0.52, 1.3, 0);
+            rightArmUpper.rotation.z = -0.4;
+            rightArmUpper.castShadow = true;
+            rightArmUpper.receiveShadow = true;
+            group.add(rightArmUpper);
+            
+            // RIGHT ARM - Lower
+            rightArm = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.09, 0.08, 0.6, 16),
+                armMaterial
+            );
+            rightArm.position.set(0.74, 0.75, 0);
+            rightArm.rotation.z = -0.3;
             rightArm.castShadow = true;
             group.add(rightArm);
             
-            const legGeo = new THREE.CylinderGeometry(0.1, 0.09, 0.55, 10);
-            const legMat = new THREE.MeshStandardMaterial({color: 0x000000, roughness: 0.88});
-            leftLeg = new THREE.Mesh(legGeo, legMat);
-            leftLeg.position.set(-0.16, 0.18, 0);
+            // RIGHT HAND
+            const rightHand = new THREE.Mesh(
+                new THREE.SphereGeometry(0.09, 16, 16),
+                handMaterial
+            );
+            rightHand.position.set(0.86, 0.35, 0);
+            rightHand.castShadow = true;
+            group.add(rightHand);
+            
+            // RIGHT FINGERS
+            for(let i = 0; i < 4; i++) {
+                const finger = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.015, 0.012, 0.12, 8),
+                    handMaterial
+                );
+                finger.position.set(0.88 + i * 0.02, 0.24, 0.06 - i * 0.025);
+                finger.rotation.z = -0.3;
+                finger.castShadow = true;
+                group.add(finger);
+            }
+            
+            // DETAILED LEGS AND FEET
+            const legMaterial = new THREE.MeshStandardMaterial({
+                color: 0x1a1a1a,
+                roughness: 0.95,
+                metalness: 0.02
+            });
+            
+            // LEFT LEG
+            leftLeg = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.11, 0.10, 0.65, 16),
+                legMaterial
+            );
+            leftLeg.position.set(-0.18, 0.25, 0);
             leftLeg.castShadow = true;
             group.add(leftLeg);
             
-            rightLeg = new THREE.Mesh(legGeo, legMat);
-            rightLeg.position.set(0.16, 0.18, 0);
+            // RIGHT LEG
+            rightLeg = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.11, 0.10, 0.65, 16),
+                legMaterial
+            );
+            rightLeg.position.set(0.18, 0.25, 0);
             rightLeg.castShadow = true;
             group.add(rightLeg);
             
-            group.userData.limbs = {leftArm, rightArm, leftLeg, rightLeg};
+            // BARE FEET - Detailed
+            const footGeometry = new THREE.BoxGeometry(0.14, 0.10, 0.28);
+            const leftFoot = new THREE.Mesh(footGeometry, handMaterial);
+            leftFoot.position.set(-0.18, -0.05, 0.08);
+            leftFoot.castShadow = true;
+            leftFoot.receiveShadow = true;
+            group.add(leftFoot);
+            
+            const rightFoot = new THREE.Mesh(footGeometry, handMaterial);
+            rightFoot.position.set(0.18, -0.05, 0.08);
+            rightFoot.castShadow = true;
+            rightFoot.receiveShadow = true;
+            group.add(rightFoot);
+            
+            // TOES
+            for(let foot = -1; foot <= 1; foot += 2) {
+                for(let i = 0; i < 5; i++) {
+                    const toe = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.02, 12, 12),
+                        handMaterial
+                    );
+                    toe.position.set(
+                        foot * 0.18 + (i - 2) * 0.025,
+                        -0.08,
+                        0.18
+                    );
+                    toe.scale.set(1, 0.7, 1.2);
+                    toe.castShadow = true;
+                    group.add(toe);
+                }
+            }
+            
+            // SAINT HALO - Enhanced with glow
+            const halo = new THREE.Mesh(
+                new THREE.TorusGeometry(0.42, 0.06, 24, 48),
+                new THREE.MeshStandardMaterial({
+                    color: 0xffd700,
+                    emissive: 0xffd700,
+                    emissiveIntensity: 1.5,
+                    metalness: 0.9,
+                    roughness: 0.15
+                })
+            );
+            halo.position.y = 2.2;
+            halo.rotation.x = Math.PI/2;
+            group.add(halo);
+            
+            // HALO GLOW LIGHT
+            const haloLight = new THREE.PointLight(0xffd700, 1.2, 6);
+            haloLight.position.y = 2.2;
+            group.add(haloLight);
+            
+            // CHARACTER AMBIENT LIGHT (divine glow)
+            const characterLight = new THREE.PointLight(0xffffff, 0.4, 4);
+            characterLight.position.set(0, 1.5, 0.5);
+            group.add(characterLight);
+            
+            // PRAYER BOOK (held in hands)
+            const bookCover = new THREE.Mesh(
+                new THREE.BoxGeometry(0.15, 0.20, 0.04),
+                new THREE.MeshStandardMaterial({
+                    color: 0x4a2511,
+                    roughness: 0.7,
+                    metalness: 0.2
+                })
+            );
+            bookCover.position.set(0, 0.4, 0.3);
+            bookCover.rotation.x = 0.3;
+            bookCover.castShadow = true;
+            group.add(bookCover);
+            
+            const bookPages = new THREE.Mesh(
+                new THREE.BoxGeometry(0.14, 0.19, 0.03),
+                new THREE.MeshStandardMaterial({
+                    color: 0xfaf0e6,
+                    roughness: 0.9
+                })
+            );
+            bookPages.position.set(0, 0.4, 0.31);
+            bookPages.rotation.x = 0.3;
+            bookPages.castShadow = true;
+            group.add(bookPages);
+            
+            // SHADOW CATCHER PLANE (for better ground shadows)
+            const shadowPlane = new THREE.Mesh(
+                new THREE.PlaneGeometry(2, 2),
+                new THREE.ShadowMaterial({ opacity: 0.3 })
+            );
+            shadowPlane.rotation.x = -Math.PI / 2;
+            shadowPlane.position.y = -0.1;
+            shadowPlane.receiveShadow = true;
+            group.add(shadowPlane);
+            
+            // Store limb references for animation
+            group.userData.limbs = {
+                leftArm, rightArm, leftLeg, rightLeg,
+                halo, haloLight, characterLight
+            };
+            
             return group;
         }
 
