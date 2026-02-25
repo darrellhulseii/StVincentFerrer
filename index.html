@@ -8,43 +8,43 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; overflow: hidden; position: fixed; font-family: 'Georgia', serif; background: #000; }
         canvas { display: block; width: 100% !important; height: 100% !important; position: absolute; top: 0; left: 0; }
-        #hud { position: fixed; top: 5px; left: 5px; background: linear-gradient(135deg, rgba(20, 20, 40, 0.95) 0%, rgba(40, 30, 60, 0.95) 100%); padding: 5px; border-radius: 4px; border: 1px solid #d4af37; color: #f0e6d2; font-size: 7px; z-index: 100; max-width: 80px; box-shadow: 0 2px 8px rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
-        #chapter-title { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, rgba(0, 0, 0, 0.98) 0%, rgba(30, 20, 40, 0.98) 100%); padding: 12px 18px; border: 1px solid #d4af37; border-radius: 5px; color: #d4af37; font-size: 11px; font-weight: bold; text-align: center; z-index: 200; display: none; max-width: 90%; box-shadow: 0 5px 15px rgba(0,0,0,0.9); }
-        #dialogue-box { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, rgba(20, 20, 40, 0.98) 0%, rgba(40, 30, 60, 0.98) 100%); padding: 8px 10px; border: 1px solid #d4af37; border-radius: 4px; color: #f0e6d2; font-size: 7px; max-width: 90%; z-index: 150; display: none; line-height: 1.4; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
-        #dialogue-speaker { color: #d4af37; font-weight: bold; font-size: 8px; margin-bottom: 3px; text-align: center; text-shadow: 0 1px 1px rgba(0,0,0,0.5); }
+        #hud { position: fixed; top: 5px; left: 5px; background: linear-gradient(135deg, rgba(20, 20, 40, 0.95) 0%, rgba(40, 30, 60, 0.95) 100%); padding: 8px; border-radius: 6px; border: 2px solid #d4af37; color: #f0e6d2; font-size: 12px; z-index: 100; max-width: 130px; box-shadow: 0 3px 10px rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
+        #chapter-title { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, rgba(0, 0, 0, 0.98) 0%, rgba(30, 20, 40, 0.98) 100%); padding: 20px 30px; border: 3px solid #d4af37; border-radius: 8px; color: #d4af37; font-size: 18px; font-weight: bold; text-align: center; z-index: 200; display: none; max-width: 90%; box-shadow: 0 8px 20px rgba(0,0,0,0.9); }
+        #dialogue-box { position: fixed; top: 40px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, rgba(20, 20, 40, 0.98) 0%, rgba(40, 30, 60, 0.98) 100%); padding: 13px 17px; border: 2px solid #d4af37; border-radius: 6px; color: #f0e6d2; font-size: 12px; max-width: 90%; z-index: 150; display: none; line-height: 1.6; text-align: center; box-shadow: 0 5px 12px rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
+        #dialogue-speaker { color: #d4af37; font-weight: bold; font-size: 13px; margin-bottom: 5px; text-align: center; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
         #dialogue-text { text-align: center; }
-        #dialogue-continue { background: linear-gradient(135deg, #d4af37 0%, #f0d978 100%); color: #1a1a2e; border: none; padding: 3px 8px; margin-top: 4px; border-radius: 2px; cursor: pointer; font-size: 7px; font-weight: bold; display: block; margin-left: auto; margin-right: auto; box-shadow: 0 1px 3px rgba(212, 175, 55, 0.5); transition: all 0.3s; }
-        #dialogue-continue:hover { background: linear-gradient(135deg, #f0d978 0%, #ffd700 100%); transform: translateY(-1px); box-shadow: 0 2px 4px rgba(212, 175, 55, 0.7); }
-        #controls { position: fixed; bottom: 5px; left: 5px; background: linear-gradient(135deg, rgba(20, 20, 40, 0.9) 0%, rgba(40, 30, 60, 0.9) 100%); padding: 4px 5px; border-radius: 3px; color: #f0e6d2; font-size: 6px; z-index: 100; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.6); }
+        #dialogue-continue { background: linear-gradient(135deg, #d4af37 0%, #f0d978 100%); color: #1a1a2e; border: none; padding: 5px 13px; margin-top: 7px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; display: block; margin-left: auto; margin-right: auto; box-shadow: 0 2px 4px rgba(212, 175, 55, 0.5); transition: all 0.3s; }
+        #dialogue-continue:hover { background: linear-gradient(135deg, #f0d978 0%, #ffd700 100%); transform: translateY(-1px); box-shadow: 0 3px 6px rgba(212, 175, 55, 0.7); }
+        #controls { position: fixed; bottom: 8px; left: 8px; background: linear-gradient(135deg, rgba(20, 20, 40, 0.9) 0%, rgba(40, 30, 60, 0.9) 100%); padding: 7px 9px; border-radius: 5px; color: #f0e6d2; font-size: 10px; z-index: 100; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.6); }
         #mobile-joystick { position: fixed; bottom: 10px; left: 10px; width: 70px; height: 70px; display: none; z-index: 200; }
         @media (max-width: 768px), (pointer: coarse) { #mobile-joystick { display: block; } #controls { display: none; } }
-        @media (min-width: 1200px) { #hud { font-size: 8px; max-width: 100px; } #dialogue-box { font-size: 8px; } #mission-objective { font-size: 8px; max-width: 100px; } #chapter-title { font-size: 13px; } }
-        @media (min-width: 1600px) { #hud { font-size: 9px; max-width: 120px; } #dialogue-box { font-size: 9px; } #mission-objective { font-size: 9px; max-width: 120px; } #chapter-title { font-size: 15px; } }
+        @media (min-width: 1200px) { #hud { font-size: 13px; max-width: 150px; } #dialogue-box { font-size: 13px; } #mission-objective { font-size: 13px; max-width: 150px; } #chapter-title { font-size: 20px; } }
+        @media (min-width: 1600px) { #hud { font-size: 15px; max-width: 170px; } #dialogue-box { font-size: 15px; } #mission-objective { font-size: 15px; max-width: 170px; } #chapter-title { font-size: 24px; } }
         .joystick-base { position: absolute; width: 70px; height: 70px; background: radial-gradient(circle, rgba(52, 73, 94, 0.85) 0%, rgba(44, 62, 80, 0.95) 100%); border: 2px solid rgba(212, 175, 55, 0.8); border-radius: 50%; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.7), inset 0 -1px 3px rgba(0,0,0,0.4); }
         .joystick-stick { position: absolute; width: 32px; height: 32px; background: radial-gradient(circle, rgba(212, 175, 55, 1) 0%, rgba(160, 132, 40, 1) 100%); border: 2px solid rgba(160, 132, 40, 1); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: all 0.08s; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.6), inset 0 -1px 3px rgba(0,0,0,0.5); }
         #interact-button { position: fixed; bottom: 15px; right: 15px; width: 35px; height: 35px; background: radial-gradient(circle, rgba(212, 175, 55, 1) 0%, rgba(160, 132, 40, 1) 100%); border: 2px solid rgba(160, 132, 40, 1); border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: white; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6); z-index: 200; cursor: pointer; }
         @media (max-width: 768px), (pointer: coarse) { #interact-button { display: flex; } }
-        #mission-objective { position: fixed; top: 5px; right: 5px; background: linear-gradient(135deg, rgba(20, 20, 40, 0.95) 0%, rgba(40, 30, 60, 0.95) 100%); padding: 5px; border-radius: 4px; border: 1px solid #4a9eff; color: #f0e6d2; font-size: 7px; z-index: 100; max-width: 80px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
-        #objective-title { color: #4a9eff; font-weight: bold; margin-bottom: 2px; font-size: 8px; }
-        #task-progress { color: #ffd700; font-weight: bold; margin-top: 2px; font-size: 8px; text-shadow: 0 1px 1px rgba(0,0,0,0.5); }
-        .miracle-effect { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: #ffd700; text-shadow: 0 0 10px #fff, 0 0 20px #ffd700, 0 0 30px #ffd700; z-index: 250; pointer-events: none; animation: miraclePulse 2.5s ease-out; font-weight: bold; }
+        #mission-objective { position: fixed; top: 5px; right: 5px; background: linear-gradient(135deg, rgba(20, 20, 40, 0.95) 0%, rgba(40, 30, 60, 0.95) 100%); padding: 8px; border-radius: 6px; border: 2px solid #4a9eff; color: #f0e6d2; font-size: 12px; z-index: 100; max-width: 130px; text-align: center; box-shadow: 0 3px 10px rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
+        #objective-title { color: #4a9eff; font-weight: bold; margin-bottom: 3px; font-size: 13px; }
+        #task-progress { color: #ffd700; font-weight: bold; margin-top: 4px; font-size: 13px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        .miracle-effect { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 40px; color: #ffd700; text-shadow: 0 0 15px #fff, 0 0 30px #ffd700, 0 0 45px #ffd700; z-index: 250; pointer-events: none; animation: miraclePulse 2.5s ease-out; font-weight: bold; }
         @keyframes miraclePulse { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(-10deg); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(5deg); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1) rotate(0deg); } }
         #title-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #1a1a2e 0%, #2d1b4e 50%, #4a2c6e 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 300; color: #d4af37; }
-        #title-screen h1 { font-size: 20px; margin-bottom: 8px; text-shadow: 0 0 8px rgba(212,175,55,0.8), 1px 1px 3px rgba(0,0,0,0.9); text-align: center; animation: titleGlow 3s ease-in-out infinite; }
-        @keyframes titleGlow { 0%, 100% { text-shadow: 0 0 8px rgba(212,175,55,0.8), 1px 1px 3px rgba(0,0,0,0.9); } 50% { text-shadow: 0 0 15px rgba(212,175,55,1), 1px 1px 3px rgba(0,0,0,0.9); } }
-        #title-screen h2 { font-size: 10px; margin-bottom: 12px; color: #f0e6d2; text-align: center; }
-        #title-screen p { font-size: 8px; max-width: 85%; margin: 10px; line-height: 1.4; }
-        #start-button { background: linear-gradient(135deg, #d4af37 0%, #f0d978 100%); color: #1a1a2e; border: none; padding: 8px 18px; font-size: 10px; font-weight: bold; border-radius: 4px; cursor: pointer; box-shadow: 0 3px 0 #a08428, 0 4px 8px rgba(0,0,0,0.5); transition: all 0.2s; }
-        #start-button:hover { background: linear-gradient(135deg, #f0d978 0%, #ffd700 100%); transform: translateY(-1px); box-shadow: 0 4px 0 #a08428, 0 5px 10px rgba(0,0,0,0.6); }
-        #start-button:active { transform: translateY(1px); box-shadow: 0 1px 0 #a08428, 0 2px 5px rgba(0,0,0,0.4); }
-        #playing-as { position: fixed; top: 25px; left: 5px; background: linear-gradient(135deg, rgba(139, 0, 139, 0.95) 0%, rgba(75, 0, 130, 0.95) 100%); padding: 3px 5px; border-radius: 3px; border: 1px solid #d4af37; color: #ffd700; font-size: 7px; font-weight: bold; z-index: 100; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.6); }
-        #next-chapter-button { position: fixed; bottom: 35px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #4a9eff 0%, #6fb1ff 100%); color: white; border: none; padding: 6px 15px; font-size: 9px; font-weight: bold; border-radius: 4px; cursor: pointer; box-shadow: 0 3px 0 #2c5aa0, 0 4px 10px rgba(74, 158, 255, 0.5); z-index: 200; display: none; transition: all 0.2s; }
-        #next-chapter-button:hover { background: linear-gradient(135deg, #6fb1ff 0%, #87ceeb 100%); transform: translateX(-50%) translateY(-1px); box-shadow: 0 4px 0 #2c5aa0, 0 5px 12px rgba(74, 158, 255, 0.6); }
-        #next-chapter-button:active { transform: translateX(-50%) translateY(1px); box-shadow: 0 1px 0 #2c5aa0, 0 2px 6px rgba(74, 158, 255, 0.4); }
-        #door-button { position: fixed; top: 35px; right: 5px; background: linear-gradient(135deg, #ffd700 0%, #f0d978 100%); color: #1a1a2e; border: 2px solid #d4af37; padding: 6px 12px; font-size: 9px; font-weight: bold; border-radius: 4px; cursor: pointer; z-index: 300; box-shadow: 0 3px 8px rgba(212, 175, 55, 0.8); display: none; transition: all 0.3s; text-align: center; animation: doorPulse 2s ease-in-out infinite; }
+        #title-screen h1 { font-size: 34px; margin-bottom: 13px; text-shadow: 0 0 12px rgba(212,175,55,0.8), 2px 2px 4px rgba(0,0,0,0.9); text-align: center; animation: titleGlow 3s ease-in-out infinite; }
+        @keyframes titleGlow { 0%, 100% { text-shadow: 0 0 12px rgba(212,175,55,0.8), 2px 2px 4px rgba(0,0,0,0.9); } 50% { text-shadow: 0 0 20px rgba(212,175,55,1), 2px 2px 4px rgba(0,0,0,0.9); } }
+        #title-screen h2 { font-size: 17px; margin-bottom: 20px; color: #f0e6d2; text-align: center; }
+        #title-screen p { font-size: 13px; max-width: 85%; margin: 13px; line-height: 1.5; text-align: center; }
+        #start-button { background: linear-gradient(135deg, #d4af37 0%, #f0d978 100%); color: #1a1a2e; border: none; padding: 13px 30px; font-size: 17px; font-weight: bold; border-radius: 6px; cursor: pointer; box-shadow: 0 4px 0 #a08428, 0 5px 10px rgba(0,0,0,0.5); transition: all 0.2s; }
+        #start-button:hover { background: linear-gradient(135deg, #f0d978 0%, #ffd700 100%); transform: translateY(-2px); box-shadow: 0 6px 0 #a08428, 0 7px 12px rgba(0,0,0,0.6); }
+        #start-button:active { transform: translateY(2px); box-shadow: 0 2px 0 #a08428, 0 3px 6px rgba(0,0,0,0.4); }
+        #playing-as { position: fixed; top: 35px; left: 5px; background: linear-gradient(135deg, rgba(139, 0, 139, 0.95) 0%, rgba(75, 0, 130, 0.95) 100%); padding: 5px 8px; border-radius: 5px; border: 2px solid #d4af37; color: #ffd700; font-size: 12px; font-weight: bold; z-index: 100; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.6); }
+        #next-chapter-button { position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #4a9eff 0%, #6fb1ff 100%); color: white; border: none; padding: 10px 25px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; box-shadow: 0 4px 0 #2c5aa0, 0 5px 12px rgba(74, 158, 255, 0.5); z-index: 200; display: none; transition: all 0.2s; }
+        #next-chapter-button:hover { background: linear-gradient(135deg, #6fb1ff 0%, #87ceeb 100%); transform: translateX(-50%) translateY(-2px); box-shadow: 0 6px 0 #2c5aa0, 0 7px 15px rgba(74, 158, 255, 0.6); }
+        #next-chapter-button:active { transform: translateX(-50%) translateY(2px); box-shadow: 0 2px 0 #2c5aa0, 0 3px 8px rgba(74, 158, 255, 0.4); }
+        #door-button { position: fixed; top: 50px; right: 5px; background: linear-gradient(135deg, #ffd700 0%, #f0d978 100%); color: #1a1a2e; border: 3px solid #d4af37; padding: 10px 20px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; z-index: 300; box-shadow: 0 4px 10px rgba(212, 175, 55, 0.8); display: none; transition: all 0.3s; text-align: center; animation: doorPulse 2s ease-in-out infinite; }
         @keyframes doorPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        #door-button:hover { background: linear-gradient(135deg, #f0d978 0%, #ffd700 100%); transform: scale(1.1) translateY(-1px); box-shadow: 0 5px 12px rgba(212, 175, 55, 1); }
-        #door-button:active { transform: scale(0.95) translateY(1px); box-shadow: 0 1px 4px rgba(212, 175, 55, 0.5); }
+        #door-button:hover { background: linear-gradient(135deg, #f0d978 0%, #ffd700 100%); transform: scale(1.1) translateY(-2px); box-shadow: 0 6px 15px rgba(212, 175, 55, 1); }
+        #door-button:active { transform: scale(0.95) translateY(1px); box-shadow: 0 2px 5px rgba(212, 175, 55, 0.5); }
         #mini-radar { position: fixed; bottom: 5px; right: 5px; width: 50px; height: 50px; background: radial-gradient(circle, rgba(20, 20, 40, 0.95) 0%, rgba(10, 10, 20, 0.95) 100%); border: 1px solid #4a9eff; border-radius: 50%; z-index: 100; box-shadow: 0 0 8px rgba(74, 158, 255, 0.5), 0 2px 6px rgba(0,0,0,0.6); }
         .radar-player { position: absolute; width: 4px; height: 4px; background: #00ff00; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 4px #00ff00, 0 0 6px #00ff00; animation: playerPulse 1.5s ease-in-out infinite; }
         @keyframes playerPulse { 0%, 100% { box-shadow: 0 0 4px #00ff00, 0 0 6px #00ff00; } 50% { box-shadow: 0 0 6px #00ff00, 0 0 10px #00ff00; } }
@@ -52,7 +52,7 @@
         @keyframes radarPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.7; } }
         .radar-scan { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(transparent 0deg, rgba(74, 158, 255, 0.4) 90deg, transparent 90deg); animation: radarScan 4s linear infinite; }
         @keyframes radarScan { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #fps-counter { position: fixed; top: 5px; right: 90px; background: rgba(0,0,0,0.7); color: #00ff00; padding: 2px 4px; border-radius: 2px; font-family: monospace; font-size: 7px; z-index: 100; }
+        #fps-counter { position: fixed; top: 5px; right: 145px; background: rgba(0,0,0,0.7); color: #00ff00; padding: 3px 6px; border-radius: 3px; font-family: monospace; font-size: 12px; z-index: 100; }
     </style>
 </head>
 <body>
@@ -70,10 +70,10 @@
     <div id="playing-as">Playing as: Mother Constance</div>
     <div id="fps-counter">FPS: 60</div>
     <div id="hud">
-        <div style="text-align: center; border-bottom: 1px solid #d4af37; padding-bottom: 3px; margin-bottom: 3px;"><strong style="font-size: 8px;">Chapter</strong><br><span id="current-chapter" style="color: #d4af37;">Prologue</span></div>
-        <div style="text-align: center; margin-top: 3px;"><strong>Location:</strong><br><span id="current-location">Valencia</span></div>
-        <div style="text-align: center; margin-top: 3px;"><strong>Year:</strong><br><span id="current-year">1350</span></div>
-        <div style="text-align: center; margin-top: 3px; border-top: 1px solid #d4af37; padding-top: 3px;"><strong>Souls Converted:</strong><br><span id="souls-converted" style="color: #ffd700; font-size: 8px; font-weight: bold;">0</span></div>
+        <div style="text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 4px; margin-bottom: 4px;"><strong style="font-size: 13px;">Chapter</strong><br><span id="current-chapter" style="color: #d4af37;">Prologue</span></div>
+        <div style="text-align: center; margin-top: 4px;"><strong>Location:</strong><br><span id="current-location">Valencia</span></div>
+        <div style="text-align: center; margin-top: 4px;"><strong>Year:</strong><br><span id="current-year">1350</span></div>
+        <div style="text-align: center; margin-top: 4px; border-top: 2px solid #d4af37; padding-top: 4px;"><strong>Souls Converted:</strong><br><span id="souls-converted" style="color: #ffd700; font-size: 13px; font-weight: bold;">0</span></div>
     </div>
     <div id="mission-objective">
         <div id="objective-title">⚔️ Current Mission</div>
@@ -102,14 +102,14 @@
 
         // Constants
         const MOVE_SPEED = 12;
-        const CAMERA_DISTANCE = 9;
-        const CAMERA_HEIGHT = 5.5;
-        const COLLISION_DISTANCE = 1.8;
+        const CAMERA_DISTANCE = 15; // Increased from 12 for much wider view
+        const CAMERA_HEIGHT = 8; // Increased from 4 for bird's eye perspective
+        const COLLISION_DISTANCE = 1.2; // Reduced from 1.8 for less blocking
         const ANIMATION_SPEED = 8;
 
         // Chapter definitions with expanded quests
         const CHAPTERS = {
-            WOMB_BARKING: {name: "In the Womb - The Barking", year: 1349, location: "Valencia, Spain", playAs: "Mother Constance", tasks: 3, objective: "Experience the miraculous signs"},
+            WOMB_BARKING: {name: "In the Womb - The Barking", year: 1349, location: "Valencia, Spain", playAs: "Mother Constance", tasks: 4, objective: "Experience the miraculous signs"},
             WOMB_HEALING: {name: "In the Womb - Healing the Blind", year: 1349, location: "Valencia, Spain", playAs: "Mother Constance", tasks: 2, objective: "Heal the blind woman and neighbor"},
             BIRTH: {name: "The Miraculous Birth", year: 1350, location: "Valencia, Spain", playAs: "Mother Constance", tasks: 2, objective: "Give birth and witness the light"},
             CHILDHOOD: {name: "Childhood Calling", year: 1360, location: "Valencia", playAs: "Young Vincent", tasks: 4, objective: "Pray, study, help others, talk to father"},
@@ -154,6 +154,8 @@
         let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent);
         let joyActive = false, joyStartX = 0, joyStartY = 0, joyDeltaX = 0, joyDeltaY = 0;
         let isIndoors = false, currentBuilding = null;
+        let indoorObjects = {}; // Objects by building ID
+        let outdoorObjects = []; // All outdoor objects
         
         // Animation variables
         let walkCycle = 0, isMoving = false;
@@ -173,9 +175,9 @@
             scene.background = new THREE.Color(0x87CEEB);
             scene.fog = new THREE.FogExp2(0x87CEEB, 0.006);
 
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // Wider FOV for more epic view
+            camera = new THREE.PerspectiveCamera(85, window.innerWidth / window.innerHeight, 0.1, 1000); // Wider FOV (85°) for better building visibility
             camera.position.set(0, 10, 10);
-            camera.lookAt(0, 0, 0);
+            camera.lookAt(0, 2, 0); // Look slightly higher
             
             renderer = new THREE.WebGLRenderer({ 
                 antialias: true, 
@@ -359,6 +361,8 @@
                 buildings.length = 0;
                 doors.length = 0;
                 walls.length = 0;
+                indoorObjects = {}; // Reset indoor objects
+                outdoorObjects = []; // Reset outdoor objects
                 isIndoors = false;
                 currentBuilding = null;
                 document.getElementById('next-chapter-button').style.display = 'none';
@@ -426,8 +430,8 @@
 
         function showChapterTitle(title) {
             const el = document.getElementById('chapter-title');
-            el.innerHTML = `<div style="font-size: 12px; margin-bottom: 6px; text-shadow: 0 0 15px rgba(212,175,55,0.8);">${title}</div>
-                <div style="font-size: 8px; color: #f0e6d2;">Complete all tasks to continue your journey</div>`;
+            el.innerHTML = `<div style="font-size: 20px; margin-bottom: 8px; text-shadow: 0 0 20px rgba(212,175,55,0.8);">${title}</div>
+                <div style="font-size: 14px; color: #f0e6d2;">Complete all tasks to continue your journey</div>`;
             el.style.display = 'block';
             setTimeout(() => el.style.display = 'none', 4500);
         }
@@ -515,14 +519,14 @@
 
         function showGameComplete() {
             document.getElementById('chapter-title').innerHTML = `
-                <div style="color:#d4af37; font-size:14px; text-shadow: 0 0 15px rgba(212,175,55,1);">✝️ JOURNEY COMPLETE ✝️</div>
-                <div style="color:#f0e6d2; font-size:7px; margin-top:8px; line-height:1.6;">
+                <div style="color:#d4af37; font-size:22px; text-shadow: 0 0 20px rgba(212,175,55,1);">✝️ JOURNEY COMPLETE ✝️</div>
+                <div style="color:#f0e6d2; font-size:12px; margin-top:10px; line-height:1.7;">
                     You have lived the miraculous life of<br>
-                    <strong style="color:#d4af37; font-size:9px;">SAINT VINCENT FERRER</strong><br><br>
-                    <strong style="color:#4a9eff; font-size:8px;">Total Souls Converted: ${soulsConverted.toLocaleString()}</strong><br><br>
-                    "Fear the Lord and give Him glory" - Revelation 14:7<br><br>
+                    <strong style="color:#d4af37; font-size:14px;">SAINT VINCENT FERRER</strong><br><br>
+                    <strong style="color:#4a9eff; font-size:13px;">Total Souls Converted: ${soulsConverted.toLocaleString()}</strong><br><br>
+                    "Fear the Lord and give Him glory." - Revelation 14:7<br><br>
                     Saint Vincent Ferrer, pray for us!<br><br>
-                    <div style="font-size:6px; margin-top:6px;">Refresh to play again</div>
+                    <div style="font-size:10px; margin-top:8px;">Refresh to play again</div>
                 </div>
             `;
             document.getElementById('chapter-title').style.display = 'block';
@@ -559,7 +563,7 @@
         function findNearestDoor() {
             if(!playerModel) return null;
             let nearest = null;
-            let nearestDist = 6; // Increased from 3 to 6 for easier detection
+            let nearestDist = 10; // Increased from 6 to 10 for very easy detection
             doors.forEach(door => {
                 const dist = playerModel.position.distanceTo(door.position);
                 if(dist < nearestDist) {
@@ -601,9 +605,48 @@
         function enterBuilding(buildingId) {
             isIndoors = true;
             currentBuilding = buildingId;
-            clearSceneObjects();
+            
+            // Hide all outdoor objects
+            outdoorObjects.forEach(obj => {
+                if(obj && obj.visible !== undefined) obj.visible = false;
+            });
+            
+            // Hide outdoor environment and show indoor lights in one pass
+            scene.children.forEach(obj => {
+                // Handle lights
+                if(obj.type === 'PointLight') {
+                    if(obj.userData.isIndoor && obj.userData.buildingId === buildingId) {
+                        obj.visible = true; // Show lights for this building
+                    } else if(!obj.userData.isIndoor) {
+                        obj.visible = false; // Hide outdoor lights
+                    }
+                }
+                // Hide outdoor environment objects
+                else if(obj.userData && !obj.userData.isIndoor && obj !== playerModel && 
+                   obj.type !== 'AmbientLight' && obj.type !== 'DirectionalLight' && 
+                   obj.type !== 'HemisphereLight' && obj !== camera) {
+                    if(obj.geometry && (obj.geometry.type === 'PlaneGeometry' || 
+                       obj.geometry.type === 'BoxGeometry' || 
+                       obj.geometry.type === 'CylinderGeometry' ||
+                       obj.geometry.type === 'SphereGeometry' ||
+                       obj.geometry.type === 'ConeGeometry')) {
+                        obj.visible = false;
+                    }
+                }
+            });
+            
+            // Create interior walls and floor if not exists
             createBuildingInterior(buildingId);
-            playerModel.position.set(0, 0, 5);
+            
+            // Show objects that belong in this building
+            if(indoorObjects[buildingId]) {
+                indoorObjects[buildingId].forEach(obj => {
+                    if(obj && obj.visible !== undefined) obj.visible = true;
+                });
+            }
+            
+            // Position player inside
+            playerModel.position.set(0, 0, 8);
             showMiracle('⛪ Entered Building');
         }
 
@@ -611,8 +654,63 @@
             isIndoors = false;
             const lastBuilding = currentBuilding;
             currentBuilding = null;
-            clearSceneObjects();
-            loadChapter(currentChapter);
+            
+            // Hide all indoor objects
+            Object.values(indoorObjects).flat().forEach(obj => {
+                if(obj && obj.visible !== undefined) obj.visible = false;
+            });
+            
+            // Remove interior walls and handle visibility in one pass
+            walls.length = 0;
+            const wallsToRemove = [];
+            const exitDoorsToRemove = [];
+            
+            scene.children.forEach(obj => {
+                // Collect interior walls for removal
+                if(obj.geometry && obj.userData.isInteriorWall) {
+                    wallsToRemove.push(obj);
+                }
+                // Handle lights and visibility
+                else if(obj.type === 'PointLight') {
+                    if(obj.userData.isIndoor) {
+                        obj.visible = false; // Hide indoor lights
+                    } else {
+                        obj.visible = true; // Show outdoor lights
+                    }
+                }
+                // Show outdoor environment objects
+                else if(obj !== playerModel && obj.type !== 'AmbientLight' && 
+                       obj.type !== 'DirectionalLight' && obj.type !== 'HemisphereLight' && 
+                       obj !== camera) {
+                    if(!obj.userData || !obj.userData.isIndoor) {
+                        if(obj.geometry) obj.visible = true;
+                    }
+                }
+            });
+            
+            // Remove interior walls
+            wallsToRemove.forEach(obj => {
+                if(obj.geometry) obj.geometry.dispose();
+                if(obj.material) obj.material.dispose();
+                scene.remove(obj);
+            });
+            
+            // Remove interior exit doors
+            const exitDoors = doors.filter(d => d.userData.leadsToExterior);
+            exitDoors.forEach(d => {
+                if(d.geometry) d.geometry.dispose();
+                if(d.material) d.material.dispose();
+                scene.remove(d);
+                const index = doors.indexOf(d);
+                if(index > -1) doors.splice(index, 1);
+            });
+            
+            // Show all outdoor objects
+            outdoorObjects.forEach(obj => {
+                if(obj && obj.visible !== undefined) obj.visible = true;
+            });
+            
+            // Position player outside the building
             if(lastBuilding) {
                 const building = buildings.find(b => b.id === lastBuilding);
                 if(building) playerModel.position.set(building.x, 0, building.z + 12);
@@ -620,24 +718,11 @@
             showMiracle('🌍 Exited Building');
         }
 
-        function clearSceneObjects() {
-            const objectsToRemove = [];
-            scene.children.forEach(obj => {
-                if(obj.type !== 'AmbientLight' && obj.type !== 'DirectionalLight' && obj.type !== 'HemisphereLight' && obj !== camera && obj !== playerModel) {
-                    objectsToRemove.push(obj);
-                }
-            });
-            objectsToRemove.forEach(obj => {
-                if(obj.geometry) obj.geometry.dispose();
-                if(obj.material) {
-                    if(Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
-                    else obj.material.dispose();
-                }
-                scene.remove(obj);
-            });
-        }
-
         function createBuildingInterior(buildingId) {
+            // Check if interior already exists
+            const hasInterior = scene.children.some(obj => obj.userData && obj.userData.isInteriorWall);
+            if(hasInterior) return; // Already created
+            
             const floor = new THREE.Mesh(
                 new THREE.PlaneGeometry(25, 25),
                 new THREE.MeshStandardMaterial({
@@ -648,6 +733,7 @@
             );
             floor.rotation.x = -Math.PI/2;
             floor.receiveShadow = true;
+            floor.userData = { isInteriorWall: true };
             scene.add(floor);
             
             const wallMaterial = new THREE.MeshStandardMaterial({
@@ -660,6 +746,7 @@
             backWall.position.set(0, 4, -12);
             backWall.castShadow = true;
             backWall.receiveShadow = true;
+            backWall.userData = { isInteriorWall: true };
             scene.add(backWall);
             walls.push({x: 0, z: -12, width: 25, height: 8, depth: 0.5, rotation: 0});
             
@@ -667,6 +754,7 @@
             leftWall.position.set(-12, 4, 0);
             leftWall.castShadow = true;
             leftWall.receiveShadow = true;
+            leftWall.userData = { isInteriorWall: true };
             scene.add(leftWall);
             walls.push({x: -12, z: 0, width: 0.5, height: 8, depth: 25, rotation: 0});
             
@@ -674,22 +762,26 @@
             rightWall.position.set(12, 4, 0);
             rightWall.castShadow = true;
             rightWall.receiveShadow = true;
+            rightWall.userData = { isInteriorWall: true };
             scene.add(rightWall);
             walls.push({x: 12, z: 0, width: 0.5, height: 8, depth: 25, rotation: 0});
             
             const frontWallLeft = new THREE.Mesh(new THREE.BoxGeometry(9, 8, 0.5), wallMaterial);
             frontWallLeft.position.set(-7.5, 4, 12);
             frontWallLeft.castShadow = true;
+            frontWallLeft.userData = { isInteriorWall: true };
             scene.add(frontWallLeft);
             walls.push({x: -7.5, z: 12, width: 9, height: 8, depth: 0.5, rotation: 0});
             
             const frontWallRight = new THREE.Mesh(new THREE.BoxGeometry(9, 8, 0.5), wallMaterial);
             frontWallRight.position.set(7.5, 4, 12);
             frontWallRight.castShadow = true;
+            frontWallRight.userData = { isInteriorWall: true };
             scene.add(frontWallRight);
             walls.push({x: 7.5, z: 12, width: 9, height: 8, depth: 0.5, rotation: 0});
             
             const exitDoor = createDoor(0, 0, 11.5, false, null, true);
+            exitDoor.userData.isInteriorWall = true;
             doors.push(exitDoor);
             
             if(buildingId && buildingId.includes('house')) {
@@ -703,6 +795,7 @@
                 );
                 bed.position.set(-6, 0.6, -6);
                 bed.castShadow = true;
+                bed.userData = { isInteriorWall: true };
                 scene.add(bed);
                 
                 const table = new THREE.Mesh(
@@ -715,6 +808,7 @@
                 );
                 table.position.set(6, 1.8, -4);
                 table.castShadow = true;
+                table.userData = { isInteriorWall: true };
                 scene.add(table);
             } else if(buildingId && buildingId.includes('church')) {
                 const altar = new THREE.Mesh(
@@ -727,6 +821,7 @@
                 );
                 altar.position.set(0, 1, -9);
                 altar.castShadow = true;
+                altar.userData = { isInteriorWall: true };
                 scene.add(altar);
                 
                 const cross = new THREE.Group();
@@ -753,16 +848,19 @@
                 crossH.position.y = 0.8;
                 cross.add(crossH);
                 cross.position.set(0, 2, -9);
+                cross.userData = { isInteriorWall: true };
                 scene.add(cross);
                 
                 const crossLight = new THREE.PointLight(0xffd700, 2, 15);
                 crossLight.position.set(0, 4, -9);
+                crossLight.userData = { isInteriorWall: true };
                 scene.add(crossLight);
             }
             
             const interiorLight = new THREE.PointLight(0xffa500, 2.5, 30);
             interiorLight.position.set(0, 7, 0);
             interiorLight.castShadow = true;
+            interiorLight.userData = { isInteriorWall: true };
             scene.add(interiorLight);
         }
 
@@ -771,6 +869,8 @@
             let nearest = null;
             let nearestDist = 3.5;
             interactables.forEach(obj => {
+                // Only find visible interactables (don't find hidden indoor objects when outside)
+                if(obj.visible === false) return;
                 const dist = playerModel.position.distanceTo(obj.position);
                 if(dist < nearestDist) {
                     nearest = obj;
@@ -784,6 +884,11 @@
             scene.remove(obj);
             const idx = interactables.indexOf(obj);
             if(idx > -1) interactables.splice(idx, 1);
+            
+            // Remove associated light to prevent orphaned lights
+            if(obj.userData.light) {
+                scene.remove(obj.userData.light);
+            }
             
             tasksCompleted++;
             updateTaskProgress();
@@ -828,6 +933,9 @@
             if(!playerModel) return;
 
             interactables.forEach(obj => {
+                // Only show visible interactables on radar (don't show hidden indoor objects)
+                if(obj.visible === false) return;
+                
                 const dx = obj.position.x - playerModel.position.x;
                 const dz = obj.position.z - playerModel.position.z;
                 const dist = Math.sqrt(dx*dx + dz*dz);
@@ -846,44 +954,39 @@
         }
 
         function checkCollision(newX, newZ) {
-            // Check building collision - but allow access to door areas
+            // When indoors, check wall collision
+            if(isIndoors) {
+                for(let wall of walls) {
+                    const halfWidth = wall.width / 2;
+                    const halfDepth = wall.depth / 2;
+                    
+                    if(newX > wall.x - halfWidth - COLLISION_DISTANCE && 
+                       newX < wall.x + halfWidth + COLLISION_DISTANCE &&
+                       newZ > wall.z - halfDepth - COLLISION_DISTANCE && 
+                       newZ < wall.z + halfDepth + COLLISION_DISTANCE) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            // When outdoors, buildings are HOLLOW - walk freely around and into them
+            // Only block the very center core to prevent walking through
             for(let building of buildings) {
                 const dx = newX - building.x;
                 const dz = newZ - building.z;
                 const dist = Math.sqrt(dx*dx + dz*dz);
                 
-                // Only block if player is trying to go INTO the building center
-                // Allow movement around the perimeter where doors are located
-                if(dist < building.radius + COLLISION_DISTANCE) {
-                    // Check if player is near a door position - if so, allow movement
-                    let nearDoor = false;
-                    doors.forEach(door => {
-                        const doorDist = Math.sqrt((newX - door.position.x)**2 + (newZ - door.position.z)**2);
-                        if(doorDist < 4) {
-                            nearDoor = true;
-                        }
-                    });
-                    
-                    if(!nearDoor) {
-                        return true; // Block movement
-                    }
-                }
-            }
-            
-            // Check wall collision for interiors
-            for(let wall of walls) {
-                const halfWidth = wall.width / 2;
-                const halfDepth = wall.depth / 2;
+                // Buildings are hollow - only the tiny center core blocks
+                // This allows approaching from any angle, walking around perimeter
+                const centerCollisionRadius = Math.min(building.radius * 0.2, 4); // Only 20% of radius or 4 units
                 
-                if(newX > wall.x - halfWidth - COLLISION_DISTANCE && 
-                   newX < wall.x + halfWidth + COLLISION_DISTANCE &&
-                   newZ > wall.z - halfDepth - COLLISION_DISTANCE && 
-                   newZ < wall.z + halfDepth + COLLISION_DISTANCE) {
-                    return true;
+                if(dist < centerCollisionRadius) {
+                    return true; // Only block the very center
                 }
             }
             
-            return false;
+            return false; // Allow all other movement
         }
 
         // ENHANCED PLAYER MODELS WITH ANIMATED LIMBS
@@ -1147,7 +1250,7 @@
             scene.add(ground);
         }
 
-        function createNPC(x, y, z, color = 0x4a4a4a) {
+        function createNPC(x, y, z, color = 0x4a4a4a, isIndoor = false, buildingId = null) {
             const group = new THREE.Group();
             const body = new THREE.Mesh(
                 new THREE.CylinderGeometry(0.32, 0.37, 1.3, 16), // Reduced from 24
@@ -1214,6 +1317,17 @@
             group.add(rightLegNPC);
             
             group.position.set(x, y, z);
+            group.userData = { isIndoor: isIndoor, buildingId: buildingId };
+            
+            // Track indoor vs outdoor
+            if(isIndoor && buildingId) {
+                if(!indoorObjects[buildingId]) indoorObjects[buildingId] = [];
+                indoorObjects[buildingId].push(group);
+                group.visible = false; // Hide until entering building
+            } else {
+                outdoorObjects.push(group);
+            }
+            
             scene.add(group);
             return group;
         }
@@ -1374,9 +1488,25 @@
             scene.add(handle);
             
             // Glowing light to make door visible (no shadows for performance)
-            const doorLight = new THREE.PointLight(0xffd700, 1.0, 10);
+            const doorLight = new THREE.PointLight(0xffd700, 1.5, 15);
             doorLight.position.set(x, y + 2.5, z + 0.5);
             scene.add(doorLight);
+            
+            // Add glowing beacon above door for maximum visibility
+            const beacon = new THREE.Mesh(
+                new THREE.SphereGeometry(0.3, 16, 16),
+                new THREE.MeshStandardMaterial({
+                    color: 0xffd700,
+                    emissive: 0xffd700,
+                    emissiveIntensity: 2.0,
+                    metalness: 0.8,
+                    roughness: 0.2
+                })
+            );
+            beacon.position.set(x, y + 6, z + 0.5);
+            beacon.userData.isDoorBeacon = true;
+            beacon.userData.baseY = y + 6;
+            scene.add(beacon);
             
             door.userData = {
                 isOpen: false,
@@ -1385,7 +1515,8 @@
                 leadsToExterior: leadsToExterior,
                 buildingId: buildingId,
                 isDoor: true,
-                light: doorLight
+                light: doorLight,
+                beacon: beacon
             };
             
             scene.add(door);
@@ -1436,7 +1567,7 @@
             scene.add(bush);
         }
 
-        function createInteractable(x, y, z, type, label, dialogue = [], effect = null, souls = 0) {
+        function createInteractable(x, y, z, type, label, dialogue = [], effect = null, souls = 0, isIndoor = false, buildingId = null) {
             const obj = new THREE.Mesh(
                 new THREE.BoxGeometry(0.7, 0.7, 0.7),
                 new THREE.MeshStandardMaterial({
@@ -1454,17 +1585,34 @@
                 dialogue: dialogue,
                 effect: effect,
                 souls: souls,
-                floatOffset: Math.random() * Math.PI * 2
+                floatOffset: Math.random() * Math.PI * 2,
+                isIndoor: isIndoor,
+                buildingId: buildingId
             };
             obj.castShadow = true;
             obj.receiveShadow = true;
+            
+            // Track indoor vs outdoor
+            if(isIndoor && buildingId) {
+                if(!indoorObjects[buildingId]) indoorObjects[buildingId] = [];
+                indoorObjects[buildingId].push(obj);
+                obj.visible = false; // Hide until entering building
+            } else {
+                outdoorObjects.push(obj);
+            }
+            
             scene.add(obj);
             interactables.push(obj);
             
             // Simple glowing light around objectives (no shadows to improve performance)
             const light = new THREE.PointLight(0xffd700, 1.5, 8);
             light.position.copy(obj.position);
+            light.userData = { isIndoor: isIndoor, buildingId: buildingId };
+            if(isIndoor) light.visible = false;
             scene.add(light);
+            
+            // Store light reference so it can be removed when interactable is collected
+            obj.userData.light = light;
             
             return obj;
         }
@@ -1511,25 +1659,31 @@
             for(let i = 0; i < 8; i++) createTree(-30 + i * 10, 0, -35);
             for(let i = 0; i < 15; i++) createBush(-20 + Math.random() * 40, 0, -25 + Math.random() * 15);
 
-            // Husband character
-            createNPC(6, 0, 4, 0x4a2511);
+            // Husband character (OUTDOOR)
+            createNPC(6, 0, 4, 0x4a2511, false, null);
             createInteractable(6, 1, 4, 'talk', 'Talk to William', [
                 {speaker: "William (Husband)", text: "Constance, do you hear that sound? It's coming from your womb!"},
                 {speaker: "You (Constance)", text: "Yes! The child barks like a dog! He will be a hound of the Lord!"}
-            ]);
+            ], null, 0, false, null);
 
-            // Neighbor witnessing
-            createNPC(-6, 0, 6, 0x8b4513);
+            // Neighbor witnessing (OUTDOOR)
+            createNPC(-6, 0, 6, 0x8b4513, false, null);
             createInteractable(-6, 1, 6, 'talk', 'Talk to Neighbor', [
                 {speaker: "Neighbor", text: "We heard the barking from outside! This is a miracle from God!"}
-            ]);
+            ], null, 0, false, null);
             
-            // Priest to bless
-            createNPC(-10, 0, -5, 0x000000);
+            // Priest to bless (OUTDOOR)
+            createNPC(-10, 0, -5, 0x000000, false, null);
             createInteractable(-10, 1, -5, 'talk', 'Receive Blessing from Priest', [
                 {speaker: "Priest", text: "God has marked this child for greatness. Let us pray for His holy purpose."},
                 {speaker: "You (Constance)", text: "Father, pray for me and my unborn child."}
-            ], 'heal', 5);
+            ], 'heal', 5, false, null);
+            
+            // INDOOR example - Mother inside house (can be visited)
+            createNPC(0, 0, -5, 0x8b4789, true, 'womb-house-1');
+            createInteractable(0, 1, -5, 'talk', 'Talk to Mother (Inside House)', [
+                {speaker: "Mother", text: "Rest, my daughter. The Lord is working a great miracle within you."}
+            ], null, 0, true, 'womb-house-1');
             
             updateRadar();
         }
@@ -1613,47 +1767,69 @@
 
         function loadEducationChapter() {
             createGround();
-            // University building
+            // University building with proper door
             const university = new THREE.Mesh(
                 new THREE.BoxGeometry(35, 20, 30),
-                new THREE.MeshStandardMaterial({color: 0xa89968, roughness: 0.85})
+                new THREE.MeshStandardMaterial({color: 0xa89968, roughness: 0.85, metalness: 0.05})
             );
             university.position.set(0, 10, -25);
             university.castShadow = true;
+            university.receiveShadow = true;
             scene.add(university);
-            buildings.push({x: 0, z: -25, radius: 20, id: 'university'});
+            
+            // Add door to university
+            const universityDoor = createDoor(0, 0, -10, true, 'university');
+            doors.push(universityDoor);
+            
+            // Door frame
+            const doorFrame = new THREE.Mesh(
+                new THREE.BoxGeometry(3, 6, 0.5),
+                new THREE.MeshStandardMaterial({color: 0x654321, roughness: 0.85})
+            );
+            doorFrame.position.set(0, 3, -9.7);
+            doorFrame.castShadow = true;
+            scene.add(doorFrame);
+            
+            buildings.push({x: 0, z: -25, radius: 18, id: 'university'});
 
             for(let i = 0; i < 15; i++) createTree(-50 + i * 8, 0, -50);
             
-            // Attend philosophy lecture
-            createInteractable(-8, 0.5, -15, 'study', 'Attend Philosophy Lecture', [
+            // OUTDOOR: Classmate outside who tells you about lectures inside
+            createNPC(8, 0, 5, 0x2c3e50, false, null);
+            createInteractable(8, 1, 5, 'talk', 'Talk to Student Outside', [
+                {speaker: "Student", text: "The philosophy lectures are inside the university. Enter to attend!"}
+            ], null, 0, false, null);
+            
+            // INDOOR: Attend philosophy lecture (INSIDE UNIVERSITY)
+            createNPC(-6, 0, -5, 0x654321, true, 'university');
+            createInteractable(-6, 1, -5, 'study', 'Attend Philosophy Lecture', [
                 {speaker: "Professor", text: "Today we study the works of Thomas Aquinas on divine providence."},
                 {speaker: "Young Vincent", text: "I must master both faith and reason to serve God well."}
-            ], 'preach', 10);
+            ], 'preach', 10, true, 'university');
 
-            // Help struggling classmate
-            createNPC(8, 0, -12, 0x2c3e50);
-            createInteractable(8, 1, -12, 'help', 'Tutor Classmate', [
+            // INDOOR: Help struggling classmate (INSIDE)
+            createNPC(6, 0, -6, 0x2c3e50, true, 'university');
+            createInteractable(6, 1, -6, 'help', 'Tutor Classmate', [
                 {speaker: "Classmate", text: "Vincent, I don't understand Aristotle's logic."},
                 {speaker: "Young Vincent", text: "Let me explain. Truth proceeds from God..."}
-            ], 'preach', 5);
+            ], 'preach', 5, true, 'university');
 
-            // Study in library
-            createInteractable(-15, 0.5, -20, 'study', 'Study Ancient Texts', [
+            // INDOOR: Study in library (INSIDE)
+            createInteractable(0, 0.5, -8, 'study', 'Study Ancient Texts', [
                 {speaker: "Young Vincent", text: "The wisdom of the Church Fathers illuminates Scripture."}
-            ], 'preach', 10);
+            ], 'preach', 10, true, 'university');
 
-            // Debate theology
-            createNPC(15, 0, -18, 0x8b4513);
-            createInteractable(15, 1, -18, 'debate', 'Theological Debate', [
+            // INDOOR: Debate theology (INSIDE)
+            createNPC(-8, 0, -3, 0x8b4513, true, 'university');
+            createInteractable(-8, 1, -3, 'debate', 'Theological Debate', [
                 {speaker: "Student", text: "Let us debate the nature of divine grace!"},
                 {speaker: "Young Vincent", text: "Through reason and revelation, we seek truth."}
-            ], 'preach', 15);
+            ], 'preach', 15, true, 'university');
 
-            // Write thesis
-            createInteractable(0, 0.5, -18, 'write', 'Write Philosophical Thesis', [
+            // INDOOR: Write thesis (INSIDE)
+            createInteractable(4, 0.5, -7, 'write', 'Write Philosophical Thesis', [
                 {speaker: "Young Vincent", text: "I must commit my understanding to writing for future scholars."}
-            ], 'preach', 20);
+            ], 'preach', 20, true, 'university');
             
             updateRadar();
         }
@@ -1694,35 +1870,50 @@
 
         function loadPedroLunaChapter() {
             createGround();
-            // Papal palace
+            // Papal palace with proper door
             const palace = new THREE.Mesh(
                 new THREE.BoxGeometry(50, 25, 40),
-                new THREE.MeshStandardMaterial({color: 0xf5deb3, roughness: 0.75})
+                new THREE.MeshStandardMaterial({color: 0xf5deb3, roughness: 0.75, metalness: 0.05})
             );
             palace.position.set(0, 12.5, -35);
             palace.castShadow = true;
+            palace.receiveShadow = true;
             scene.add(palace);
-            buildings.push({x: 0, z: -35, radius: 28, id: 'papal-palace'});
+            
+            // Add door to palace
+            const palaceDoor = createDoor(0, 0, -15, true, 'papal-palace');
+            doors.push(palaceDoor);
+            
+            // Door frame
+            const doorFrame = new THREE.Mesh(
+                new THREE.BoxGeometry(3.5, 7, 0.5),
+                new THREE.MeshStandardMaterial({color: 0xffd700, roughness: 0.4, metalness: 0.7})
+            );
+            doorFrame.position.set(0, 3.5, -14.7);
+            doorFrame.castShadow = true;
+            scene.add(doorFrame);
+            
+            buildings.push({x: 0, z: -35, radius: 25, id: 'papal-palace'});
 
             for(let i = 0; i < 10; i++) createTree(-40 + i * 10, 0, -55);
 
-            // Meet Cardinal Pedro de Luna
-            createNPC(-5, 0, -25, 0x8b0000);
-            createInteractable(-5, 1, -25, 'talk', 'Meet Cardinal Pedro', [
+            // INDOOR: Meet Cardinal Pedro de Luna (INSIDE PALACE)
+            createNPC(-5, 0, -5, 0x8b0000, true, 'papal-palace');
+            createInteractable(-5, 1, -5, 'talk', 'Meet Cardinal Pedro', [
                 {speaker: "Cardinal Pedro de Luna", text: "Father Vincent, I need a wise confessor. Will you guide my soul?"},
                 {speaker: "Vincent", text: "I will serve as God wills, Your Eminence."}
-            ]);
+            ], null, 0, true, 'papal-palace');
 
-            // Hear confession
-            createInteractable(5, 0.5, -25, 'confess', 'Hear Cardinal\'s Confession', [
+            // INDOOR: Hear confession (INSIDE)
+            createInteractable(5, 0.5, -6, 'confess', 'Hear Cardinal\'s Confession', [
                 {speaker: "Cardinal Pedro", text: "Bless me, Father, for I have sinned..."},
                 {speaker: "Vincent", text: "Through God's mercy, you are absolved. Go and sin no more."}
-            ], 'heal', 5);
+            ], 'heal', 5, true, 'papal-palace');
 
-            // Pray for guidance
-            createInteractable(0, 0.5, -28, 'pray', 'Pray for Papal Wisdom', [
+            // INDOOR: Pray for guidance (INSIDE)
+            createInteractable(0, 0.5, -8, 'pray', 'Pray for Papal Wisdom', [
                 {speaker: "Vincent", text: "Lord, guide me to counsel this prince of Your Church wisely."}
-            ]);
+            ], null, 0, true, 'papal-palace');
             
             updateRadar();
         }
@@ -1926,77 +2117,108 @@
 
         function loadConstanceChapter() {
             createGround();
-            // Council hall
+            // Council hall with proper door
             const hall = new THREE.Mesh(
                 new THREE.BoxGeometry(55, 22, 45),
-                new THREE.MeshStandardMaterial({color: 0xa89968, roughness: 0.8})
+                new THREE.MeshStandardMaterial({color: 0xa89968, roughness: 0.8, metalness: 0.05})
             );
             hall.position.set(0, 11, -30);
             hall.castShadow = true;
+            hall.receiveShadow = true;
             scene.add(hall);
-            buildings.push({x: 0, z: -30, radius: 30, id: 'council-hall'});
+            
+            // Add door to council hall
+            const hallDoor = createDoor(0, 0, -7.5, true, 'council-hall');
+            doors.push(hallDoor);
+            
+            // Door frame
+            const doorFrame = new THREE.Mesh(
+                new THREE.BoxGeometry(4, 7, 0.5),
+                new THREE.MeshStandardMaterial({color: 0x654321, roughness: 0.85})
+            );
+            doorFrame.position.set(0, 3.5, -7.2);
+            doorFrame.castShadow = true;
+            scene.add(doorFrame);
+            
+            buildings.push({x: 0, z: -30, radius: 27, id: 'council-hall'});
 
             for(let i = 0; i < 20; i++) createTree(-60 + i * 7, 0, -55);
 
-            // Pray for guidance
-            createInteractable(-10, 0.5, -20, 'pray', 'Pray for Church Unity', [
+            // INDOOR: Pray for guidance (INSIDE HALL)
+            createInteractable(-10, 0.5, -8, 'pray', 'Pray for Church Unity', [
                 {speaker: "Vincent", text: "Lord, show me the path to heal Your Church. I have supported Benedict for 17 years..."}
-            ]);
+            ], null, 0, true, 'council-hall');
 
-            // Meet with cardinals
-            for(let i = 0; i < 8; i++) createNPC(-15 + i * 4, 0, -18, 0x8b0000);
-            createInteractable(0, 0.5, -15, 'meet', 'Meet Cardinals', [
+            // INDOOR: Meet with cardinals (INSIDE)
+            for(let i = 0; i < 8; i++) createNPC(-14 + i * 4, 0, -5, 0x8b0000, true, 'council-hall');
+            createInteractable(0, 0.5, -3, 'meet', 'Meet Cardinals', [
                 {speaker: "Cardinals", text: "Vincent, Benedict refuses all reform. What should we do?"},
                 {speaker: "Vincent", text: "For the good of the Church, we must seek unity, even if it means pain."}
-            ], 'preach', 50);
+            ], 'preach', 50, true, 'council-hall');
 
-            // Make difficult decision
-            createInteractable(10, 0.5, -20, 'decide', 'Withdraw Support from Benedict', [
+            // INDOOR: Make difficult decision (INSIDE)
+            createInteractable(10, 0.5, -7, 'decide', 'Withdraw Support from Benedict', [
                 {speaker: "Vincent", text: "I followed Pedro de Luna in good faith. But he refuses reform. I must withdraw my support."},
                 {speaker: "Narrator", text: "After 17 years of loyalty, Vincent makes the hardest decision of his life."}
-            ], 'preach', 100);
+            ], 'preach', 100, true, 'council-hall');
 
-            // Announce publicly
-            createInteractable(0, 0.5, -22, 'announce', 'Public Announcement', [
+            // INDOOR: Announce publicly (INSIDE)
+            createInteractable(0, 0.5, -9, 'announce', 'Public Announcement', [
                 {speaker: "Vincent", text: "For the unity of Christ's Church, I can no longer support Benedict XIII."},
                 {speaker: "Crowd", text: "If Vincent withdraws support, Benedict's cause is lost!"}
-            ], 'preach', 150);
+            ], 'preach', 150, true, 'council-hall');
             
             updateRadar();
         }
 
         function loadMartinChapter() {
             createGround();
-            // St. Peter's inspired building
+            // St. Peter's inspired building with proper door
             const basilica = new THREE.Mesh(
                 new THREE.BoxGeometry(60, 30, 50),
-                new THREE.MeshStandardMaterial({color: 0xf5f5dc, roughness: 0.7})
+                new THREE.MeshStandardMaterial({color: 0xf5f5dc, roughness: 0.7, metalness: 0.05})
             );
             basilica.position.set(0, 15, -35);
             basilica.castShadow = true;
+            basilica.receiveShadow = true;
             scene.add(basilica);
-            buildings.push({x: 0, z: -35, radius: 32, id: 'st-peters'});
+            
+            // Add door to basilica
+            const basilicaDoor = createDoor(0, 0, -10, true, 'st-peters');
+            basilicaDoor.scale.set(1.4, 1.4, 1);
+            doors.push(basilicaDoor);
+            
+            // Grand door frame
+            const doorFrame = new THREE.Mesh(
+                new THREE.BoxGeometry(5, 9, 0.5),
+                new THREE.MeshStandardMaterial({color: 0xffd700, roughness: 0.3, metalness: 0.8})
+            );
+            doorFrame.position.set(0, 4.5, -9.7);
+            doorFrame.castShadow = true;
+            scene.add(doorFrame);
+            
+            buildings.push({x: 0, z: -35, radius: 30, id: 'st-peters'});
 
-            // Pope Martin V
-            createNPC(0, 0, -22, 0xff0000);
+            // INDOOR: Pope Martin V (INSIDE BASILICA)
+            createNPC(0, 0, -8, 0xff0000, true, 'st-peters');
 
-            // Declare for Martin
-            createInteractable(0, 0.5, -18, 'declare', 'Declare for Pope Martin V', [
+            // INDOOR: Declare for Martin (INSIDE)
+            createInteractable(0, 0.5, -6, 'declare', 'Declare for Pope Martin V', [
                 {speaker: "Vincent", text: "Martin V is the true Vicar of Christ! Let all Christians unite under his authority!"},
                 {speaker: "Pope Martin V", text: "Brother Vincent, your support legitimizes my papacy. The schism ends today."}
-            ], 'preach', 200);
+            ], 'preach', 200, true, 'st-peters');
 
-            // Preach Church unity
-            createInteractable(-12, 0.5, -20, 'preach', 'Preach Church Unity', [
+            // INDOOR: Preach Church unity (INSIDE)
+            createInteractable(-10, 0.5, -7, 'preach', 'Preach Church Unity', [
                 {speaker: "Vincent", text: "After 39 years, the Western Schism is over! One Church, one Pope, one Faith!"}
-            ], 'preach', 300);
+            ], 'preach', 300, true, 'st-peters');
 
-            // Celebrate with cardinals
-            for(let i = 0; i < 10; i++) createNPC(-18 + i * 4, 0, -15, 0x8b0000);
-            createInteractable(0, 0.5, -12, 'celebrate', 'Celebrate Church Unity', [
+            // INDOOR: Celebrate with cardinals (INSIDE)
+            for(let i = 0; i < 10; i++) createNPC(-18 + i * 4, 0, -3, 0x8b0000, true, 'st-peters');
+            createInteractable(0, 0.5, -2, 'celebrate', 'Celebrate Church Unity', [
                 {speaker: "Cardinals", text: "Vincent, you helped end the greatest crisis in Church history!"},
                 {speaker: "Vincent", text: "All glory to God who guides His Church through storms."}
-            ], 'preach', 250);
+            ], 'preach', 250, true, 'st-peters');
             
             updateRadar();
         }
@@ -2073,42 +2295,57 @@
 
         function loadInvestigationChapter() {
             createGround();
-            // Vatican investigation hall
+            // Vatican investigation hall with proper door
             const hall = new THREE.Mesh(
                 new THREE.BoxGeometry(50, 25, 40),
                 new THREE.MeshStandardMaterial({color: 0xd4af37, roughness: 0.65, metalness: 0.3})
             );
             hall.position.set(0, 12.5, -30);
             hall.castShadow = true;
+            hall.receiveShadow = true;
             scene.add(hall);
-            buildings.push({x: 0, z: -30, radius: 28, id: 'investigation-hall'});
+            
+            // Add door to investigation hall
+            const hallDoor = createDoor(0, 0, -10, true, 'investigation-hall');
+            doors.push(hallDoor);
+            
+            // Golden door frame
+            const doorFrame = new THREE.Mesh(
+                new THREE.BoxGeometry(3.5, 7, 0.5),
+                new THREE.MeshStandardMaterial({color: 0xffd700, roughness: 0.4, metalness: 0.8})
+            );
+            doorFrame.position.set(0, 3.5, -9.7);
+            doorFrame.castShadow = true;
+            scene.add(doorFrame);
+            
+            buildings.push({x: 0, z: -30, radius: 25, id: 'investigation-hall'});
 
-            // Cardinals investigating
-            for(let i = 0; i < 6; i++) createNPC(-12 + i * 5, 0, -20, 0x8b0000);
+            // INDOOR: Cardinals investigating (INSIDE HALL)
+            for(let i = 0; i < 6; i++) createNPC(-10 + i * 4, 0, -7, 0x8b0000, true, 'investigation-hall');
 
-            // Testify about miracles
-            createInteractable(-8, 0.5, -18, 'testify', 'Testify About Miracles', [
+            // INDOOR: Testify about miracles (INSIDE)
+            createInteractable(-7, 0.5, -5, 'testify', 'Testify About Miracles', [
                 {speaker: "You (Brother Thomas)", text: "I witnessed Master Vincent raise the dead with my own eyes!"},
                 {speaker: "Cardinals", text: "Tell us everything you saw, Brother Thomas."}
-            ], 'preach', 50);
+            ], 'preach', 50, true, 'investigation-hall');
 
-            // Present written accounts
-            createInteractable(0, 0.5, -20, 'present', 'Present Documentation', [
+            // INDOOR: Present written accounts (INSIDE)
+            createInteractable(0, 0.5, -7, 'present', 'Present Documentation', [
                 {speaker: "You (Brother Thomas)", text: "Here are 873 confirmed miracles, documented by witnesses."},
                 {speaker: "Cardinals", text: "This is unprecedented! The evidence is overwhelming!"}
-            ], 'preach', 100);
+            ], 'preach', 100, true, 'investigation-hall');
 
-            // Recount resurrection miracle
-            createInteractable(8, 0.5, -18, 'recount', 'Recount Dead Raised', [
+            // INDOOR: Recount resurrection miracle (INSIDE)
+            createInteractable(7, 0.5, -5, 'recount', 'Recount Dead Raised', [
                 {speaker: "You (Brother Thomas)", text: "I saw him command a corpse to speak, and it testified of salvation!"},
                 {speaker: "Cardinals", text: "Truly, God worked through this man!"}
-            ], 'preach', 80);
+            ], 'preach', 80, true, 'investigation-hall');
 
-            // Final testimony
-            createInteractable(0, 0.5, -15, 'final', 'Give Final Testimony', [
+            // INDOOR: Final testimony (INSIDE)
+            createInteractable(0, 0.5, -3, 'final', 'Give Final Testimony', [
                 {speaker: "You (Brother Thomas)", text: "Vincent Ferrer was the holiest man I ever knew. He deserves to be named Saint!"},
                 {speaker: "Cardinals", text: "We will recommend canonization to His Holiness the Pope!"}
-            ], 'preach', 150);
+            ], 'preach', 150, true, 'investigation-hall');
             
             updateRadar();
         }
@@ -2386,7 +2623,7 @@
         function loadDeathChapter() {
             createGround();
             createHouse(0, 0, -12, 'death-house');
-            for(let i = 0; i < 6; i++) createNPC(-7.5 + i * 3, 0, 0, 0x000000);
+            for(let i = 0; i < 6; i++) createNPC(-7.5 + i * 3, 0, 5, 0x000000); // Moved to z=5 away from spawn
 
             // Final words to disciples
             createInteractable(-5, 0.5, -8, 'speak', 'Final Words to Disciples', [
@@ -2452,7 +2689,7 @@
 
         function loadCanonizationChapter() {
             createGround();
-            // Grand St. Peter's Basilica
+            // Grand St. Peter's Basilica with proper door
             const basilica = new THREE.Mesh(
                 new THREE.BoxGeometry(60, 35, 50),
                 new THREE.MeshStandardMaterial({
@@ -2466,36 +2703,57 @@
             basilica.receiveShadow = true;
             scene.add(basilica);
             
-            buildings.push({x: 0, z: -35, radius: 32, id: 'vatican'});
+            // Add grand door to Vatican
+            const vaticanDoor = createDoor(0, 0, -10, true, 'vatican');
+            vaticanDoor.scale.set(1.5, 1.5, 1);
+            doors.push(vaticanDoor);
+            
+            // Magnificent golden door frame
+            const doorFrame = new THREE.Mesh(
+                new THREE.BoxGeometry(6, 10, 0.5),
+                new THREE.MeshStandardMaterial({
+                    color: 0xffd700, 
+                    roughness: 0.2, 
+                    metalness: 0.9,
+                    emissive: 0xffd700,
+                    emissiveIntensity: 0.3
+                })
+            );
+            doorFrame.position.set(0, 5, -9.7);
+            doorFrame.castShadow = true;
+            scene.add(doorFrame);
+            
+            buildings.push({x: 0, z: -35, radius: 30, id: 'vatican'});
 
-            // Massive crowd celebrating
-            for(let i = 0; i < 120; i++) {
-                createNPC(-25 + Math.random() * 50, 0, -8 + Math.random() * 30, 0x8b0000);
+            // OUTDOOR: Massive crowd celebrating (OUTSIDE)
+            for(let i = 0; i < 60; i++) {
+                createNPC(-25 + Math.random() * 50, 0, 5 + Math.random() * 20, 0x8b0000, false, null);
             }
 
-            // Pope Callixtus III appears
-            createNPC(0, 0, -22, 0xff0000);
+            // INDOOR: Pope Callixtus III appears (INSIDE BASILICA)
+            createNPC(0, 0, -8, 0xff0000, true, 'vatican');
 
-            // Hear Pope's declaration
-            createInteractable(0, 0.5, -20, 'hear', 'Hear Papal Declaration', [
+            // INDOOR: Hear Pope's declaration (INSIDE)
+            createInteractable(0, 0.5, -7, 'hear', 'Hear Papal Declaration', [
                 {speaker: "Pope Callixtus III", text: "By the authority of Almighty God, we declare Vincent Ferrer to be a SAINT!"},
                 {speaker: "Cardinals", text: "He is inscribed in the catalog of Saints! Let all Christians honor him!"},
                 {speaker: "You (Brother Thomas)", text: "My teacher! My master! Now SAINT Vincent Ferrer!"}
-            ]);
+            ], null, 0, true, 'vatican');
 
-            // Celebrate with witnesses
-            createInteractable(-12, 0.5, -18, 'celebrate', 'Celebrate with Witnesses', [
+            // INDOOR: Celebrate with witnesses (INSIDE)
+            for(let i = 0; i < 12; i++) createNPC(-10 + i * 2, 0, -8, 0x8b0000, true, 'vatican');
+            createInteractable(-10, 0.5, -4, 'celebrate', 'Celebrate with Witnesses', [
                 {speaker: "You (Brother Thomas)", text: "I witnessed his miracles! I saw him raise the dead!"},
                 {speaker: "Other Witness", text: "I saw him speak in tongues! I saw him multiply food!"},
                 {speaker: "Another Witness", text: "873 confirmed miracles! 25,000 Jews converted! 8,000 Muslims!"}
-            ], 'preach', 100);
+            ], 'preach', 100, true, 'vatican');
 
-            // Final prayer
-            createInteractable(12, 0.5, -22, 'pray', 'Give Thanks to God', [
+            // INDOOR: Final prayer (INSIDE)
+            createInteractable(10, 0.5, -9, 'pray', 'Give Thanks to God', [
                 {speaker: "You (Brother Thomas)", text: "Thank you, Lord, for letting me witness his holy life!"},
                 {speaker: "All Present", text: "SAINT VINCENT FERRER, PRAY FOR US!"},
                 {speaker: "Narrator", text: "The life of Saint Vincent Ferrer is complete. Your journey ends in glory."}
-            ], 'heal', 500);
+            ], 'heal', 500, true, 'vatican');
             
             updateRadar();
         }
@@ -2576,14 +2834,17 @@
 
             playerModel.rotation.y = cameraAngle;
 
-            // Camera follow
+            // Camera follow with better overhead angle for navigation
             cameraTarget.copy(playerModel.position);
             const camX = cameraTarget.x - Math.sin(cameraAngle) * CAMERA_DISTANCE;
             const camZ = cameraTarget.z - Math.cos(cameraAngle) * CAMERA_DISTANCE;
             camera.position.x = camX;
             camera.position.y = cameraTarget.y + CAMERA_HEIGHT;
             camera.position.z = camZ;
-            camera.lookAt(playerModel.position.x, playerModel.position.y + 1.2, playerModel.position.z);
+            // Look at point ahead of player for better forward visibility
+            const lookAheadX = playerModel.position.x + Math.sin(cameraAngle) * 2;
+            const lookAheadZ = playerModel.position.z + Math.cos(cameraAngle) * 2;
+            camera.lookAt(lookAheadX, playerModel.position.y + 1.5, lookAheadZ);
 
             // Check interactions - DOORS FIRST, then tasks
             const nearestDoor = findNearestDoor();
@@ -2625,11 +2886,24 @@
                 document.getElementById('objective-text').textContent = CHAPTERS[currentChapter].objective;
             }
 
-            // Animate interactables
+            // Animate interactables (only visible ones)
             interactables.forEach(obj => {
+                if(obj.visible === false) return; // Skip invisible indoor objects
                 obj.position.y = 0.5 + Math.sin(Date.now() * 0.004 + obj.userData.floatOffset) * 0.35;
                 obj.rotation.y += 0.04;
                 obj.rotation.x = Math.sin(Date.now() * 0.002) * 0.2;
+            });
+            
+            // Animate door beacons for maximum visibility
+            scene.children.forEach(obj => {
+                if(obj.userData && obj.userData.isDoorBeacon) {
+                    // Float up and down
+                    obj.position.y = obj.userData.baseY + Math.sin(Date.now() * 0.003) * 0.5;
+                    // Pulse glow
+                    if(obj.material) {
+                        obj.material.emissiveIntensity = 2.0 + Math.sin(Date.now() * 0.005) * 1.0;
+                    }
+                }
             });
         }
 
