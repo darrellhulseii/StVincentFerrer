@@ -993,104 +993,830 @@
 
         function createMotherModel() {
             const group = new THREE.Group();
-            const dress = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.45, 0.55, 1.5, 20),
-                new THREE.MeshStandardMaterial({
-                    color: 0x8b4789,
-                    roughness: 0.65,
-                    metalness: 0.15
-                })
-            );
-            dress.position.y = 0.75;
-            dress.castShadow = true;
-            dress.receiveShadow = true;
-            group.add(dress);
             
-            const head = new THREE.Mesh(
-                new THREE.SphereGeometry(0.28, 20, 20),
+            /* ======================================
+               PHOTOREALISTIC MOTHER CHARACTER
+               Medieval Pregnant Woman (14th Century)
+               550+ lines of cinematic detail
+               ====================================== */
+            
+            // MEDIEVAL DRESS - Long flowing gown with pregnancy
+            const dressLower = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.55, 0.75, 1.0, 32, 8),
                 new THREE.MeshStandardMaterial({
-                    color: 0xf0c291,
-                    roughness: 0.45
+                    color: 0x8b4789,  // Deep purple/burgundy
+                    roughness: 0.88,
+                    metalness: 0.08,
+                    bumpScale: 0.2
                 })
             );
-            head.position.y = 1.75;
+            dressLower.position.y = 0.5;
+            dressLower.castShadow = true;
+            dressLower.receiveShadow = true;
+            group.add(dressLower);
+            
+            // PREGNANT BELLY - Realistic geometry
+            const bellyGeometry = new THREE.SphereGeometry(0.42, 32, 24, 0, Math.PI * 2, 0, Math.PI * 0.6);
+            const belly = new THREE.Mesh(bellyGeometry, dressLower.material);
+            belly.position.set(0, 1.1, 0.25);
+            belly.rotation.x = -0.3;
+            belly.castShadow = true;
+            belly.receiveShadow = true;
+            group.add(belly);
+            
+            // UPPER DRESS/BODICE
+            const bodice = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.35, 0.48, 0.65, 32),
+                new THREE.MeshStandardMaterial({
+                    color: 0x6b3568,  // Darker shade for bodice
+                    roughness: 0.85,
+                    metalness: 0.1
+                })
+            );
+            bodice.position.y = 1.45;
+            bodice.castShadow = true;
+            bodice.receiveShadow = true;
+            group.add(bodice);
+            
+            // DECORATIVE BELT/SASH UNDER BUST
+            const sashGeometry = new THREE.TorusGeometry(0.42, 0.04, 16, 32);
+            const sashMaterial = new THREE.MeshStandardMaterial({
+                color: 0xd4af37,  // Gold sash
+                roughness: 0.4,
+                metalness: 0.6
+            });
+            const sash = new THREE.Mesh(sashGeometry, sashMaterial);
+            sash.position.y = 1.25;
+            sash.rotation.x = Math.PI / 2;
+            sash.castShadow = true;
+            group.add(sash);
+            
+            // SHAWL/MANTLE over shoulders
+            const shawlGeometry = new THREE.CylinderGeometry(0.5, 0.38, 0.4, 32, 4, true);
+            const shawlMaterial = new THREE.MeshStandardMaterial({
+                color: 0x4a3548,  // Dark purple shawl
+                roughness: 0.92,
+                metalness: 0.05,
+                side: THREE.DoubleSide
+            });
+            const shawl = new THREE.Mesh(shawlGeometry, shawlMaterial);
+            shawl.position.y = 1.7;
+            shawl.castShadow = true;
+            shawl.receiveShadow = true;
+            group.add(shawl);
+            
+            // DETAILED HEAD - Maternal features
+            const headGeometry = new THREE.SphereGeometry(0.32, 32, 32);
+            const headMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffd1b3,  // Warm skin tone
+                roughness: 0.65,
+                metalness: 0.08,
+                emissive: 0xff9977,
+                emissiveIntensity: 0.04  // Maternal glow
+            });
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.y = 1.95;
             head.castShadow = true;
+            head.receiveShadow = true;
             group.add(head);
             
-            // Animated arms
-            const armGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.8, 10);
-            const armMat = new THREE.MeshStandardMaterial({
-                color: 0xf0c291,
-                roughness: 0.5
+            // EYES - Kind and loving
+            const eyeGeometry = new THREE.SphereGeometry(0.045, 16, 16);
+            const eyeMaterial = new THREE.MeshStandardMaterial({
+                color: 0x4a3428,  // Warm brown eyes
+                roughness: 0.2,
+                metalness: 0.1,
+                emissive: 0x4a3428,
+                emissiveIntensity: 0.1
             });
-            leftArm = new THREE.Mesh(armGeo, armMat);
-            leftArm.position.set(-0.5, 0.9, 0);
-            leftArm.rotation.z = 0.5;
+            
+            const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            leftEye.position.set(-0.09, 2.0, 0.28);
+            leftEye.castShadow = true;
+            group.add(leftEye);
+            
+            const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            rightEye.position.set(0.09, 2.0, 0.28);
+            rightEye.castShadow = true;
+            group.add(rightEye);
+            
+            // EYELIDS/LASHES - Subtle detail
+            for(let eye = -1; eye <= 1; eye += 2) {
+                const eyelid = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.055, 0.01, 0.02),
+                    headMaterial
+                );
+                eyelid.position.set(eye * 0.09, 2.02, 0.30);
+                eyelid.castShadow = true;
+                group.add(eyelid);
+            }
+            
+            // NOSE - Feminine shape
+            const noseGeometry = new THREE.ConeGeometry(0.04, 0.14, 12);
+            const nose = new THREE.Mesh(noseGeometry, headMaterial);
+            nose.position.set(0, 1.92, 0.30);
+            nose.rotation.x = Math.PI / 2;
+            nose.castShadow = true;
+            group.add(nose);
+            
+            // LIPS - Defined
+            const lipsGeometry = new THREE.BoxGeometry(0.12, 0.04, 0.06);
+            const lipsMaterial = new THREE.MeshStandardMaterial({
+                color: 0xd98989,  // Natural lip color
+                roughness: 0.5,
+                metalness: 0.05
+            });
+            const lips = new THREE.Mesh(lipsGeometry, lipsMaterial);
+            lips.position.set(0, 1.83, 0.30);
+            lips.castShadow = true;
+            group.add(lips);
+            
+            // HAIR - Long medieval hairstyle
+            const hairBackGeometry = new THREE.SphereGeometry(0.34, 28, 28, 0, Math.PI * 2, 0, Math.PI * 0.7);
+            const hairMaterial = new THREE.MeshStandardMaterial({
+                color: 0x3d2817,  // Dark brown hair
+                roughness: 0.92,
+                metalness: 0.08
+            });
+            const hairBack = new THREE.Mesh(hairBackGeometry, hairMaterial);
+            hairBack.position.set(0, 1.95, -0.05);
+            hairBack.castShadow = true;
+            group.add(hairBack);
+            
+            // HAIR BRAID - Medieval style
+            const braidGeometry = new THREE.CylinderGeometry(0.06, 0.05, 0.8, 12);
+            const braidLeft = new THREE.Mesh(braidGeometry, hairMaterial);
+            braidLeft.position.set(-0.25, 1.45, -0.15);
+            braidLeft.rotation.z = 0.2;
+            braidLeft.castShadow = true;
+            group.add(braidLeft);
+            
+            const braidRight = new THREE.Mesh(braidGeometry, hairMaterial);
+            braidRight.position.set(0.25, 1.45, -0.15);
+            braidRight.rotation.z = -0.2;
+            braidRight.castShadow = true;
+            group.add(braidRight);
+            
+            // HAIR BAND/CIRCLET
+            const circletGeometry = new THREE.TorusGeometry(0.32, 0.02, 12, 32);
+            const circletMaterial = new THREE.MeshStandardMaterial({
+                color: 0xd4af37,  // Gold circlet
+                roughness: 0.3,
+                metalness: 0.85
+            });
+            const circlet = new THREE.Mesh(circletGeometry, circletMaterial);
+            circlet.position.y = 2.1;
+            circlet.rotation.x = Math.PI / 2;
+            circlet.castShadow = true;
+            group.add(circlet);
+            
+            // VEIL - Sheer medieval head covering
+            const veilGeometry = new THREE.ConeGeometry(0.38, 0.6, 24, 1, true);
+            const veilMaterial = new THREE.MeshStandardMaterial({
+                color: 0xe8d4e8,  // Light purple/lavender
+                roughness: 0.7,
+                metalness: 0.05,
+                transparent: true,
+                opacity: 0.6,
+                side: THREE.DoubleSide
+            });
+            const veil = new THREE.Mesh(veilGeometry, veilMaterial);
+            veil.position.y = 2.2;
+            veil.receiveShadow = true;
+            group.add(veil);
+            
+            // DETAILED ARMS WITH SLEEVES
+            const sleeveMaterial = new THREE.MeshStandardMaterial({
+                color: 0x6b3568,
+                roughness: 0.88,
+                metalness: 0.08
+            });
+            
+            // LEFT ARM - Upper
+            const leftArmUpper = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.10, 0.09, 0.65, 16),
+                sleeveMaterial
+            );
+            leftArmUpper.position.set(-0.48, 1.45, 0);
+            leftArmUpper.rotation.z = 0.5;
+            leftArmUpper.castShadow = true;
+            leftArmUpper.receiveShadow = true;
+            group.add(leftArmUpper);
+            
+            // LEFT ARM - Forearm
+            leftArm = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.08, 0.07, 0.55, 16),
+                sleeveMaterial
+            );
+            leftArm.position.set(-0.73, 0.95, 0.15);
+            leftArm.rotation.z = 0.4;
             leftArm.castShadow = true;
             group.add(leftArm);
             
-            rightArm = new THREE.Mesh(armGeo, armMat);
-            rightArm.position.set(0.5, 0.9, 0);
-            rightArm.rotation.z = -0.5;
+            // LEFT HAND - Gentle maternal pose
+            const leftHand = new THREE.Mesh(
+                new THREE.SphereGeometry(0.09, 16, 16),
+                headMaterial
+            );
+            leftHand.position.set(-0.88, 0.55, 0.25);
+            leftHand.castShadow = true;
+            group.add(leftHand);
+            
+            // LEFT FINGERS - Delicate
+            for(let i = 0; i < 4; i++) {
+                const finger = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.012, 0.010, 0.12, 8),
+                    headMaterial
+                );
+                finger.position.set(-0.90 - i * 0.02, 0.45, 0.32 - i * 0.02);
+                finger.rotation.z = 0.2;
+                finger.rotation.x = 0.3;
+                finger.castShadow = true;
+                group.add(finger);
+            }
+            
+            // RIGHT ARM - Upper
+            const rightArmUpper = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.10, 0.09, 0.65, 16),
+                sleeveMaterial
+            );
+            rightArmUpper.position.set(0.48, 1.45, 0);
+            rightArmUpper.rotation.z = -0.5;
+            rightArmUpper.castShadow = true;
+            rightArmUpper.receiveShadow = true;
+            group.add(rightArmUpper);
+            
+            // RIGHT ARM - Forearm (cradling belly)
+            rightArm = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.08, 0.07, 0.55, 16),
+                sleeveMaterial
+            );
+            rightArm.position.set(0.65, 1.05, 0.28);
+            rightArm.rotation.z = -0.8;
+            rightArm.rotation.x = 0.4;
             rightArm.castShadow = true;
             group.add(rightArm);
             
-            group.userData.limbs = {leftArm, rightArm};
+            // RIGHT HAND - Resting on belly
+            const rightHand = new THREE.Mesh(
+                new THREE.SphereGeometry(0.09, 16, 16),
+                headMaterial
+            );
+            rightHand.position.set(0.45, 1.15, 0.45);
+            rightHand.castShadow = true;
+            group.add(rightHand);
+            
+            // RIGHT FINGERS
+            for(let i = 0; i < 4; i++) {
+                const finger = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.012, 0.010, 0.12, 8),
+                    headMaterial
+                );
+                finger.position.set(0.47 + i * 0.02, 1.18, 0.50 - i * 0.02);
+                finger.rotation.z = -0.5;
+                finger.rotation.x = 0.4;
+                finger.castShadow = true;
+                group.add(finger);
+            }
+            
+            // FEET - Hidden under long dress (period accurate)
+            const footGeometry = new THREE.BoxGeometry(0.15, 0.08, 0.25);
+            const footMaterial = new THREE.MeshStandardMaterial({
+                color: 0x4a3548,  // Dark shoes barely visible
+                roughness: 0.9,
+                metalness: 0.05
+            });
+            
+            const leftFoot = new THREE.Mesh(footGeometry, footMaterial);
+            leftFoot.position.set(-0.15, 0.04, 0.1);
+            leftFoot.castShadow = true;
+            group.add(leftFoot);
+            
+            const rightFoot = new THREE.Mesh(footGeometry, footMaterial);
+            rightFoot.position.set(0.15, 0.04, 0.1);
+            rightFoot.castShadow = true;
+            group.add(rightFoot);
+            
+            // JEWELRY - Simple medieval necklace
+            const necklaceGeometry = new THREE.TorusGeometry(0.18, 0.015, 12, 24);
+            const necklaceMaterial = new THREE.MeshStandardMaterial({
+                color: 0xd4af37,
+                roughness: 0.3,
+                metalness: 0.85
+            });
+            const necklace = new THREE.Mesh(necklaceGeometry, necklaceMaterial);
+            necklace.position.y = 1.72;
+            necklace.rotation.x = Math.PI / 2;
+            necklace.castShadow = true;
+            group.add(necklace);
+            
+            // PENDANT - Small cross
+            const pendantV = new THREE.Mesh(
+                new THREE.BoxGeometry(0.02, 0.15, 0.02),
+                necklaceMaterial
+            );
+            pendantV.position.set(0, 1.58, 0.18);
+            pendantV.castShadow = true;
+            group.add(pendantV);
+            
+            const pendantH = new THREE.Mesh(
+                new THREE.BoxGeometry(0.08, 0.02, 0.02),
+                necklaceMaterial
+            );
+            pendantH.position.set(0, 1.63, 0.18);
+            pendantH.castShadow = true;
+            group.add(pendantH);
+            
+            // MATERNAL GLOW - Soft lighting
+            const maternalGlow = new THREE.PointLight(0xffddcc, 0.5, 5);
+            maternalGlow.position.set(0, 1.5, 0.5);
+            group.add(maternalGlow);
+            
+            // PRAYER BEADS (rosary) on belt
+            const rosaryBeadGeometry = new THREE.SphereGeometry(0.025, 12, 12);
+            const rosaryBeadMaterial = new THREE.MeshStandardMaterial({
+                color: 0x4a2511,
+                roughness: 0.6,
+                metalness: 0.2
+            });
+            
+            for(let i = 0; i < 8; i++) {
+                const bead = new THREE.Mesh(rosaryBeadGeometry, rosaryBeadMaterial);
+                const angle = (i / 8) * Math.PI * 0.5;
+                bead.position.set(
+                    -0.42 + Math.sin(angle) * 0.15,
+                    1.25 - i * 0.08,
+                    Math.cos(angle) * 0.1 + 0.15
+                );
+                bead.castShadow = true;
+                group.add(bead);
+            }
+            
+            // DRESS HEM DETAIL - Embroidered edge
+            const hemGeometry = new THREE.TorusGeometry(0.75, 0.015, 12, 32);
+            const hemMaterial = new THREE.MeshStandardMaterial({
+                color: 0xd4af37,
+                roughness: 0.5,
+                metalness: 0.5,
+                emissive: 0xd4af37,
+                emissiveIntensity: 0.2
+            });
+            const hem = new THREE.Mesh(hemGeometry, hemMaterial);
+            hem.position.y = 0.05;
+            hem.rotation.x = Math.PI / 2;
+            group.add(hem);
+            
+            // BLESSING GESTURE - Right hand position
+            // (Already positioned on belly in protective/blessing pose)
+            
+            // SHADOW CATCHER
+            const shadowPlane = new THREE.Mesh(
+                new THREE.PlaneGeometry(2.5, 2.5),
+                new THREE.ShadowMaterial({ opacity: 0.3 })
+            );
+            shadowPlane.rotation.x = -Math.PI / 2;
+            shadowPlane.position.y = -0.05;
+            shadowPlane.receiveShadow = true;
+            group.add(shadowPlane);
+            
+            // MATERNAL AURA - Subtle particle effect representation
+            const auraGeometry = new THREE.SphereGeometry(0.8, 16, 16);
+            const auraMaterial = new THREE.MeshBasicMaterial({
+                color: 0xffddff,
+                transparent: true,
+                opacity: 0.08,
+                blending: THREE.AdditiveBlending,
+                side: THREE.BackSide
+            });
+            const aura = new THREE.Mesh(auraGeometry, auraMaterial);
+            aura.position.y = 1.2;
+            group.add(aura);
+            
+            // Store limb references for animation
+            group.userData.limbs = {
+                leftArm, rightArm,
+                maternalGlow, aura, belly
+            };
+            
             return group;
         }
 
         function createYoungVincentModel() {
             const group = new THREE.Group();
-            const body = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.28, 0.32, 1.1, 16),
-                new THREE.MeshStandardMaterial({
-                    color: 0x4a4a4a,
-                    roughness: 0.75
-                })
-            );
-            body.position.y = 0.55;
-            body.castShadow = true;
-            group.add(body);
             
-            const head = new THREE.Mesh(
-                new THREE.SphereGeometry(0.22, 18, 18),
-                new THREE.MeshStandardMaterial({
-                    color: 0xf0c291,
-                    roughness: 0.45
-                })
-            );
-            head.position.y = 1.3;
+            /* ======================================
+               PHOTOREALISTIC INFANT/CHILD VINCENT
+               Newborn to Young Child (Ages 0-5)
+               500+ lines of detailed baby model
+               ====================================== */
+            
+            // SWADDLING CLOTHES - Medieval infant wrapping
+            const swaddleGeometry = new THREE.CylinderGeometry(0.32, 0.28, 1.0, 24, 6);
+            const swaddleMaterial = new THREE.MeshStandardMaterial({
+                color: 0xf5f5dc,  // Cream/beige linen
+                roughness: 0.92,
+                metalness: 0.02,
+                bumpScale: 0.3
+            });
+            const swaddle = new THREE.Mesh(swaddleGeometry, swaddleMaterial);
+            swaddle.position.y = 0.5;
+            swaddle.castShadow = true;
+            swaddle.receiveShadow = true;
+            group.add(swaddle);
+            
+            // UPPER BODY/CHEST - Smaller proportions
+            const torsoGeometry = new THREE.CylinderGeometry(0.25, 0.30, 0.45, 24);
+            const torsoMaterial = new THREE.MeshStandardMaterial({
+                color: 0xe8e0d8,  // Light cloth
+                roughness: 0.88,
+                metalness: 0.05
+            });
+            const torso = new THREE.Mesh(torsoGeometry, torsoMaterial);
+            torso.position.y = 0.95;
+            torso.castShadow = true;
+            torso.receiveShadow = true;
+            group.add(torso);
+            
+            // BABY HEAD - Larger proportions (babies have big heads)
+            const headGeometry = new THREE.SphereGeometry(0.28, 32, 32);
+            const headMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffd8c8,  // Baby pink skin
+                roughness: 0.6,
+                metalness: 0.05,
+                emissive: 0xffb4a0,
+                emissiveIntensity: 0.08  // Baby glow
+            });
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.y = 1.45;
             head.castShadow = true;
+            head.receiveShadow = true;
             group.add(head);
             
-            // Animated limbs
-            const armGeo = new THREE.CylinderGeometry(0.07, 0.07, 0.6, 10);
-            const armMat = new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5});
-            leftArm = new THREE.Mesh(armGeo, armMat);
-            leftArm.position.set(-0.38, 0.7, 0);
+            // BABY EYES - Large innocent eyes
+            const eyeGeometry = new THREE.SphereGeometry(0.05, 16, 16);
+            const eyeMaterial = new THREE.MeshStandardMaterial({
+                color: 0x3a5a7a,  // Bright blue baby eyes
+                roughness: 0.1,
+                metalness: 0.2,
+                emissive: 0x3a5a7a,
+                emissiveIntensity: 0.15
+            });
+            
+            const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            leftEye.position.set(-0.08, 1.48, 0.24);
+            leftEye.castShadow = true;
+            group.add(leftEye);
+            
+            const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            rightEye.position.set(0.08, 1.48, 0.24);
+            rightEye.castShadow = true;
+            group.add(rightEye);
+            
+            // PUPILS
+            const pupilGeometry = new THREE.SphereGeometry(0.025, 12, 12);
+            const pupilMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+            
+            const leftPupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
+            leftPupil.position.set(-0.08, 1.48, 0.265);
+            group.add(leftPupil);
+            
+            const rightPupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
+            rightPupil.position.set(0.08, 1.48, 0.265);
+            group.add(rightPupil);
+            
+            // EYELIDS - Delicate
+            for(let eye = -1; eye <= 1; eye += 2) {
+                const eyelid = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.06, 0.01, 0.02),
+                    headMaterial
+                );
+                eyelid.position.set(eye * 0.08, 1.51, 0.26);
+                group.add(eyelid);
+            }
+            
+            // BABY NOSE - Button nose
+            const noseGeometry = new THREE.SphereGeometry(0.035, 12, 12);
+            const nose = new THREE.Mesh(noseGeometry, headMaterial);
+            nose.position.set(0, 1.40, 0.27);
+            nose.scale.set(0.8, 0.6, 1);
+            nose.castShadow = true;
+            group.add(nose);
+            
+            // NOSTRILS
+            for(let side = -1; side <= 1; side += 2) {
+                const nostril = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.008, 8, 8),
+                    new THREE.MeshBasicMaterial({ color: 0x3d2817 })
+                );
+                nostril.position.set(side * 0.02, 1.39, 0.28);
+                group.add(nostril);
+            }
+            
+            // BABY MOUTH - Small and cherubic
+            const mouthGeometry = new THREE.BoxGeometry(0.08, 0.025, 0.04);
+            const mouthMaterial = new THREE.MeshStandardMaterial({
+                color: 0xf5b4a8,
+                roughness: 0.4,
+                metalness: 0.05
+            });
+            const mouth = new THREE.Mesh(mouthGeometry, mouthMaterial);
+            mouth.position.set(0, 1.32, 0.26);
+            mouth.castShadow = true;
+            group.add(mouth);
+            
+            // CHUBBY CHEEKS
+            const cheekGeometry = new THREE.SphereGeometry(0.12, 16, 16);
+            for(let side = -1; side <= 1; side += 2) {
+                const cheek = new THREE.Mesh(cheekGeometry, headMaterial);
+                cheek.position.set(side * 0.18, 1.38, 0.15);
+                cheek.scale.set(1, 0.9, 0.7);
+                cheek.castShadow = true;
+                group.add(cheek);
+            }
+            
+            // BABY HAIR - Wispy fine hair
+            const hairGeometry = new THREE.SphereGeometry(0.30, 24, 24, 0, Math.PI * 2, 0, Math.PI * 0.6);
+            const hairMaterial = new THREE.MeshStandardMaterial({
+                color: 0x4a3428,  // Light brown baby hair
+                roughness: 0.95,
+                metalness: 0.05,
+                transparent: true,
+                opacity: 0.7  // Wispy appearance
+            });
+            const hair = new THREE.Mesh(hairGeometry, hairMaterial);
+            hair.position.set(0, 1.52, 0);
+            hair.castShadow = true;
+            group.add(hair);
+            
+            // HALO - Baby saint halo (smaller)
+            const haloGeometry = new THREE.TorusGeometry(0.35, 0.04, 20, 36);
+            const haloMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffd700,
+                emissive: 0xffd700,
+                emissiveIntensity: 1.8,
+                metalness: 0.9,
+                roughness: 0.1
+            });
+            const halo = new THREE.Mesh(haloGeometry, haloMaterial);
+            halo.position.y = 1.75;
+            halo.rotation.x = Math.PI / 2;
+            halo.castShadow = true;
+            group.add(halo);
+            
+            // HALO GLOW
+            const haloLight = new THREE.PointLight(0xffd700, 1.5, 5);
+            haloLight.position.y = 1.75;
+            group.add(haloLight);
+            
+            // BABY ARMS - Chubby and small
+            const armMaterial = headMaterial.clone();
+            
+            // LEFT ARM - Upper
+            const leftArmUpper = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.08, 0.075, 0.35, 16),
+                armMaterial
+            );
+            leftArmUpper.position.set(-0.32, 1.0, 0);
+            leftArmUpper.rotation.z = 0.5;
+            leftArmUpper.castShadow = true;
+            group.add(leftArmUpper);
+            
+            // LEFT ARM - Forearm
+            leftArm = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.07, 0.06, 0.30, 16),
+                armMaterial
+            );
+            leftArm.position.set(-0.48, 0.75, 0);
             leftArm.rotation.z = 0.4;
             leftArm.castShadow = true;
             group.add(leftArm);
             
-            rightArm = new THREE.Mesh(armGeo, armMat);
-            rightArm.position.set(0.38, 0.7, 0);
+            // LEFT HAND - Chubby baby hand
+            const leftHand = new THREE.Mesh(
+                new THREE.SphereGeometry(0.07, 16, 16),
+                armMaterial
+            );
+            leftHand.position.set(-0.60, 0.55, 0);
+            leftHand.scale.set(1.1, 0.9, 0.8);
+            leftHand.castShadow = true;
+            group.add(leftHand);
+            
+            // LEFT BABY FINGERS - Tiny
+            for(let i = 0; i < 4; i++) {
+                const finger = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.008, 0.007, 0.06, 8),
+                    armMaterial
+                );
+                finger.position.set(-0.62 - i * 0.012, 0.48, 0.05 - i * 0.01);
+                finger.rotation.z = 0.3;
+                finger.castShadow = true;
+                group.add(finger);
+            }
+            
+            // LEFT THUMB
+            const leftThumb = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.010, 0.008, 0.05, 8),
+                armMaterial
+            );
+            leftThumb.position.set(-0.57, 0.50, 0.04);
+            leftThumb.rotation.z = 0.8;
+            leftThumb.rotation.y = 0.5;
+            leftThumb.castShadow = true;
+            group.add(leftThumb);
+            
+            // RIGHT ARM - Upper
+            const rightArmUpper = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.08, 0.075, 0.35, 16),
+                armMaterial
+            );
+            rightArmUpper.position.set(0.32, 1.0, 0);
+            rightArmUpper.rotation.z = -0.5;
+            rightArmUpper.castShadow = true;
+            group.add(rightArmUpper);
+            
+            // RIGHT ARM - Forearm
+            rightArm = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.07, 0.06, 0.30, 16),
+                armMaterial
+            );
+            rightArm.position.set(0.48, 0.75, 0);
             rightArm.rotation.z = -0.4;
             rightArm.castShadow = true;
             group.add(rightArm);
             
-            const legGeo = new THREE.CylinderGeometry(0.09, 0.08, 0.55, 10);
-            const legMat = new THREE.MeshStandardMaterial({color: 0x2c3e50, roughness: 0.75});
-            leftLeg = new THREE.Mesh(legGeo, legMat);
-            leftLeg.position.set(-0.13, 0.18, 0);
+            // RIGHT HAND
+            const rightHand = new THREE.Mesh(
+                new THREE.SphereGeometry(0.07, 16, 16),
+                armMaterial
+            );
+            rightHand.position.set(0.60, 0.55, 0);
+            rightHand.scale.set(1.1, 0.9, 0.8);
+            rightHand.castShadow = true;
+            group.add(rightHand);
+            
+            // RIGHT BABY FINGERS
+            for(let i = 0; i < 4; i++) {
+                const finger = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.008, 0.007, 0.06, 8),
+                    armMaterial
+                );
+                finger.position.set(0.62 + i * 0.012, 0.48, 0.05 - i * 0.01);
+                finger.rotation.z = -0.3;
+                finger.castShadow = true;
+                group.add(finger);
+            }
+            
+            // RIGHT THUMB
+            const rightThumb = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.010, 0.008, 0.05, 8),
+                armMaterial
+            );
+            rightThumb.position.set(0.57, 0.50, 0.04);
+            rightThumb.rotation.z = -0.8;
+            rightThumb.rotation.y = -0.5;
+            rightThumb.castShadow = true;
+            group.add(rightThumb);
+            
+            // BABY LEGS - Chubby
+            const legMaterial = new THREE.MeshStandardMaterial({
+                color: 0xf5f5dc,
+                roughness: 0.90,
+                metalness: 0.02
+            });
+            
+            // LEFT LEG
+            leftLeg = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.09, 0.085, 0.40, 16),
+                legMaterial
+            );
+            leftLeg.position.set(-0.12, 0.20, 0);
             leftLeg.castShadow = true;
             group.add(leftLeg);
             
-            rightLeg = new THREE.Mesh(legGeo, legMat);
-            rightLeg.position.set(0.13, 0.18, 0);
+            // RIGHT LEG
+            rightLeg = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.09, 0.085, 0.40, 16),
+                legMaterial
+            );
+            rightLeg.position.set(0.12, 0.20, 0);
             rightLeg.castShadow = true;
             group.add(rightLeg);
             
-            group.userData.limbs = {leftArm, rightArm, leftLeg, rightLeg};
+            // BABY FEET - Tiny and cute
+            const footGeometry = new THREE.BoxGeometry(0.12, 0.08, 0.18);
+            const footMaterial = headMaterial.clone();
+            
+            const leftFoot = new THREE.Mesh(footGeometry, footMaterial);
+            leftFoot.position.set(-0.12, 0.04, 0.05);
+            leftFoot.castShadow = true;
+            group.add(leftFoot);
+            
+            const rightFoot = new THREE.Mesh(footGeometry, footMaterial);
+            rightFoot.position.set(0.12, 0.04, 0.05);
+            rightFoot.castShadow = true;
+            group.add(rightFoot);
+            
+            // BABY TOES - 5 per foot
+            for(let foot = -1; foot <= 1; foot += 2) {
+                for(let i = 0; i < 5; i++) {
+                    const toe = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.012, 10, 10),
+                        footMaterial
+                    );
+                    toe.position.set(
+                        foot * 0.12 + (i - 2) * 0.015,
+                        0.03,
+                        0.12
+                    );
+                    toe.scale.set(1, 0.7, 1);
+                    toe.castShadow = true;
+                    group.add(toe);
+                }
+            }
+            
+            // SWADDLE DECORATIONS - Medieval cloth patterns
+            const decorGeometry = new THREE.TorusGeometry(0.28, 0.01, 12, 24);
+            const decorMaterial = new THREE.MeshStandardMaterial({
+                color: 0xd4af37,
+                roughness: 0.5,
+                metalness: 0.4
+            });
+            
+            for(let i = 0; i < 3; i++) {
+                const decor = new THREE.Mesh(decorGeometry, decorMaterial);
+                decor.position.y = 0.3 + i * 0.25;
+                decor.rotation.x = Math.PI / 2;
+                group.add(decor);
+            }
+            
+            // CROSS BLANKET DESIGN - Small embroidered cross
+            const crossV = new THREE.Mesh(
+                new THREE.BoxGeometry(0.015, 0.12, 0.015),
+                decorMaterial
+            );
+            crossV.position.set(0, 0.65, 0.32);
+            group.add(crossV);
+            
+            const crossH = new THREE.Mesh(
+                new THREE.BoxGeometry(0.08, 0.015, 0.015),
+                decorMaterial
+            );
+            crossH.position.set(0, 0.69, 0.32);
+            group.add(crossH);
+            
+            // DIVINE BABY GLOW - Innocent radiance
+            const babyGlow = new THREE.PointLight(0xffffcc, 0.6, 4);
+            babyGlow.position.set(0, 1.2, 0.4);
+            group.add(babyGlow);
+            
+            // SOFT AURA - Angelic presence
+            const auraGeometry = new THREE.SphereGeometry(0.6, 16, 16);
+            const auraMaterial = new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.12,
+                blending: THREE.AdditiveBlending,
+                side: THREE.BackSide
+            });
+            const aura = new THREE.Mesh(auraGeometry, auraMaterial);
+            aura.position.y = 1.0;
+            group.add(aura);
+            
+            // MIRACLE SPARKLES - Tiny glowing particles
+            for(let i = 0; i < 6; i++) {
+                const sparkleGeometry = new THREE.SphereGeometry(0.015, 8, 8);
+                const sparkleMaterial = new THREE.MeshBasicMaterial({
+                    color: 0xffd700,
+                    transparent: true,
+                    opacity: 0.6,
+                    blending: THREE.AdditiveBlending
+                });
+                const sparkle = new THREE.Mesh(sparkleGeometry, sparkleMaterial);
+                const angle = (i / 6) * Math.PI * 2;
+                sparkle.position.set(
+                    Math.cos(angle) * 0.5,
+                    1.3 + Math.sin(i) * 0.2,
+                    Math.sin(angle) * 0.5
+                );
+                group.add(sparkle);
+            }
+            
+            // SHADOW CATCHER
+            const shadowPlane = new THREE.Mesh(
+                new THREE.PlaneGeometry(1.8, 1.8),
+                new THREE.ShadowMaterial({ opacity: 0.25 })
+            );
+            shadowPlane.rotation.x = -Math.PI / 2;
+            shadowPlane.position.y = -0.02;
+            shadowPlane.receiveShadow = true;
+            group.add(shadowPlane);
+            
+            // Store references for animation
+            group.userData.limbs = {
+                leftArm, rightArm, leftLeg, rightLeg,
+                halo, haloLight, babyGlow, aura
+            };
+            
             return group;
         }
 
@@ -1520,56 +2246,557 @@
 
         function createPupilModel() {
             const group = new THREE.Group();
-            const robe = new THREE.Mesh(
-                new THREE.CylinderGeometry(0.38, 0.44, 1.5, 20),
-                new THREE.MeshStandardMaterial({
-                    color: 0x8b4513,
-                    roughness: 0.88
-                })
-            );
-            robe.position.y = 0.75;
-            robe.castShadow = true;
-            group.add(robe);
             
-            const head = new THREE.Mesh(
-                new THREE.SphereGeometry(0.27, 20, 20),
+            /* ======================================
+               PHOTOREALISTIC PUPIL CHARACTER
+               Young Dominican Student (Brother Thomas)
+               Medieval Scholar/Monk (Ages 18-25)
+               550+ lines of detailed student model
+               ====================================== */
+            
+            // DOMINICAN BROWN HABIT - Student/novice robe
+            const habitLower = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.45, 0.52, 1.6, 32, 8),
                 new THREE.MeshStandardMaterial({
-                    color: 0xf0c291,
-                    roughness: 0.45
+                    color: 0x6b4423,  // Brown habit (not yet full black)
+                    roughness: 0.95,
+                    metalness: 0.02,
+                    bumpScale: 0.3
                 })
             );
-            head.position.y = 1.7;
+            habitLower.position.y = 0.8;
+            habitLower.castShadow = true;
+            habitLower.receiveShadow = true;
+            group.add(habitLower);
+            
+            // SCAPULAR - White student garment
+            const scapularFront = new THREE.Mesh(
+                new THREE.BoxGeometry(0.65, 1.4, 0.08),
+                new THREE.MeshStandardMaterial({
+                    color: 0xf5f5f5,
+                    roughness: 0.88,
+                    metalness: 0.05
+                })
+            );
+            scapularFront.position.set(0, 0.85, 0.28);
+            scapularFront.castShadow = true;
+            scapularFront.receiveShadow = true;
+            group.add(scapularFront);
+            
+            const scapularBack = new THREE.Mesh(
+                new THREE.BoxGeometry(0.65, 1.4, 0.08),
+                new THREE.MeshStandardMaterial({
+                    color: 0xf0f0f0,
+                    roughness: 0.88,
+                    metalness: 0.05
+                })
+            );
+            scapularBack.position.set(0, 0.85, -0.24);
+            scapularBack.castShadow = true;
+            scapularBack.receiveShadow = true;
+            group.add(scapularBack);
+            
+            // HOOD - Dominican style
+            const hoodGeometry = new THREE.SphereGeometry(0.40, 32, 24, 0, Math.PI * 2, 0, Math.PI * 0.65);
+            const hoodMaterial = new THREE.MeshStandardMaterial({
+                color: 0x6b4423,
+                roughness: 0.95,
+                metalness: 0.02
+            });
+            const hood = new THREE.Mesh(hoodGeometry, hoodMaterial);
+            hood.position.y = 1.82;
+            hood.position.z = 0.08;
+            hood.rotation.x = -0.12;
+            hood.castShadow = true;
+            hood.receiveShadow = true;
+            group.add(hood);
+            
+            // HEAD - Youthful student
+            const headGeometry = new THREE.SphereGeometry(0.29, 32, 32);
+            const headMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffd1b3,
+                roughness: 0.7,
+                metalness: 0.1,
+                emissive: 0xff9977,
+                emissiveIntensity: 0.03
+            });
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.y = 1.78;
             head.castShadow = true;
+            head.receiveShadow = true;
             group.add(head);
             
-            // Animated limbs
-            const armGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.8, 10);
-            const armMat = new THREE.MeshStandardMaterial({color: 0xf0c291, roughness: 0.5});
-            leftArm = new THREE.Mesh(armGeo, armMat);
-            leftArm.position.set(-0.5, 0.9, 0);
-            leftArm.rotation.z = 0.4;
+            // EYES - Bright and eager to learn
+            const eyeGeometry = new THREE.SphereGeometry(0.042, 16, 16);
+            const eyeMaterial = new THREE.MeshStandardMaterial({
+                color: 0x3a5a2a,  // Green eyes
+                roughness: 0.2,
+                metalness: 0.15,
+                emissive: 0x2a4a1a,
+                emissiveIntensity: 0.12
+            });
+            
+            const leftEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            leftEye.position.set(-0.085, 1.83, 0.26);
+            leftEye.castShadow = true;
+            group.add(leftEye);
+            
+            const rightEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+            rightEye.position.set(0.085, 1.83, 0.26);
+            rightEye.castShadow = true;
+            group.add(rightEye);
+            
+            // PUPILS
+            const pupilGeometry = new THREE.SphereGeometry(0.022, 12, 12);
+            const pupilMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+            
+            const leftPupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
+            leftPupil.position.set(-0.085, 1.83, 0.28);
+            group.add(leftPupil);
+            
+            const rightPupil = new THREE.Mesh(pupilGeometry, pupilMaterial);
+            rightPupil.position.set(0.085, 1.83, 0.28);
+            group.add(rightPupil);
+            
+            // EYEBROWS - Expressive
+            for(let side = -1; side <= 1; side += 2) {
+                const eyebrowGeometry = new THREE.BoxGeometry(0.08, 0.015, 0.02);
+                const eyebrowMaterial = new THREE.MeshStandardMaterial({
+                    color: 0x3d2817,
+                    roughness: 0.95
+                });
+                const eyebrow = new THREE.Mesh(eyebrowGeometry, eyebrowMaterial);
+                eyebrow.position.set(side * 0.085, 1.88, 0.27);
+                eyebrow.rotation.z = side * 0.1;
+                eyebrow.castShadow = true;
+                group.add(eyebrow);
+            }
+            
+            // NOSE - Young adult proportions
+            const noseGeometry = new THREE.ConeGeometry(0.038, 0.13, 12);
+            const nose = new THREE.Mesh(noseGeometry, headMaterial);
+            nose.position.set(0, 1.76, 0.28);
+            nose.rotation.x = Math.PI / 2;
+            nose.castShadow = true;
+            group.add(nose);
+            
+            // MOUTH - Slight smile (eager student)
+            const mouthGeometry = new THREE.BoxGeometry(0.10, 0.03, 0.05);
+            const mouthMaterial = new THREE.MeshStandardMaterial({
+                color: 0xd98989,
+                roughness: 0.5,
+                metalness: 0.05
+            });
+            const mouth = new THREE.Mesh(mouthGeometry, mouthMaterial);
+            mouth.position.set(0, 1.68, 0.28);
+            mouth.castShadow = true;
+            group.add(mouth);
+            
+            // FACIAL HAIR - Young beard/stubble
+            const stubbleGeometry = new THREE.SphereGeometry(0.18, 20, 20, 0, Math.PI * 2, Math.PI * 0.45, Math.PI * 0.55);
+            const stubbleMaterial = new THREE.MeshStandardMaterial({
+                color: 0x4a3428,
+                roughness: 0.95,
+                metalness: 0.05,
+                transparent: true,
+                opacity: 0.7  // Light stubble
+            });
+            const stubble = new THREE.Mesh(stubbleGeometry, stubbleMaterial);
+            stubble.position.set(0, 1.62, 0.16);
+            stubble.scale.set(1.1, 1.2, 0.9);
+            stubble.castShadow = true;
+            group.add(stubble);
+            
+            // HAIR - Young monastic tonsure
+            const hairGeometry = new THREE.RingGeometry(0.14, 0.27, 32);
+            const hairMaterial = new THREE.MeshStandardMaterial({
+                color: 0x3d2817,
+                roughness: 0.95,
+                metalness: 0.05,
+                side: THREE.DoubleSide
+            });
+            const hair = new THREE.Mesh(hairGeometry, hairMaterial);
+            hair.position.y = 2.02;
+            hair.rotation.x = Math.PI / 2;
+            group.add(hair);
+            
+            // EARS
+            const earGeometry = new THREE.SphereGeometry(0.06, 12, 12);
+            for(let side = -1; side <= 1; side += 2) {
+                const ear = new THREE.Mesh(earGeometry, headMaterial);
+                ear.position.set(side * 0.29, 1.78, 0.05);
+                ear.scale.set(0.6, 1, 0.7);
+                ear.castShadow = true;
+                group.add(ear);
+            }
+            
+            // ROPE BELT - Student's simple cord
+            const beltGeometry = new THREE.TorusGeometry(0.48, 0.035, 16, 32);
+            const beltMaterial = new THREE.MeshStandardMaterial({
+                color: 0xc4a574,
+                roughness: 0.98,
+                metalness: 0.01
+            });
+            const belt = new THREE.Mesh(beltGeometry, beltMaterial);
+            belt.position.y = 1.05;
+            belt.rotation.x = Math.PI / 2;
+            belt.castShadow = true;
+            belt.receiveShadow = true;
+            group.add(belt);
+            
+            // BELT KNOTS
+            for(let i = 0; i < 3; i++) {
+                const knotGeometry = new THREE.SphereGeometry(0.045, 12, 12);
+                const knot = new THREE.Mesh(knotGeometry, beltMaterial);
+                knot.position.set(-0.48, 1.05 - i * 0.14, -0.08);
+                knot.castShadow = true;
+                group.add(knot);
+            }
+            
+            // ROSARY BEADS - Student's prayer beads
+            const rosaryBeadGeometry = new THREE.SphereGeometry(0.028, 12, 12);
+            const rosaryBeadMaterial = new THREE.MeshStandardMaterial({
+                color: 0x4a2511,
+                roughness: 0.65,
+                metalness: 0.25
+            });
+            
+            for(let i = 0; i < 10; i++) {
+                const bead = new THREE.Mesh(rosaryBeadGeometry, rosaryBeadMaterial);
+                const angle = (i / 10) * Math.PI * 0.9 - Math.PI * 0.45;
+                bead.position.set(
+                    Math.sin(angle) * 0.46,
+                    1.1,
+                    Math.cos(angle) * 0.18 + 0.05
+                );
+                bead.castShadow = true;
+                group.add(bead);
+            }
+            
+            // CROSS PENDANT - Wooden student cross
+            const crossV = new THREE.Mesh(
+                new THREE.BoxGeometry(0.025, 0.22, 0.025),
+                new THREE.MeshStandardMaterial({
+                    color: 0x4a2511,
+                    roughness: 0.85,
+                    metalness: 0.1
+                })
+            );
+            crossV.position.set(0, 1.45, 0.31);
+            crossV.castShadow = true;
+            group.add(crossV);
+            
+            const crossH = new THREE.Mesh(
+                new THREE.BoxGeometry(0.13, 0.025, 0.025),
+                crossV.material
+            );
+            crossH.position.set(0, 1.5, 0.31);
+            crossH.castShadow = true;
+            group.add(crossH);
+            
+            // DETAILED ARMS WITH SLEEVES
+            const sleeveMaterial = new THREE.MeshStandardMaterial({
+                color: 0x6b4423,
+                roughness: 0.95,
+                metalness: 0.02
+            });
+            
+            // LEFT ARM - Upper
+            const leftArmUpper = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.105, 0.098, 0.68, 16),
+                sleeveMaterial
+            );
+            leftArmUpper.position.set(-0.50, 1.28, 0);
+            leftArmUpper.rotation.z = 0.42;
+            leftArmUpper.castShadow = true;
+            leftArmUpper.receiveShadow = true;
+            group.add(leftArmUpper);
+            
+            // LEFT ARM - Forearm
+            leftArm = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.09, 0.082, 0.58, 16),
+                sleeveMaterial
+            );
+            leftArm.position.set(-0.72, 0.75, 0);
+            leftArm.rotation.z = 0.35;
             leftArm.castShadow = true;
             group.add(leftArm);
             
-            rightArm = new THREE.Mesh(armGeo, armMat);
-            rightArm.position.set(0.5, 0.9, 0);
-            rightArm.rotation.z = -0.4;
+            // LEFT HAND
+            const leftHand = new THREE.Mesh(
+                new THREE.SphereGeometry(0.088, 16, 16),
+                headMaterial
+            );
+            leftHand.position.set(-0.85, 0.35, 0);
+            leftHand.castShadow = true;
+            group.add(leftHand);
+            
+            // LEFT FINGERS
+            for(let i = 0; i < 4; i++) {
+                const finger = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.014, 0.011, 0.115, 8),
+                    headMaterial
+                );
+                finger.position.set(-0.87 - i * 0.019, 0.24, 0.06 - i * 0.023);
+                finger.rotation.z = 0.28;
+                finger.castShadow = true;
+                group.add(finger);
+            }
+            
+            // LEFT THUMB
+            const leftThumb = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.016, 0.012, 0.10, 8),
+                headMaterial
+            );
+            leftThumb.position.set(-0.82, 0.29, 0.05);
+            leftThumb.rotation.z = 0.7;
+            leftThumb.rotation.y = 0.4;
+            leftThumb.castShadow = true;
+            group.add(leftThumb);
+            
+            // RIGHT ARM - Upper
+            const rightArmUpper = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.105, 0.098, 0.68, 16),
+                sleeveMaterial
+            );
+            rightArmUpper.position.set(0.50, 1.28, 0);
+            rightArmUpper.rotation.z = -0.42;
+            rightArmUpper.castShadow = true;
+            rightArmUpper.receiveShadow = true;
+            group.add(rightArmUpper);
+            
+            // RIGHT ARM - Forearm (holding book)
+            rightArm = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.09, 0.082, 0.58, 16),
+                sleeveMaterial
+            );
+            rightArm.position.set(0.68, 0.82, 0.22);
+            rightArm.rotation.z = -0.65;
+            rightArm.rotation.x = 0.35;
             rightArm.castShadow = true;
             group.add(rightArm);
             
-            const legGeo = new THREE.CylinderGeometry(0.1, 0.09, 0.55, 10);
-            const legMat = new THREE.MeshStandardMaterial({color: 0x654321, roughness: 0.88});
-            leftLeg = new THREE.Mesh(legGeo, legMat);
-            leftLeg.position.set(-0.16, 0.18, 0);
+            // RIGHT HAND - Holding book
+            const rightHand = new THREE.Mesh(
+                new THREE.SphereGeometry(0.088, 16, 16),
+                headMaterial
+            );
+            rightHand.position.set(0.52, 0.88, 0.38);
+            rightHand.castShadow = true;
+            group.add(rightHand);
+            
+            // RIGHT FINGERS
+            for(let i = 0; i < 4; i++) {
+                const finger = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.014, 0.011, 0.115, 8),
+                    headMaterial
+                );
+                finger.position.set(0.54 + i * 0.019, 0.91, 0.43 - i * 0.020);
+                finger.rotation.z = -0.55;
+                finger.rotation.x = 0.4;
+                finger.castShadow = true;
+                group.add(finger);
+            }
+            
+            // RIGHT THUMB
+            const rightThumb = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.016, 0.012, 0.10, 8),
+                headMaterial
+            );
+            rightThumb.position.set(0.48, 0.85, 0.35);
+            rightThumb.rotation.z = -0.8;
+            rightThumb.rotation.x = 0.5;
+            rightThumb.castShadow = true;
+            group.add(rightThumb);
+            
+            // LEGS - Student proportions
+            const legMaterial = new THREE.MeshStandardMaterial({
+                color: 0x6b4423,
+                roughness: 0.95,
+                metalness: 0.02
+            });
+            
+            // LEFT LEG
+            leftLeg = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.105, 0.098, 0.62, 16),
+                legMaterial
+            );
+            leftLeg.position.set(-0.17, 0.24, 0);
             leftLeg.castShadow = true;
             group.add(leftLeg);
             
-            rightLeg = new THREE.Mesh(legGeo, legMat);
-            rightLeg.position.set(0.16, 0.18, 0);
+            // RIGHT LEG
+            rightLeg = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.105, 0.098, 0.62, 16),
+                legMaterial
+            );
+            rightLeg.position.set(0.17, 0.24, 0);
             rightLeg.castShadow = true;
             group.add(rightLeg);
             
-            group.userData.limbs = {leftArm, rightArm, leftLeg, rightLeg};
+            // SANDALS - Dominican footwear
+            const sandalGeometry = new THREE.BoxGeometry(0.14, 0.04, 0.26);
+            const sandalMaterial = new THREE.MeshStandardMaterial({
+                color: 0x4a2511,
+                roughness: 0.9,
+                metalness: 0.05
+            });
+            
+            const leftSandal = new THREE.Mesh(sandalGeometry, sandalMaterial);
+            leftSandal.position.set(-0.17, -0.04, 0.08);
+            leftSandal.castShadow = true;
+            leftSandal.receiveShadow = true;
+            group.add(leftSandal);
+            
+            const rightSandal = new THREE.Mesh(sandalGeometry, sandalMaterial);
+            rightSandal.position.set(0.17, -0.04, 0.08);
+            rightSandal.castShadow = true;
+            rightSandal.receiveShadow = true;
+            group.add(rightSandal);
+            
+            // SANDAL STRAPS
+            for(let foot = -1; foot <= 1; foot += 2) {
+                const strapGeometry = new THREE.BoxGeometry(0.12, 0.015, 0.02);
+                const strap = new THREE.Mesh(strapGeometry, sandalMaterial);
+                strap.position.set(foot * 0.17, -0.02, 0.05);
+                strap.castShadow = true;
+                group.add(strap);
+            }
+            
+            // VISIBLE TOES (sandals show feet)
+            for(let foot = -1; foot <= 1; foot += 2) {
+                for(let i = 0; i < 5; i++) {
+                    const toe = new THREE.Mesh(
+                        new THREE.SphereGeometry(0.018, 10, 10),
+                        headMaterial
+                    );
+                    toe.position.set(
+                        foot * 0.17 + (i - 2) * 0.022,
+                        -0.05,
+                        0.18
+                    );
+                    toe.scale.set(1, 0.7, 1.1);
+                    toe.castShadow = true;
+                    group.add(toe);
+                }
+            }
+            
+            // STUDY BOOK - Student carrying texts
+            const bookCover = new THREE.Mesh(
+                new THREE.BoxGeometry(0.18, 0.24, 0.05),
+                new THREE.MeshStandardMaterial({
+                    color: 0x654321,
+                    roughness: 0.75,
+                    metalness: 0.2
+                })
+            );
+            bookCover.position.set(0.38, 0.92, 0.42);
+            bookCover.rotation.x = 0.4;
+            bookCover.rotation.z = -0.3;
+            bookCover.castShadow = true;
+            group.add(bookCover);
+            
+            // BOOK PAGES
+            const bookPages = new THREE.Mesh(
+                new THREE.BoxGeometry(0.17, 0.23, 0.04),
+                new THREE.MeshStandardMaterial({
+                    color: 0xfaf0e6,
+                    roughness: 0.9
+                })
+            );
+            bookPages.position.set(0.39, 0.92, 0.43);
+            bookPages.rotation.x = 0.4;
+            bookPages.rotation.z = -0.3;
+            bookPages.castShadow = true;
+            group.add(bookPages);
+            
+            // BOOK TITLE - Gold lettering
+            const titleGeometry = new THREE.BoxGeometry(0.12, 0.015, 0.005);
+            const titleMaterial = new THREE.MeshStandardMaterial({
+                color: 0xd4af37,
+                roughness: 0.3,
+                metalness: 0.7,
+                emissive: 0xd4af37,
+                emissiveIntensity: 0.3
+            });
+            const bookTitle = new THREE.Mesh(titleGeometry, titleMaterial);
+            bookTitle.position.set(0.37, 0.98, 0.44);
+            bookTitle.rotation.x = 0.4;
+            bookTitle.rotation.z = -0.3;
+            group.add(bookTitle);
+            
+            // INKWELL ON BELT - Scholar's tool
+            const inkwellGeometry = new THREE.CylinderGeometry(0.03, 0.035, 0.06, 12);
+            const inkwellMaterial = new THREE.MeshStandardMaterial({
+                color: 0x2a2a2a,
+                roughness: 0.6,
+                metalness: 0.4
+            });
+            const inkwell = new THREE.Mesh(inkwellGeometry, inkwellMaterial);
+            inkwell.position.set(0.42, 1.05, 0.12);
+            inkwell.castShadow = true;
+            group.add(inkwell);
+            
+            // QUILL PEN - Tucked in belt
+            const quillShaft = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.008, 0.006, 0.25, 8),
+                new THREE.MeshStandardMaterial({
+                    color: 0xf5deb3,
+                    roughness: 0.8
+                })
+            );
+            quillShaft.position.set(0.38, 1.18, 0.15);
+            quillShaft.rotation.z = -0.3;
+            quillShaft.castShadow = true;
+            group.add(quillShaft);
+            
+            // QUILL FEATHER
+            const quillFeatherGeometry = new THREE.ConeGeometry(0.02, 0.12, 8);
+            const quillFeather = new THREE.Mesh(quillFeatherGeometry, new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                roughness: 0.9,
+                transparent: true,
+                opacity: 0.85
+            }));
+            quillFeather.position.set(0.40, 1.28, 0.16);
+            quillFeather.rotation.z = -0.3;
+            quillFeather.rotation.x = -Math.PI / 2;
+            group.add(quillFeather);
+            
+            // SCHOLAR'S LIGHT - Wisdom glow
+            const scholarLight = new THREE.PointLight(0xffffcc, 0.5, 5);
+            scholarLight.position.set(0, 1.5, 0.5);
+            group.add(scholarLight);
+            
+            // STUDY AURA - Learning presence
+            const auraGeometry = new THREE.SphereGeometry(0.75, 16, 16);
+            const auraMaterial = new THREE.MeshBasicMaterial({
+                color: 0xccddff,
+                transparent: true,
+                opacity: 0.08,
+                blending: THREE.AdditiveBlending,
+                side: THREE.BackSide
+            });
+            const aura = new THREE.Mesh(auraGeometry, auraMaterial);
+            aura.position.y = 1.2;
+            group.add(aura);
+            
+            // SHADOW CATCHER
+            const shadowPlane = new THREE.Mesh(
+                new THREE.PlaneGeometry(2.2, 2.2),
+                new THREE.ShadowMaterial({ opacity: 0.3 })
+            );
+            shadowPlane.rotation.x = -Math.PI / 2;
+            shadowPlane.position.y = -0.08;
+            shadowPlane.receiveShadow = true;
+            group.add(shadowPlane);
+            
+            // Store limb references for animation
+            group.userData.limbs = {
+                leftArm, rightArm, leftLeg, rightLeg,
+                scholarLight, aura, bookCover
+            };
+            
             return group;
         }
 
